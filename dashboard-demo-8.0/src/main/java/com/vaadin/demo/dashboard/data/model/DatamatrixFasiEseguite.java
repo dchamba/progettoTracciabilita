@@ -1,5 +1,6 @@
 package com.vaadin.demo.dashboard.data.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class DatamatrixFasiEseguite {
@@ -19,6 +20,8 @@ public class DatamatrixFasiEseguite {
 	private String esitoValore;
 	
 	private String impianto;
+	
+	private ArrayList<DatamatrixFasiEseguite> controlliMaster;
 	
 	public DatamatrixFasiEseguite () {
 		
@@ -87,6 +90,14 @@ public class DatamatrixFasiEseguite {
 
 	public void setImpianto(String impianto) {
 		this.impianto = impianto;
+	}
+
+	public ArrayList<DatamatrixFasiEseguite> getControlliMaster() {
+		return controlliMaster;
+	}
+
+	public void setControlliMaster(ArrayList<DatamatrixFasiEseguite> controlliMaster) {
+		this.controlliMaster = controlliMaster;
 	}
 	
 	
