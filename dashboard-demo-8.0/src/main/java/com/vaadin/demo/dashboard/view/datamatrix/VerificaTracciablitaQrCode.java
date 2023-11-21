@@ -20,21 +20,14 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class VerificaTracciablitaQrCode extends MyCustomView {
-
-	RepositoryAnimeImballi repositoryAnimeImballi = null;
-		
-	AnimeImballi animaImballoCorrente = null;
-
-	Grid<AnimeImballi> gridAnimeImballi = new Grid<AnimeImballi>();
 	
 	TextField textDatamatrix;
-	
-	private Label lableQtaPzFia10;
 	
 	public VerificaTracciablitaQrCode() {
         setSizeFull();
@@ -42,11 +35,8 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
         setMargin(false);
         setSpacing(false);
         
-        this.repositoryAnimeImballi = RepositoryProvider.repositoryAnimeImballi();
-        
         DashboardEventBus.register(this);
         buildDatamatrixForm();
-        aggiornaDatiImballi();
 	}
 	
     void buildDatamatrixForm() {
@@ -54,8 +44,6 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
         header.addStyleName(StyleUtils.viewHeaderStyle);
         Responsive.makeResponsive(header);
         
-        //this.gridFia10 = new Grid<AnimeImballi>();
-
         Label title = new Label(ViewUtils.titoloVistaImballiAnime);
         //title.setSizeUndefined();
         title.addStyleName(ValoTheme.LABEL_H1);
@@ -86,7 +74,7 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 				if (codiceDataMatrixInserito.isEmpty()) {
 					return;
 				}
-				checkSandcoreUsability(codiceDataMatrixInserito);
+				//checkSandcoreUsability(codiceDataMatrixInserito);
 						
 		    	textDatamatrix.setValue("");
 		    	textDatamatrix.setComponentError(null);
@@ -110,60 +98,36 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
         
     	layoutPezziScatolaFia10.addComponent(titleFia10);
 
-    	addColumnToGrid(gridAnimeImballi);
-    	
-    	layoutPezziScatolaFia10.addComponent(gridAnimeImballi);
+    	//layoutPezziScatolaFia10.addComponent(gridAnimeImballi);
         
-        HorizontalLayout pezziScatolaHorizontalLayout = new HorizontalLayout();
-        pezziScatolaHorizontalLayout.addComponent(layoutPezziScatolaFia10);
-        pezziScatolaHorizontalLayout.setSizeFull();
+//        HorizontalLayout pezziScatolaHorizontalLayout = new HorizontalLayout();
+//        pezziScatolaHorizontalLayout.addComponent(layoutPezziScatolaFia10);
+//        pezziScatolaHorizontalLayout.setSizeFull();
+    	
+    	TabSheet tabsheet = new TabSheet();
+    	tabsheet.setSizeFull();
+
+    	VerticalLayout vTab1 = new VerticalLayout();
+    	VerticalLayout vTab2 = new VerticalLayout();
+    	tabsheet.addTab(vTab1).setCaption("My Tab 1");
+    	tabsheet.addTab(vTab2).setCaption("My Tab 2");
 
         VerticalLayout fields = new VerticalLayout();
         fields.setSizeFull();
         fields.setDefaultComponentAlignment(Alignment.TOP_CENTER);
         addComponent(header);
         addComponents(layoutDatamatrix);
-        addComponents(pezziScatolaHorizontalLayout);
+        addComponents(tabsheet);
         
         setExpandRatio(header, 0.1f);
         setExpandRatio(layoutDatamatrix, 0.2f);
-        setExpandRatio(pezziScatolaHorizontalLayout, 0.7f);
+        setExpandRatio(tabsheet, 0.7f);
         
         
         addComponent(fields);
     	//setExpandRatio(fields, 8);
 	}
     
-	void checkSandcoreUsability(String codiceDataMatrixInserito) {
-		try {
-    		//Verifica doppione/pezzo già inserito
-			AnimeImballi imballoAnimeRicercata = this.repositoryAnimeImballi.getAnimeImballiByQrCode(codiceDataMatrixInserito);
-    		if(imballoAnimeRicercata == null) {
-	            throw new Exception("Qrcode imballo anime non esiste");
-    		} else {
-    			if(imballoAnimeRicercata.getDataScadenza().before(new Date())) {
-    	            throw new Exception("Anime scadute! Non utilizzare! ");
-    			} else {
-    				List<AnimeImballi> listaAnimeImballi = this.repositoryAnimeImballi.getAnimeImballi();
-    				
-    				for (AnimeImballi animeImballo : listaAnimeImballi) {
-						if(animeImballo.getDataScadenza().before(new Date())) {
-							//anima scaduta
-						} else {
-							if(animeImballo.getDataScadenza().before(imballoAnimeRicercata.getDataScadenza())) {
-			    	            throw new Exception("Ci sono anime in scadenza prima di questa! Possiblmente non utilizzare! ");
-							}
-						}
-    				}  
-    		    	ViewUtils.showSuccessfullNotification("E' possibile utilizzare questo imballo");	 
-    			}
-    		} 	
-		} catch (Exception e) {
-          	ViewUtils.showErrorNotification(e.getMessage());
-        	//logging
-		}
-	}
-	
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	void addColumnToGrid(Grid<AnimeImballi> grid) {
@@ -196,15 +160,6 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 //			this.aggiornaDatiImballi();
 //		}
 //	}
-
-    void aggiornaDatiImballi() {
-    	List<AnimeImballi> listaVuota = new ArrayList<AnimeImballi>();
-		gridAnimeImballi.setItems(listaVuota);
-		gridAnimeImballi.setItems(this.repositoryAnimeImballi.getAnimeImballi());
-
-//    	listdataprovider<animeimballi> dataprovider = (listdataprovider<animeimballi>) this.gridanimeimballi.getdataprovider();
-//		lableqtapzfia10.setvalue("qtà pz in scatola:  " + string.valueof(dataprovider.getitems().size()));
-    }
 
 	void setPezziScatolaGridTitleStyle(Label title) {
         title.setSizeUndefined();
