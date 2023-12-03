@@ -141,7 +141,7 @@ public final class PackingListGestampView extends PackingListView {
     		gridGes1.setItems(new ArrayList<VistaPackingList>());
     		gridGes1.setItems(this.repositoryImballi.getVistaPackingListFromEtichettaScatola(null, this.etichettaImballoGes001.getIdEtichettaImballo()));
 
-    		lableEtichettaGes001.setValue("Cod.etic.:"+ this.etichettaImballoGes001.getCodiceEtichetta().substring(0, 10));
+    		lableEtichettaGes001.setValue("Cod.etic.:"+ this.etichettaImballoGes001.getCodiceEtichettaImballoSmeup());
 
         	ListDataProvider<VistaPackingList> dataProvider = (ListDataProvider<VistaPackingList>) gridGes1.getDataProvider();
     		lableQtaPzGes001.setValue("Qtà pz in scatola:  " + String.valueOf(dataProvider.getItems().size()));

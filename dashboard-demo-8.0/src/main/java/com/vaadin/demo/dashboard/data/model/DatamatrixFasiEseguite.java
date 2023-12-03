@@ -13,6 +13,8 @@ public class DatamatrixFasiEseguite {
 	
 	private String faseProcesso;
 	
+	private String codiceFaseProcesso;
+	
 	private String utente;
 
 	private String esito;
@@ -20,6 +22,12 @@ public class DatamatrixFasiEseguite {
 	private String esitoValore;
 	
 	private String impianto;
+	
+	private String fornitore;
+	
+	private String durezza;
+	
+	private String numeroFornata;
 	
 	private ArrayList<DatamatrixFasiEseguite> controlliMaster;
 	
@@ -98,6 +106,38 @@ public class DatamatrixFasiEseguite {
 
 	public void setControlliMaster(ArrayList<DatamatrixFasiEseguite> controlliMaster) {
 		this.controlliMaster = controlliMaster;
+	}
+
+	public String getCodiceFaseProcesso() {
+		return codiceFaseProcesso;
+	}
+
+	public void setCodiceFaseProcesso(String codiceFaseProcesso) {
+		this.codiceFaseProcesso = codiceFaseProcesso;
+	}
+
+	public String getFornitore() {
+		return fornitore;
+	}
+
+	public void setFornitore(String fornitore) {
+		this.fornitore = fornitore;
+	}
+
+	public String getDurezza() {
+		return durezza;
+	}
+
+	public void setDurezza(String durezza) {
+		this.durezza = durezza;
+	}
+
+	public String getNumeroFornata() {
+		return numeroFornata;
+	}
+
+	public void setNumeroFornata(String numeroFornata) {
+		this.numeroFornata = numeroFornata;
 	}
 	
 	

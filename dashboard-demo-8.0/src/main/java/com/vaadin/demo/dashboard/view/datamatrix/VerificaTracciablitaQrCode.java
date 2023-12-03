@@ -2,38 +2,84 @@ package com.vaadin.demo.dashboard.view.datamatrix;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.demo.dashboard.component.model.StatoBancale;
 import com.vaadin.demo.dashboard.component.style.StyleUtils;
+import com.vaadin.demo.dashboard.component.utils.CommonUtils;
 import com.vaadin.demo.dashboard.component.utils.ViewUtils;
 import com.vaadin.demo.dashboard.component.view.MyCustomView;
 import com.vaadin.demo.dashboard.data.model.AnimeImballi;
+import com.vaadin.demo.dashboard.data.model.Datamatrix;
+import com.vaadin.demo.dashboard.data.model.DatamatrixFasiEseguite;
+import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
+import com.vaadin.demo.dashboard.data.model.Prodotti;
 import com.vaadin.demo.dashboard.data.model.Utenti;
+import com.vaadin.demo.dashboard.data.model.VistaPackingList;
 import com.vaadin.demo.dashboard.data.repository.RepositoryAnimeImballi;
+import com.vaadin.demo.dashboard.data.repository.RepositoryDatamatrix;
+import com.vaadin.demo.dashboard.data.repository.RepositoryDatamatrixFasiProcesso;
+import com.vaadin.demo.dashboard.data.repository.RepositoryFasiProcesso;
+import com.vaadin.demo.dashboard.data.repository.RepositoryFasiProcessoProdotti;
+import com.vaadin.demo.dashboard.data.repository.RepositoryImballi;
+import com.vaadin.demo.dashboard.data.repository.RepositoryProdotti;
+import com.vaadin.demo.dashboard.data.repository.RepositoryProveTenuta;
 import com.vaadin.demo.dashboard.data.repository.RepositoryProvider;
+import com.vaadin.demo.dashboard.data.repository.RepositoryVerificaQrCode;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.renderers.ButtonRenderer;
+import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class VerificaTracciablitaQrCode extends MyCustomView {
+
+	private RepositoryDatamatrix repositoryDatamatrix = null;
+	private RepositoryProdotti repositoryProdotti = null;
+	private RepositoryImballi repositoryImballi = null;
+	private RepositoryProveTenuta repositoryProveTenuta = null;
+
+	private RepositoryFasiProcesso repositoryFasiProcesso = null;
+	private RepositoryDatamatrixFasiProcesso repositoryDatamatrixFasiProcesso = null;
+	//private RepositoryFasiProcessoProdotti repositoryFasiProcessoProdotto = null;
+
+	private RepositoryVerificaQrCode repositoryVerificaQrCode = new RepositoryVerificaQrCode();
 	
-	TextField textDatamatrix;
+	private TextField textDatamatrix;
+
+	private TabSheet tabsheet = new TabSheet();
 	
 	public VerificaTracciablitaQrCode() {
         setSizeFull();
         addStyleName("transactions");
         setMargin(false);
         setSpacing(false);
+
+        this.repositoryDatamatrix = RepositoryProvider.getRepositoryDatamatrix();
+        this.repositoryProdotti = RepositoryProvider.getRepositoryProdotti();
+        this.repositoryImballi = RepositoryProvider.repositoryImballi();
+        this.repositoryProveTenuta = RepositoryProvider.getRepositoryProveTenuta();
+        
+        this.repositoryFasiProcesso = RepositoryProvider.repositoryFasiProcesso();
+        this.repositoryDatamatrixFasiProcesso = RepositoryProvider.getRepositoryDatamatrixTrattamenti();
+        //this.repositoryFasiProcessoProdotto = RepositoryProvider.repositoryFasiProcessoProdotti();
         
         DashboardEventBus.register(this);
         buildDatamatrixForm();
@@ -44,7 +90,7 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
         header.addStyleName(StyleUtils.viewHeaderStyle);
         Responsive.makeResponsive(header);
         
-        Label title = new Label(ViewUtils.titoloVistaImballiAnime);
+        Label title = new Label(ViewUtils.titoloVistaVerificaQrCode);
         //title.setSizeUndefined();
         title.addStyleName(ValoTheme.LABEL_H1);
         title.addStyleName(ValoTheme.LABEL_NO_MARGIN);
@@ -61,8 +107,8 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 //    	marginInfo.do(10, 10, 20, 10);
 //    	fields.setMargin(marginInfo);
 	    
-    	textDatamatrix = new TextField("Verifica usabilità imballo");  
-    	textDatamatrix.setPlaceholder("Qrcode imballo");
+    	textDatamatrix = new TextField("Inserisci QrCode");  
+    	textDatamatrix.setPlaceholder("Qrcode pezzo/imballo (ricerca multipla con valori separati da \";\" e max 10 qrcode)");
     	//textDatamatrix.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
     	textDatamatrix.addValueChangeListener(new ValueChangeListener<String>() {
 			
@@ -74,14 +120,14 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 				if (codiceDataMatrixInserito.isEmpty()) {
 					return;
 				}
-				//checkSandcoreUsability(codiceDataMatrixInserito);
+				checkQrCodeInserted(codiceDataMatrixInserito);
 						
 		    	textDatamatrix.setValue("");
 		    	textDatamatrix.setComponentError(null);
 			}
 		});
     	textDatamatrix.setHeight("65px");
-    	textDatamatrix.setWidth("700px");
+    	textDatamatrix.setWidth("800px");
 
     	
     	VerticalLayout layoutDatamatrix = new VerticalLayout();
@@ -104,13 +150,10 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 //        pezziScatolaHorizontalLayout.addComponent(layoutPezziScatolaFia10);
 //        pezziScatolaHorizontalLayout.setSizeFull();
     	
-    	TabSheet tabsheet = new TabSheet();
     	tabsheet.setSizeFull();
 
     	VerticalLayout vTab1 = new VerticalLayout();
     	VerticalLayout vTab2 = new VerticalLayout();
-    	tabsheet.addTab(vTab1).setCaption("My Tab 1");
-    	tabsheet.addTab(vTab2).setCaption("My Tab 2");
 
         VerticalLayout fields = new VerticalLayout();
         fields.setSizeFull();
@@ -126,40 +169,135 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
         
         addComponent(fields);
     	//setExpandRatio(fields, 8);
+	}    
+
+	protected void checkQrCodeInserted(String codiceDataMatrixInserito) {
+		try {
+			//se codiceDatamatrix già cercato apro il relativo Tab
+			if(this.tabsheet.getComponentCount() > 0) {
+				Iterator<Component> i = this.tabsheet.getComponentIterator();
+				while (i.hasNext()) {
+					Component component = (Component) i.next();
+				    Tab tab = this.tabsheet.getTab(component);
+				    if (codiceDataMatrixInserito.equals(tab.getCaption()) || codiceDataMatrixInserito.startsWith(tab.getCaption())) {
+				         this.tabsheet.setSelectedTab(component);
+				         return;
+				    }
+				}
+			}
+			
+			//Verifico che il formato del valore sia compatibile con uno dei DM
+			Prodotti prodottoCorrente  = this.repositoryProdotti.getProdottoFromDatamatrixFormat(codiceDataMatrixInserito, false);
+			EtichetteImballi etichettaImballo = this.repositoryImballi.getEtichettaImballo(codiceDataMatrixInserito);
+			
+	        if(prodottoCorrente != null) {
+	        	Map<String, List<DatamatrixFasiEseguite>> mappaFasiEseguite = repositoryVerificaQrCode.getDatamatrixFasiEseguite(codiceDataMatrixInserito);
+	        	//si tratta di qrcode inserito
+	        	//componento con 3 griglie
+	        	
+	        } else if(etichettaImballo != null){
+	        	this.aggiungiTabIballo(etichettaImballo);
+	        } else {
+	        	//verifica numero ddt
+        		throw new Exception("Datamatrix/qrcode inserito non trovato in sistema");
+	        }
+		} catch (Exception e) {
+          	ViewUtils.showErrorNotification(e.getMessage());
+		}
 	}
-    
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	void addColumnToGrid(Grid<AnimeImballi> grid) {
-		grid.setSizeFull();
+	private void aggiungiTabIballo(EtichetteImballi etichettaImballo) {
+		List<VistaPackingList> vistaPackingList = this.repositoryImballi.getVistaPackingListFromEtichettaScatola(null, etichettaImballo.getIdEtichettaImballo());
+		VistaPackingList primoVistaPacking = vistaPackingList.size() > 0 ? vistaPackingList.get(0) : null;
+		StatoBancale statoBancale = this.repositoryImballi.getStatoBancale(etichettaImballo);
+		
+		VerticalLayout layoutGridDatiImballo = new VerticalLayout();
+		
+		Label titleCodiceProdotto = new Label(primoVistaPacking == null ? "" : primoVistaPacking.getCodiceProdotto());
+		setPezziScatolaGridTitleStyle(titleCodiceProdotto);
+		layoutGridDatiImballo.addComponent(titleCodiceProdotto);
+		
+		Label lableEtichetta = new Label("Cod.etic.: " + etichettaImballo.getCodiceEtichettaImballoSmeup());
+		setInfoScatolaStyle(lableEtichetta);
+		layoutGridDatiImballo.addComponent(lableEtichetta);
 
-		grid.addColumn("GESTAMP").setCaption("Codice prodotto");
-		//grid.addColumn(v -> v.getProddoto().getCodiceProdotto()).setCaption("Codice prodotto");
-		grid.addColumn(v -> v.getQrcode()).setCaption("QrCode");
-		grid.addColumn(v -> v.getQtaAnime()).setCaption("Qta Anime");
-		grid.addColumn(v -> v.getDataProduzione()).setCaption("Data produzione");
-		grid.addColumn(v -> v.getGaranziaGiorniAnima()).setCaption("Garanzia gg anima");
-		grid.addColumn(v -> v.getDataScadenza()).setCaption("Data scadenza");
+		Label lableQtaPzImballo = new Label("Qtà pz in scatola: " + vistaPackingList.size());
+		setInfoScatolaStyle(lableQtaPzImballo);
+		layoutGridDatiImballo.addComponent(lableQtaPzImballo);
+		
+		//fare griglia e colonne
+		Grid<VistaPackingList> gridDatiImballo = new Grid<VistaPackingList>();
+		gridDatiImballo.setSizeFull();   
+		gridDatiImballo.addColumn(v -> v.getDataMatrix()).setCaption("QRCode pz");
+		gridDatiImballo.addColumn(v -> CommonUtils.DATETIMEFORMAT.format(v.getDataOraCreazioneEtichettaPezzo()), new TextRenderer("")).setCaption("Data/ora imballo pz");
+		gridDatiImballo.addColumn(v -> v.getCodiceProdotto()).setCaption("Cod. prodotto");
+		gridDatiImballo.addColumn(v -> v.getNomeCognome()).setCaption("Operatore");
+		gridDatiImballo.setColumnReorderingAllowed(true);
+		gridDatiImballo.setItems(vistaPackingList);
+		
+		layoutGridDatiImballo.addComponent(gridDatiImballo); 
+		
+		Label labelQtaScatoleMancanti = null;
+		if(!statoBancale.isBoxesQtyPerPalletComplete()) {
+			String testoMaxQtaImballo = "Scatola non completa! Necessari tot : " + etichettaImballo.getTipoImballo().getQtaPezziPerScatola() + " pz";
+			testoMaxQtaImballo = "<b style='color:red;'>" + testoMaxQtaImballo + "</b>";
+			Label lableQtaMaxImballo = new Label(testoMaxQtaImballo);
+			setInfoScatolaStyle(lableQtaMaxImballo);
+			lableQtaMaxImballo.setContentMode(com.vaadin.shared.ui.ContentMode.HTML);
+			layoutGridDatiImballo.addComponent(lableQtaMaxImballo);
+			
+			int qtaPzMancanti = etichettaImballo.getTipoImballo().getQtaPezziPerScatola() - vistaPackingList.size();
+			String qtaScatoleMantantiStringa = "Qtà. pz mancanti in pallet: " + qtaPzMancanti;
+			qtaScatoleMantantiStringa = "<b style='color:red;'>" + qtaScatoleMantantiStringa;
+			
+			for(Map.Entry<String, Integer> bancaleNonCompleto : statoBancale.getBoxesWithMissingPcs().entrySet()) {
+				qtaScatoleMantantiStringa += "<br>" + bancaleNonCompleto.getKey() + " " + bancaleNonCompleto.getValue() + " pz";
+			}
+			
+			qtaScatoleMantantiStringa += "</b>";
+			
+			labelQtaScatoleMancanti = new Label(qtaScatoleMantantiStringa);
+			setInfoScatolaStyle(labelQtaScatoleMancanti);
+			labelQtaScatoleMancanti.setContentMode(com.vaadin.shared.ui.ContentMode.HTML);
+		}
 		
 		
-//		grid.addcolumn(v -> "cancella",
-//		      new buttonrenderer(clickevent -> { 
-//		    	  animeimballi v = (animeimballi)clickevent.getitem();
-//		    	  eliminapezzodascatola(v); 
-//	    	  })).setcaption("elimina").setwidth(120);
+		//layoutGridDatiImballo.setId(etichettaImballo.getCodiceEtichettaImballoSmeup());
 		
-		grid.setColumnReorderingAllowed(true);
+
+		VerticalLayout layoutStatoBancale = new VerticalLayout();
+		
+		Label labelNumeroBancale = new Label("Num. bancale : " + etichettaImballo.getCodiceEtichettaBancaleSmeup());
+		setPezziScatolaGridTitleStyle(labelNumeroBancale);
+		layoutStatoBancale.addComponent(labelNumeroBancale);
+		
+		Label labelQtaScatole = new Label("Qtà. scatole necessarie: " + etichettaImballo.getTipoImballo().getQtaScatolePerBancale());
+		setInfoScatolaStyle(labelQtaScatole);
+		layoutStatoBancale.addComponent(labelQtaScatole);
+
+		if(labelQtaScatoleMancanti != null) {
+			layoutStatoBancale.addComponent(labelQtaScatoleMancanti);
+		}
+		if(labelQtaScatoleMancanti != null) {
+			layoutStatoBancale.addComponent(labelQtaScatoleMancanti);
+		}
+		
+		layoutStatoBancale.addComponent(labelQtaScatole);
+		
+
+        HorizontalLayout pezziScatolaHorizontalLayout = new HorizontalLayout();
+        pezziScatolaHorizontalLayout.setSizeFull();
+        
+        pezziScatolaHorizontalLayout.addComponent(layoutGridDatiImballo);
+        pezziScatolaHorizontalLayout.addComponent(layoutStatoBancale);
+
+        pezziScatolaHorizontalLayout.setExpandRatio(layoutGridDatiImballo, 0.7f);
+        pezziScatolaHorizontalLayout.setExpandRatio(layoutStatoBancale, 0.3f);
+
+        pezziScatolaHorizontalLayout.setId(etichettaImballo.getCodiceEtichettaImballoSmeup());
+		this.tabsheet.addTab(pezziScatolaHorizontalLayout, etichettaImballo.getCodiceEtichettaImballoSmeup()).setClosable(true);
+		this.tabsheet.setSelectedTab((this.tabsheet.getComponentCount() - 1));
 	}
-
-//	void eliminaPezzoDaScatola(AnimeImballi v) {
-//		if(v != null) {
-//			EtichettePezzi etichettaPezzo = this.repositoryImballi.getEtichettaPezzo(v.getIdEtichettaPezzo(), null);
-//			etichettaPezzo.setEliminato(true);
-//			this.repositoryImballi.salva(etichettaPezzo);
-//			
-//			this.aggiornaDatiImballi();
-//		}
-//	}
 
 	void setPezziScatolaGridTitleStyle(Label title) {
         title.setSizeUndefined();
@@ -176,5 +314,11 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 		verticalLayout.setSizeFull();
     	addComponents(verticalLayout);
     	setExpandRatio(verticalLayout, expandRatio);
+	}
+
+	void setInfoScatolaStyle(Label title) {
+        title.setSizeUndefined();
+        title.addStyleName(ValoTheme.LABEL_H3);
+        title.addStyleName(ValoTheme.LABEL_NO_MARGIN);
 	}
 }

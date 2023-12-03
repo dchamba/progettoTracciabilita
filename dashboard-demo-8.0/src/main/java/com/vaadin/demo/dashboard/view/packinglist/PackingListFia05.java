@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import com.mysql.jdbc.util.PropertiesDocGenerator;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.provider.ListDataProvider;

@@ -132,21 +132,4 @@ public class RepositoryDatamatrixFasiProcesso {
         
         return idTrattamento;
 	}
-
-	public List<DatamatrixFasiEseguite> getDatamatrixFasiEseguite(int idDatamatrix) {
-		List<DatamatrixFasiEseguite> listaFasiEseguite = new ArrayList<DatamatrixFasiEseguite>();
-		
-		List<DatamatrixFasiProcesso> listaDatamatrixFasiProcesso = this.getListaDatamatrixFasiProcesso(idDatamatrix);
-		for (DatamatrixFasiProcesso dmfp : listaDatamatrixFasiProcesso) {
-			DatamatrixFasiEseguite dme = new DatamatrixFasiEseguite();
-			dme.setDataMatrix(dmfp.getDataMatrix().getDataMatrix());
-			dme.setDataOra(dmfp.getDataOra());
-			dme.setUtente(dmfp.getUtenteOperatore().getUsername());
-			dme.setFaseProcesso(dmfp.getFaseProcesso().getDescrizione());
-			
-			listaFasiEseguite.add(dme);
-		}		
-		
-		return listaFasiEseguite;
-	}
 }

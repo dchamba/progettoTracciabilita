@@ -22,6 +22,7 @@ public class VistaPackingList implements Serializable {
 	private String nomeCognome;
 	private Date dataDDT;
     private boolean eliminato;
+    private Date dataOraCreazioneEtichettaPezzo;
 	
 	public VistaPackingList() {
 	}
@@ -114,4 +115,19 @@ public class VistaPackingList implements Serializable {
 		this.idEtichettaImballo = idEtichettaImballo;
 	}
 
+	public Date getDataOraCreazioneEtichettaPezzo() {
+		return dataOraCreazioneEtichettaPezzo;
+	}
+
+	public void setDataOraCreazioneEtichettaPezzo(Date dataOraCreazioneEtichettaPezzo) {
+		this.dataOraCreazioneEtichettaPezzo = dataOraCreazioneEtichettaPezzo;
+	}
+
+	public String getCodiceEtichettaImballoSmeup() {
+		return codiceEtichetta.substring(0, 10);
+	}
+
+	public String getCodiceEtichettaBancaleSmeup() {
+		return codiceEtichetta.substring((codiceEtichetta.length()-9), (codiceEtichetta.length()-1));
+	}
 }

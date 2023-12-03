@@ -187,7 +187,7 @@ public final class PackingListCCUView extends PackingListView {
     		gridPan3.setItems(new ArrayList<VistaPackingList>());
     		gridPan3.setItems(this.repositoryImballi.getVistaPackingListFromEtichettaScatola(null, this.etichettaImballoPan003.getIdEtichettaImballo()));
 
-    		lableEtichettaPan003.setValue("Cod.etic.:"+ this.etichettaImballoPan003.getCodiceEtichetta().substring(0, 10));
+    		lableEtichettaPan003.setValue("Cod.etic.:"+ this.etichettaImballoPan003.getCodiceEtichettaImballoSmeup());
 
         	ListDataProvider<VistaPackingList> dataProvider = (ListDataProvider<VistaPackingList>) gridPan3.getDataProvider();
     		lableQtaPzPan003.setValue("Qtà pz in scatola:  " + String.valueOf(dataProvider.getItems().size()));
@@ -197,7 +197,7 @@ public final class PackingListCCUView extends PackingListView {
     		gridPan4.setItems(new ArrayList<VistaPackingList>());
     		gridPan4.setItems(this.repositoryImballi.getVistaPackingListFromEtichettaScatola(null, this.etichettaImballoPan004.getIdEtichettaImballo()));
 
-    		lableEtichettaPan004.setValue("Cod.etic.:"+ this.etichettaImballoPan004.getCodiceEtichetta().substring(0, 10));
+    		lableEtichettaPan004.setValue("Cod.etic.:"+ this.etichettaImballoPan004.getCodiceEtichettaImballoSmeup());
 
         	ListDataProvider<VistaPackingList> dataProvider = (ListDataProvider<VistaPackingList>) gridPan4.getDataProvider();
     		lableQtaPzPan004.setValue("Qtà pz in scatola:  " + String.valueOf(dataProvider.getItems().size()));
@@ -217,7 +217,7 @@ public final class PackingListCCUView extends PackingListView {
     		gridPan10.setItems(new ArrayList<VistaPackingList>());
     		gridPan10.setItems(this.repositoryImballi.getVistaPackingListFromEtichettaScatola(null, this.etichettaImballoPan010.getIdEtichettaImballo()));
 
-    		lableEtichettaPan010.setValue("Cod.etic.:"+ this.etichettaImballoPan010.getCodiceEtichetta().substring(0, 10));
+    		lableEtichettaPan010.setValue("Cod.etic.:"+ this.etichettaImballoPan010.getCodiceEtichettaImballoSmeup());
     		
         	ListDataProvider<VistaPackingList> dataProvider = (ListDataProvider<VistaPackingList>) gridPan10.getDataProvider();
     		lableQtaPzPan010.setValue("Qtà pz in scatola:  " + String.valueOf(dataProvider.getItems().size()));

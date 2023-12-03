@@ -23,6 +23,7 @@ public class ViewUtils {
 	public static String titoloVistaImballiAnime = "Imballi anime";
 	public static String titoloVistaImballiAnimeUtilizzo = "Imballi anime utilizzo";
 	public static String titoloVistaTracciabilitàDatamatrix = "Tracciabilità datamatrix";
+	public static String titoloVistaVerificaQrCode = "Verifica QrCode";
 	
 	
 	public static String titoloFaseProcessoFin = "Controllo finale";

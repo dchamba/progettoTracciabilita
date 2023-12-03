@@ -40,6 +40,25 @@ public class RepositoryDatamatrixFasiProcessoTT {
         return dataMatrixFaseProcesso;
 	}
 
+	public DatamatrixFasiProcessoTT getDatamatrixFasiProcessoTTByIdFaseProcesso(Integer idDatamatrixFasiProcesso) {
+        DatamatrixFasiProcessoTT dataMatrixFaseProcesso = null;
+        
+		Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
+		session.beginTransaction();
+		
+		Criteria criteria = session.createCriteria(DatamatrixFasiProcessoTT.class);
+		criteria.add(RepositoryUtils.getCriteraEliminato());
+		criteria.setMaxResults(1);
+		criteria.add(Restrictions.eq(CampiDatamatrixFasiProcessoTT.idDatamatrixFaseProcesso, idDatamatrixFasiProcesso));
+		
+		if (criteria.list() != null && criteria.list().size() > 0) {
+			dataMatrixFaseProcesso = (DatamatrixFasiProcessoTT)criteria.list().get(0);
+		}
+		
+        session.close();
+        return dataMatrixFaseProcesso;
+	}
+
 	public List<VistaDatamatrixFasiProcessoTT> getVistaDatamatrixFasiProcessoTT(Integer numeroFornata, Integer idAzienda, String datamatrix) {
 		List<VistaDatamatrixFasiProcessoTT> dataMatrixFaseProcessoTT = null;
 		
@@ -65,48 +84,6 @@ public class RepositoryDatamatrixFasiProcessoTT {
 		session.close();
 		return dataMatrixFaseProcessoTT;
 	}
-
-//	public List<DatamatrixFasiProcessoTT> getListaDatamatrixFasiProcessoTT(Integer idDataMatrix) {
-//		List<DatamatrixFasiProcessoTT> dataMatrixFaseProcesso = null;
-//        
-//		Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
-//		session.beginTransaction();
-//		
-//		Criteria criteria = session.createCriteria(DatamatrixFasiProcessoTT.class);
-//		criteria.add(RepositoryUtils.getCriteraEliminato());
-//		
-//	    criteria.addOrder(Order.desc(CampiDatamatrixFasiProcessoTT.idDatamatrixFaseProcesso));
-//		criteria.add(Restrictions.eq(CampiDatamatrixFasiProcessoTT.dataMatrix_idDataMatrix, idDataMatrix));
-//		criteria.add(RepositoryUtils.getCriteraEliminato());
-//		
-//		if (criteria.list() != null && criteria.list().size() > 0) {
-//			dataMatrixFaseProcesso = criteria.list();
-//		}
-//		
-//        session.close();
-//        return dataMatrixFaseProcesso;
-//	}
-	
-//	public DatamatrixFasiProcessoTT getDatamatrixFasiProcessoTT(Integer idDatamatrix, Integer idFaseProcesso) {
-//		DatamatrixFasiProcessoTT result = null;
-//        
-//		Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
-//		session.beginTransaction();
-//		
-//		Criteria criteria = session.createCriteria(DatamatrixFasiProcessoTT.class);
-//		criteria.add(RepositoryUtils.getCriteraEliminato());
-//		
-//		criteria.add(Restrictions.eq(CampiDatamatrixFasiProcessoTT.dataMatrix_idDataMatrix, idDatamatrix));
-//		criteria.add(Restrictions.eq(CampiDatamatrixFasiProcessoTT.faseProcesso_idFaseProcesso, idFaseProcesso));
-//		
-//		List<DatamatrixFasiProcessoTT> datamatrixFasiProcesso = criteria.list();
-//		if (datamatrixFasiProcesso != null && datamatrixFasiProcesso.size() > 0) {
-//			result = datamatrixFasiProcesso.get(0);
-//		}
-//		
-//        session.close();
-//        return result;
-//	}
 
 	public DatamatrixFasiProcessoTT salvaDatamatrixFasiProcessoTT(DatamatrixFasiProcessoTT trattamento) {
 		Session session = DatabaseHibernateConnection.getSessionFactory().openSession();

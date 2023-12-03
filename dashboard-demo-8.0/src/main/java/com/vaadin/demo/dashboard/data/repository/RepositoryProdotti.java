@@ -37,6 +37,20 @@ public class RepositoryProdotti {
         return prodotto;
 	}
 	
+	public List<Prodotti> getProdotti() {
+        System.out.println("Reading prodotti");
+        
+		Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
+		session.beginTransaction();
+		
+		Criteria criteria = session.createCriteria(Prodotti.class);
+		criteria.add(RepositoryUtils.getCriteraEliminato());
+
+        List<Prodotti> prodotti = criteria.list();
+        session.close();
+        return prodotti;
+	}
+	
 	public List<Prodotti> getProdottoByPackingListPermesso(String packingListPermesso) {
         System.out.println("Reading prodotti");
         

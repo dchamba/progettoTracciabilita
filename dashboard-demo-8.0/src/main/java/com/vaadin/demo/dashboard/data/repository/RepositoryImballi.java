@@ -1,7 +1,13 @@
 package com.vaadin.demo.dashboard.data.repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -9,6 +15,8 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
+import com.vaadin.demo.dashboard.component.model.StatoBancale;
+import com.vaadin.demo.dashboard.component.utils.CommonUtils;
 import com.vaadin.demo.dashboard.data.hibernate.DatabaseHibernateConnection;
 import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
 import com.vaadin.demo.dashboard.data.model.EtichettePezzi;
@@ -149,6 +157,29 @@ public class RepositoryImballi {
 	    return (etichetteImballi != null && etichetteImballi.size() > 0) ? etichetteImballi.get(0) : null;
 	}
 	
+	public List<VistaPackingList> getVistaPackingListByCodiceBancale(String codiceBancale) {
+		System.out.println("Reading VistaPackingList");
+
+		Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
+		session.beginTransaction();
+
+        List<VistaPackingList> vistaPackingList = new ArrayList<VistaPackingList>();
+		Criteria criteria = session.createCriteria(VistaPackingList.class);
+		criteria.add(RepositoryUtils.getCriteraEliminato());
+		
+		if (codiceBancale != null && !codiceBancale.isEmpty()) {
+			criteria.add(Restrictions.like("codiceEtichetta", codiceBancale, MatchMode.ANYWHERE));
+		} else {
+	        session.close();
+			return null;
+		}
+		
+        vistaPackingList = criteria.list();
+        session.close();
+
+        return vistaPackingList;
+	}
+
 	public List<VistaPackingList> getVistaPackingListByDatamatrix(String dataMatrix) {
 		System.out.println("Reading VistaPackingList");
 
@@ -248,5 +279,36 @@ public class RepositoryImballi {
 		for (EtichettePezzi etichettePezzoVecchio : listaEtichettaPezzi) {
 			elimina(etichettePezzoVecchio);
 		}
+	}
+	
+	public StatoBancale getStatoBancale(EtichetteImballi etichettaImballo) {
+		StatoBancale result = new StatoBancale();
+		
+		TipoImballi tipoImballoCorrente = etichettaImballo.getTipoImballo();
+		int totalePezziPerBancaleRichiesti = tipoImballoCorrente.getQtaPezziPerScatola() * tipoImballoCorrente.getQtaScatolePerBancale();
+		
+		List<VistaPackingList> pzInBancale = getVistaPackingListByCodiceBancale(etichettaImballo.getCodiceEtichettaBancaleSmeup());
+
+		//List<String> listaEtichette = pzInBancale.stream().map(VistaPackingList::getCodiceEtichetta).distinct().collect(Collectors.toList());
+		List<VistaPackingList> listaEtichette = pzInBancale.stream().filter(CommonUtils.distinctByKey(p -> p.getCodiceEtichetta())).collect(Collectors.toList());
+		
+		//List<VistaPackingList> listaEtichette = new ArrayList();
+		//listaEtichette.addAll(pzInBancale.stream().collect(Collectors.groupingBy(g -> g.getCodiceEtichetta())).values().toArray());
+//		listaEtichette.forEach(v -> {
+//			int totPzImballo = this.getVistaPackingListFromEtichettaScatola(v.getCodiceEtichetta(), null).size();
+//			result.getBoxesWithMissingPcs().put(v.getCodiceEtichettaImballoSmeup(), totPzImballo);
+//		});
+		for (VistaPackingList etichetta : listaEtichette) {
+			int totPzImballo = this.getVistaPackingListFromEtichettaScatola(etichetta.getCodiceEtichetta(), null).size();
+			result.getBoxesWithMissingPcs().put(etichetta.getCodiceEtichettaImballoSmeup(), totPzImballo);
+		}
+		
+		result.setPcsQtyForPalletComplete(pzInBancale.size() == totalePezziPerBancaleRichiesti);
+		result.setQtyOfPcsInThePallet(pzInBancale.size());
+		result.setStandardQtyPerBoxes(tipoImballoCorrente.getQtaPezziPerScatola());
+		result.setQtyOfBoxesInThePallet(listaEtichette.size());
+		result.setBoxesQtyPerPalletComplete(listaEtichette.size() == tipoImballoCorrente.getQtaScatolePerBancale());
+		
+		return result;
 	}
 }

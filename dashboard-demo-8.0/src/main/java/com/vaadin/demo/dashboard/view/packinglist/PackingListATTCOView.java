@@ -164,7 +164,7 @@ public final class PackingListATTCOView extends PackingListView {
 			gridAttco01.setItems(new ArrayList<VistaPackingList>());
 			gridAttco01.setItems(this.repositoryImballi.getVistaPackingListFromEtichettaScatola(null, this.etichettaImballoAttco01.getIdEtichettaImballo()));
 
-			lableEtichettaAttco01.setValue("Cod.etic.:" + this.etichettaImballoAttco01.getCodiceEtichetta().substring(0, 10));
+			lableEtichettaAttco01.setValue("Cod.etic.:" + this.etichettaImballoAttco01.getCodiceEtichettaImballoSmeup());
 
 			ListDataProvider<VistaPackingList> dataProvider = (ListDataProvider<VistaPackingList>) gridAttco01.getDataProvider();
 			lableQtaPzAttco01.setValue("Qtà pz in scatola:  " + String.valueOf(dataProvider.getItems().size()));
@@ -174,7 +174,7 @@ public final class PackingListATTCOView extends PackingListView {
 			gridAttco02.setItems(new ArrayList<VistaPackingList>());
 			gridAttco02.setItems(this.repositoryImballi.getVistaPackingListFromEtichettaScatola(null, this.etichettaImballoAttco02.getIdEtichettaImballo()));
 
-			lableEtichettaAttco02.setValue("Cod.etic.:" + this.etichettaImballoAttco02.getCodiceEtichetta().substring(0, 10));
+			lableEtichettaAttco02.setValue("Cod.etic.:" + this.etichettaImballoAttco02.getCodiceEtichettaImballoSmeup());
 
 			ListDataProvider<VistaPackingList> dataProvider = (ListDataProvider<VistaPackingList>) gridAttco02.getDataProvider();
 			lableQtaPzAttco02.setValue("Qtà pz in scatola:  " + String.valueOf(dataProvider.getItems().size()));

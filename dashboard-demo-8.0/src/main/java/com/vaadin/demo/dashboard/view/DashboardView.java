@@ -5,7 +5,6 @@ import java.util.Iterator;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.demo.dashboard.DashboardUI;
-import com.vaadin.demo.dashboard.domain.DashboardNotification;
 import com.vaadin.demo.dashboard.event.DashboardEvent.CloseOpenWindowsEvent;
 import com.vaadin.demo.dashboard.event.DashboardEvent.NotificationsCountUpdatedEvent;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;

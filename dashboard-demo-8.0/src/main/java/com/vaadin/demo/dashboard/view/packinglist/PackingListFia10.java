@@ -137,7 +137,7 @@ public class PackingListFia10 extends PackingListView {
     		gridFia05.setItems(new ArrayList<VistaPackingList>());
     		gridFia05.setItems(this.repositoryImballi.getVistaPackingListFromEtichettaScatola(null, this.etichettaImballoFia10.getIdEtichettaImballo()));
 
-    		lableEtichettaFia10.setValue("Cod.etic.:"+ this.etichettaImballoFia10.getCodiceEtichetta().substring(0, 10));
+    		lableEtichettaFia10.setValue("Cod.etic.:"+ this.etichettaImballoFia10.getCodiceEtichettaImballoSmeup());
 
         	ListDataProvider<VistaPackingList> dataProvider = (ListDataProvider<VistaPackingList>) this.gridFia05.getDataProvider();
     		lableQtaPzFia10.setValue("Qtà pz in scatola:  " + String.valueOf(dataProvider.getItems().size()));

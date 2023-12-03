@@ -125,7 +125,7 @@ public final class PackingListPAN11View extends PackingListView {
     		gridPan11.setItems(new ArrayList<VistaPackingList>());
     		gridPan11.setItems(this.repositoryImballi.getVistaPackingListFromEtichettaScatola(null, this.etichettaImballoPan11.getIdEtichettaImballo()));
 
-    		lableEtichettaPan11.setValue("Cod.etic.:"+ this.etichettaImballoPan11.getCodiceEtichetta().substring(0, 10));
+    		lableEtichettaPan11.setValue("Cod.etic.:"+ this.etichettaImballoPan11.getCodiceEtichettaImballoSmeup());
 
         	ListDataProvider<VistaPackingList> dataProvider = (ListDataProvider<VistaPackingList>) gridPan11.getDataProvider();
     		lableQtaPzPan11.setValue("Qtà pz in scatola:  " + String.valueOf(dataProvider.getItems().size()));
