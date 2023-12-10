@@ -6,15 +6,17 @@ public class StatoBancale {
 	
 	private boolean isBoxesQtyPerPalletComplete;
 	
-	private boolean isPcsQtyForPalletComplete;
-
 	private int qtyOfBoxesInThePallet;
 
 	private int qtyOfPcsInThePallet;
 	
 	private HashMap<String, Integer> boxesWithMissingPcs = new HashMap<String, Integer>();
 
-	private int standardQtyPerBoxes;
+	private int standardPcsQtyPerBoxes;
+	
+	private int standardPcsQtyPerPallet;
+	
+	private int standardBoxesQtyPerPallet;
 	
 	public StatoBancale() {	}
 
@@ -35,11 +37,7 @@ public class StatoBancale {
 	}
 
 	public boolean isPcsQtyForPalletComplete() {
-		return isPcsQtyForPalletComplete;
-	}
-
-	public void setPcsQtyForPalletComplete(boolean isPcsQtyForPalletComplete) {
-		this.isPcsQtyForPalletComplete = isPcsQtyForPalletComplete;
+		return this.standardPcsQtyPerPallet == this.qtyOfPcsInThePallet;
 	}
 
 	public int getQtyOfPcsInThePallet() {
@@ -58,12 +56,28 @@ public class StatoBancale {
 		this.boxesWithMissingPcs = boxesWithMissingPcs;
 	}
 
-	public int getStandardQtyPerBoxes() {
-		return standardQtyPerBoxes;
+	public int getStandardPcsQtyPerBoxes() {
+		return standardPcsQtyPerBoxes;
 	}
 
-	public void setStandardQtyPerBoxes(int standardQtyPerBoxes) {
-		this.standardQtyPerBoxes = standardQtyPerBoxes;
+	public void setStandardPcsQtyPerBoxes(int standardQtyPerBoxes) {
+		this.standardPcsQtyPerBoxes = standardQtyPerBoxes;
+	}
+
+	public int getQtyOfMissingPcsInThePallet() {
+		return getStandardPcsQtyPerPallet() - getQtyOfPcsInThePallet();
+	}
+
+	public int getStandardPcsQtyPerPallet() {
+		return this.getStandardPcsQtyPerBoxes() * this.getStandardBoxesQtyPerPallet();
+	}
+
+	public void setStandardBoxesQtyPerPallet(int standardBoxesQtyPerPallet) {
+		this.standardBoxesQtyPerPallet = standardBoxesQtyPerPallet;
+	}
+
+	public int getStandardBoxesQtyPerPallet() {
+		return standardBoxesQtyPerPallet;
 	}
 
 }

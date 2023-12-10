@@ -33,7 +33,7 @@ import com.vaadin.server.Resource;
 public enum DashboardViewType {
 		DASHBOARD("home", "Home", DashboardView.class, FontAwesome.HOME, true, null), 
 		ENTRYDATAMATRIX("GESTIONE_DATAMATRIX", ViewUtils.titoloEntryDataMatrix, NewDatamatrixView.class, FontAwesome.PLUS_CIRCLE, false, PermessiUtentiLista.GESTIONE_DATAMATRIX),
-    	DATAMATRIX("CONSULTAZIONE_DATAMATRIX", ViewUtils.titoloDataMatrix, VerificaTracciablitaQrCode.class, FontAwesome.BARCODE, false, PermessiUtentiLista.CONSULTAZIONE_DATAMATRIX),
+    	DATAMATRIX("CONSULTAZIONE_DATAMATRIX", ViewUtils.titoloVerificDataMatrix, VerificaTracciablitaQrCode.class, FontAwesome.BARCODE, false, PermessiUtentiLista.CONSULTAZIONE_DATAMATRIX),
     	TRATTAMENTOHTT("GESTIONE_TRATTAMENTO", ViewUtils.titoloTrattamentoHtt, TrattamentoView.class, FontAwesome.FIRE, false, PermessiUtentiLista.GESTIONE_TRATTAMENTO),
     	IMBALLI_ANIME("IMBALLI_ANIME", ViewUtils.titoloVistaImballiAnime, VistaImballiAnime.class, FontAwesome.FIRE, false, PermessiUtentiLista.IMBALLI_ANIME),
     	IMBALLI_ANIME_UTILIZZO("IMBALLI_ANIME_UTILIZZO", ViewUtils.titoloVistaImballiAnimeUtilizzo, VerificaUtilizzoImballiAnime.class, FontAwesome.FIRE, false, PermessiUtentiLista.IMBALLI_ANIME_UTILIZZO),

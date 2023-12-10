@@ -242,7 +242,7 @@ public final class PackingListATTCOView extends PackingListView {
 		   	
 			Integer totEtichetteInserite = this.repositoryImballi.getEtichettaPezzoByEtichettaImballo(etichettaImballoDaStampre.getIdEtichettaImballo()).size();
 			
-			if (totEtichetteInserite == totPezziPerScatola) {
+			if (totEtichetteInserite.equals(totPezziPerScatola)) {
 				String codiceScatola = "0";
 				codiceScatola += prodottoEtichettaDaStampre.getNumeroDisegno(); 
 				codiceScatola += ".";

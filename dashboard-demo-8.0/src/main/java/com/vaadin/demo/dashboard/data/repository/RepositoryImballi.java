@@ -23,6 +23,7 @@ import com.vaadin.demo.dashboard.data.model.EtichettePezzi;
 import com.vaadin.demo.dashboard.data.model.TipoImballi;
 import com.vaadin.demo.dashboard.data.model.VistaPackingList;
 import com.vaadin.demo.dashboard.data.repository.campi.CampiTipoImballi;
+import com.vaadin.shared.ui.dnd.criteria.Criterion.Match;
 
 @SuppressWarnings("unchecked")
 public class RepositoryImballi {
@@ -128,6 +129,33 @@ public class RepositoryImballi {
 		
 		if (codiceEtichettaImballo != null && !codiceEtichettaImballo.isEmpty()) {
 			criteria.add(Restrictions.like("codiceEtichetta", codiceEtichettaImballo));
+		}
+	
+		etichetteImballi = criteria.list();
+	    session.close();
+		
+	    return (etichetteImballi != null && etichetteImballi.size() > 0) ? etichetteImballi.get(0) : null;
+	}
+	
+	public EtichetteImballi getEtichettaImballoByCodiceEtichettaOrStartWith(String codiceEtichettaImballo) {
+		EtichetteImballi result = getEtichettaImballo(codiceEtichettaImballo);
+		EtichetteImballi result1 = getEtichettaImballoByCodiceEtichetta(codiceEtichettaImballo);
+		return result == null ? result1 : result;
+	}
+	
+	public EtichetteImballi getEtichettaImballoByCodiceEtichetta(String codiceEtichettaImballo) {
+	    System.out.println("Reading etichetta imballo");
+	
+	    List<EtichetteImballi> etichetteImballi = new ArrayList<EtichetteImballi>();
+	    
+		Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
+		session.beginTransaction();
+		
+		Criteria criteria = session.createCriteria(EtichetteImballi.class);
+		criteria.add(RepositoryUtils.getCriteraEliminato());
+		
+		if (codiceEtichettaImballo != null && !codiceEtichettaImballo.isEmpty()) {
+			criteria.add(Restrictions.like("codiceEtichetta", codiceEtichettaImballo, MatchMode.START));
 		}
 	
 		etichetteImballi = criteria.list();
@@ -285,30 +313,26 @@ public class RepositoryImballi {
 		StatoBancale result = new StatoBancale();
 		
 		TipoImballi tipoImballoCorrente = etichettaImballo.getTipoImballo();
-		int totalePezziPerBancaleRichiesti = tipoImballoCorrente.getQtaPezziPerScatola() * tipoImballoCorrente.getQtaScatolePerBancale();
+		//int totalePezziPerBancaleRichiesti = tipoImballoCorrente.getQtaPezziPerScatola() * tipoImballoCorrente.getQtaScatolePerBancale();
 		
 		List<VistaPackingList> pzInBancale = getVistaPackingListByCodiceBancale(etichettaImballo.getCodiceEtichettaBancaleSmeup());
-
-		//List<String> listaEtichette = pzInBancale.stream().map(VistaPackingList::getCodiceEtichetta).distinct().collect(Collectors.toList());
 		List<VistaPackingList> listaEtichette = pzInBancale.stream().filter(CommonUtils.distinctByKey(p -> p.getCodiceEtichetta())).collect(Collectors.toList());
 		
-		//List<VistaPackingList> listaEtichette = new ArrayList();
-		//listaEtichette.addAll(pzInBancale.stream().collect(Collectors.groupingBy(g -> g.getCodiceEtichetta())).values().toArray());
-//		listaEtichette.forEach(v -> {
-//			int totPzImballo = this.getVistaPackingListFromEtichettaScatola(v.getCodiceEtichetta(), null).size();
-//			result.getBoxesWithMissingPcs().put(v.getCodiceEtichettaImballoSmeup(), totPzImballo);
-//		});
-		for (VistaPackingList etichetta : listaEtichette) {
-			int totPzImballo = this.getVistaPackingListFromEtichettaScatola(etichetta.getCodiceEtichetta(), null).size();
-			result.getBoxesWithMissingPcs().put(etichetta.getCodiceEtichettaImballoSmeup(), totPzImballo);
-		}
-		
-		result.setPcsQtyForPalletComplete(pzInBancale.size() == totalePezziPerBancaleRichiesti);
 		result.setQtyOfPcsInThePallet(pzInBancale.size());
-		result.setStandardQtyPerBoxes(tipoImballoCorrente.getQtaPezziPerScatola());
+		result.setStandardPcsQtyPerBoxes(tipoImballoCorrente.getQtaPezziPerScatola());
 		result.setQtyOfBoxesInThePallet(listaEtichette.size());
 		result.setBoxesQtyPerPalletComplete(listaEtichette.size() == tipoImballoCorrente.getQtaScatolePerBancale());
 		
+		result.setStandardBoxesQtyPerPallet(tipoImballoCorrente.getQtaScatolePerBancale());
+		result.setStandardPcsQtyPerBoxes(tipoImballoCorrente.getQtaPezziPerScatola());
+
+		for (VistaPackingList etichetta : listaEtichette) {
+			int totPzImballo = this.getVistaPackingListFromEtichettaScatola(etichetta.getCodiceEtichetta(), null).size();
+			int pzMancanti = (result.getStandardPcsQtyPerBoxes() - totPzImballo);
+			if(pzMancanti > 0) {
+				result.getBoxesWithMissingPcs().put(etichetta.getCodiceEtichettaImballoSmeup(), pzMancanti);
+			}
+		}
 		return result;
 	}
 }

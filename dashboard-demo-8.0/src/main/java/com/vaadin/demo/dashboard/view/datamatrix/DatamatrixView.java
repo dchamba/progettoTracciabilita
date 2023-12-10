@@ -85,7 +85,7 @@ public final class DatamatrixView extends MyCustomView {
 		header.addStyleName(StyleUtils.viewHeaderStyle);
 		Responsive.makeResponsive(header);
 
-		Label title = new Label(ViewUtils.titoloDataMatrix);
+		Label title = new Label(ViewUtils.titoloVerificDataMatrix);
 		title.setSizeUndefined();
 		title.addStyleName(ValoTheme.LABEL_H1);
 		title.addStyleName(ValoTheme.LABEL_NO_MARGIN);

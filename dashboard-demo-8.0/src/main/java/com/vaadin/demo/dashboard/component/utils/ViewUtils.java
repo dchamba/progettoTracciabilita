@@ -19,7 +19,7 @@ public class ViewUtils {
 	
 	public static String titoloEntryDataMatrix = "RX DataMatrix scanning";
 	public static String titoloTrattamentoHtt = "HT DataMatrix scanning";
-	public static String titoloDataMatrix = "DataMatrix list";
+	public static String titoloVerificDataMatrix = "Verifica QrCode";
 	public static String titoloVistaImballiAnime = "Imballi anime";
 	public static String titoloVistaImballiAnimeUtilizzo = "Imballi anime utilizzo";
 	public static String titoloVistaTracciabilitàDatamatrix = "Tracciabilità datamatrix";

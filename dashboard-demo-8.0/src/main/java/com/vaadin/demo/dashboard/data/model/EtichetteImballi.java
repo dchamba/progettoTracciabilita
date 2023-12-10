@@ -60,11 +60,13 @@ public class EtichetteImballi implements Serializable {
 	}
 
 	public String getCodiceEtichettaImballoSmeup() {
-		return codiceEtichetta.substring(0, 10);
+		return codiceEtichetta.split(";")[0];
 	}
 
 	public String getCodiceEtichettaBancaleSmeup() {
-		return codiceEtichetta.substring((codiceEtichetta.length()-9), (codiceEtichetta.length()-1));
+		String[] stringheEtichetta = codiceEtichetta.split(";");
+		String codiceBancale = stringheEtichetta[stringheEtichetta.length-1];
+		return codiceBancale;
 	}
 
 	public void setCodiceEtichetta(String codiceEtichetta) {
