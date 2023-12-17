@@ -24,6 +24,7 @@ import com.vaadin.demo.dashboard.view.packinglist.PackingListFia0504;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListFia0505;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListFia10;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListGestampView;
+import com.vaadin.demo.dashboard.view.packinglist.PackingListOMR07e08;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListPAN11View;
 import com.vaadin.demo.dashboard.view.trattamenti.TrattamentoView;
 import com.vaadin.navigator.View;
@@ -53,8 +54,11 @@ public enum DashboardViewType {
 		FASE_PROCESSO_PACKINGLISTFIA10("FASE_PROCESSO_PACKINGLISTFIA10", ViewUtils.titoloFaseProcessoPackingListFia10, PackingListFia10.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTFIA10),
 		FASE_PROCESSO_PACKINGLISTFIA0505("FASE_PROCESSO_PACKINGLISTFIA0505", ViewUtils.titoloFaseProcessoPackingListFia0505, PackingListFia0505.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTFIA0505),
 		FASE_PROCESSO_PACKINGLISTFIA0504("FASE_PROCESSO_PACKINGLISTFIA0504", ViewUtils.titoloFaseProcessoPackingListFia0504, PackingListFia0504.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTFIA0504),
+//		FASE_PROCESSO_PACKINGLISTOMR1e2("FASE_PROCESSO_PACKINGLISTOMR1e2", ViewUtils.titoloFaseProcessoPackingListOmr01e02, PackingListOMR07e08.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR1e2),
+//		FASE_PROCESSO_PACKINGLISTOMR3e4("FASE_PROCESSO_PACKINGLISTOMR3e4", ViewUtils.titoloFaseProcessoPackingListOmr03e04, PackingListOMR07e08.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR3e4),
+//		FASE_PROCESSO_PACKINGLISTOMR5e6("FASE_PROCESSO_PACKINGLISTOMR5e6", ViewUtils.titoloFaseProcessoPackingListOmr05e06, PackingListOMR07e08.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR5e6),
+		FASE_PROCESSO_PACKINGLISTOMR7e8("FASE_PROCESSO_PACKINGLISTOMR7e8", ViewUtils.titoloFaseProcessoPackingListOmr07e08, PackingListOMR07e08.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR7e8),
 		FASE_PROCESSO_PACKINGLISTATTCO("FASE_PROCESSO_PACKINGLISTATTCO", ViewUtils.titoloFaseProcessoPackingListATTCO, PackingListATTCOView.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTATTCO);
-	
     	
     private final String viewName;
     private final Class<? extends View> viewClass;

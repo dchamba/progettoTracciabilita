@@ -68,6 +68,15 @@ public class PackingListView extends MyCustomView {
 	Grid<VistaPackingList> gridPan11 = new Grid<VistaPackingList>();
 	Grid<VistaPackingList> gridAttco01 = new Grid<VistaPackingList>();
 	Grid<VistaPackingList> gridAttco02 = new Grid<VistaPackingList>();
+
+	Grid<VistaPackingList> gridOmr01 = new Grid<VistaPackingList>();
+	Grid<VistaPackingList> gridOmr02 = new Grid<VistaPackingList>();
+	Grid<VistaPackingList> gridOmr03 = new Grid<VistaPackingList>();
+	Grid<VistaPackingList> gridOmr04 = new Grid<VistaPackingList>();
+	Grid<VistaPackingList> gridOmr05 = new Grid<VistaPackingList>();
+	Grid<VistaPackingList> gridOmr06 = new Grid<VistaPackingList>();
+	Grid<VistaPackingList> gridOmr07 = new Grid<VistaPackingList>();
+	Grid<VistaPackingList> gridOmr08 = new Grid<VistaPackingList>();
 	
 	TextField textDatamatrix;
 	
