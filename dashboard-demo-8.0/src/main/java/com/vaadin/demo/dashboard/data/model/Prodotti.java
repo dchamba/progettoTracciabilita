@@ -50,6 +50,14 @@ public class Prodotti implements Serializable {
 
 	private int minValoreDurezza;
     
+	private int indexCarattereInizioData;
+
+    private String formatoData;
+    
+	private int indexCarattereInizioProgressivo;
+
+    private String formatoProgressivo;
+    
 	public Prodotti() {
 	}
 
@@ -167,6 +175,38 @@ public class Prodotti implements Serializable {
 
 	public void setMinValoreDurezza(int minValoreDurezza) {
 		this.minValoreDurezza = minValoreDurezza;
+	}
+
+	public int getIndexCarattereInizioData() {
+		return indexCarattereInizioData;
+	}
+
+	public void setIndexCarattereInizioData(int indexCarattereInizioData) {
+		this.indexCarattereInizioData = indexCarattereInizioData;
+	}
+
+	public int getIndexCarattereInizioProgressivo() {
+		return indexCarattereInizioProgressivo;
+	}
+
+	public void setIndexCarattereInizioProgressivo(int indexCarattereInizioProgressivo) {
+		this.indexCarattereInizioProgressivo = indexCarattereInizioProgressivo;
+	}
+
+	public String getFormatoData() {
+		return formatoData;
+	}
+
+	public void setFormatoData(String formatoData) {
+		this.formatoData = formatoData;
+	}
+
+	public String getFormatoProgressivo() {
+		return formatoProgressivo;
+	}
+
+	public void setFormatoProgressivo(String formatoProgressivo) {
+		this.formatoProgressivo = formatoProgressivo;
 	}
 
 //	public String getFormatoDatamatrix2() {

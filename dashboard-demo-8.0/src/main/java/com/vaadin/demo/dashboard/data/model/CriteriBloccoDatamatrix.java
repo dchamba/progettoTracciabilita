@@ -17,15 +17,15 @@ public class CriteriBloccoDatamatrix implements Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name ="idProdotto")
-	private Prodotti prodotto;
+    private Prodotti prodotto;
 	
 	private Date daData;
 	
 	private Date aData;
 	
-	private int daProgressivo;
+	private Integer daProgressivo;
 	
-	private int aProgressivo;
+	private Integer aProgressivo;
 	
 	private Boolean applicaSoloAPackingList;
 
@@ -69,19 +69,19 @@ public class CriteriBloccoDatamatrix implements Serializable {
 		this.aData = aData;
 	}
 
-	public int getDaProgressivo() {
+	public Integer getDaProgressivo() {
 		return daProgressivo;
 	}
 
-	public void setDaProgressivo(int daProgressivo) {
+	public void setDaProgressivo(Integer daProgressivo) {
 		this.daProgressivo = daProgressivo;
 	}
 
-	public int getaProgressivo() {
+	public Integer getaProgressivo() {
 		return aProgressivo;
 	}
 
-	public void setaProgressivo(int aProgressivo) {
+	public void setaProgressivo(Integer aProgressivo) {
 		this.aProgressivo = aProgressivo;
 	}
 

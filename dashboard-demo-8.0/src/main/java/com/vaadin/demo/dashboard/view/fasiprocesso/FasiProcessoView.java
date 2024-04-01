@@ -14,6 +14,7 @@ import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils;
 import com.vaadin.demo.dashboard.component.utils.PermessiUtils;
 import com.vaadin.demo.dashboard.component.utils.ViewUtils;
 import com.vaadin.demo.dashboard.component.view.MyCustomView;
+import com.vaadin.demo.dashboard.data.model.CriteriBloccoDatamatrix;
 import com.vaadin.demo.dashboard.data.model.Datamatrix;
 import com.vaadin.demo.dashboard.data.model.DatamatrixFasiProcesso;
 import com.vaadin.demo.dashboard.data.model.FasiProcesso;
@@ -245,6 +246,11 @@ public abstract class FasiProcessoView extends MyCustomView {
 	        		throw new Exception("Datamatrix non presente in archivio");
 				}
 	    	}
+	    	
+    		CriteriBloccoDatamatrix criterioBloccoDmx = RepositoryProvider.getRepositoryCriteriBloccoDatamatrix().getCriteriBloccoDatamatrix(datamatrixCorrente, false);
+    		if(criterioBloccoDmx != null) {
+    			throw new Exception(criterioBloccoDmx.getMessaggioUtente());
+    		}
 	    	
 	    	//Verifico duplicato fase
 	    	DatamatrixFasiProcesso datamatrixFaseProcessoEsistente = this.repositoryDatamatrixFasiProcesso.getDatamatrixFasiProcesso(datamatrixCorrente.getIdDataMatrix(), this.faseProcessoCorrente.getIdFaseProcesso());

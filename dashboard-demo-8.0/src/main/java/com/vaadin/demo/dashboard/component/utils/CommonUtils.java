@@ -2,11 +2,13 @@ package com.vaadin.demo.dashboard.component.utils;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -59,6 +61,10 @@ public class CommonUtils {
 			return null;
 		}
 		return  Date.from(value.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	}
+
+	public static Date toDate(String formato, String dataStringa) throws ParseException {
+		return  new SimpleDateFormat(formato, Locale.ITALIAN).parse(dataStringa);
 	}
 
 	public static String fromIntConZeroIniziali(Integer numero, Integer lunghezzaString) {

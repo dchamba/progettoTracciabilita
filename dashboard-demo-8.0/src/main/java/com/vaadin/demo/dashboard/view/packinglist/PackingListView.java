@@ -13,6 +13,7 @@ import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils.FasiProcessoL
 import com.vaadin.demo.dashboard.component.utils.PermessiUtils;
 import com.vaadin.demo.dashboard.component.utils.ViewUtils;
 import com.vaadin.demo.dashboard.component.view.MyCustomView;
+import com.vaadin.demo.dashboard.data.model.CriteriBloccoDatamatrix;
 import com.vaadin.demo.dashboard.data.model.Datamatrix;
 import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
 import com.vaadin.demo.dashboard.data.model.EtichettePezzi;
@@ -185,7 +186,7 @@ public class PackingListView extends MyCustomView {
 	    		if(etichettaImballo == null) {
 		            throw new Exception("Inserire codice etichetta per questo tipo di prodotto");
 	    		}
-
+	    		
 	    		if (this.verificaDoppioneDatamatrixPackingList) {
 		    		//Verifica doppione/pezzo già in packing list 
 		    		List<VistaPackingList> vistaPackingList = this.repositoryImballi.getVistaPackingListByDatamatrix(datamatrix.getDataMatrix());
@@ -194,7 +195,14 @@ public class PackingListView extends MyCustomView {
 		    		}
 	    		}
 	    		
+	    		//controllo fasi precedenti eseguite correttamente
 	    		controlloFasiEseguiteCorrettamente(prodottoCorrente, datamatrix);
+
+	    		//verifico che non ci siano criteri di blocco per questo datamtrix
+	    		CriteriBloccoDatamatrix criterioBloccoDmx = RepositoryProvider.getRepositoryCriteriBloccoDatamatrix().getCriteriBloccoDatamatrix(datamatrix, isViewPackingList());
+	    		if(criterioBloccoDmx != null) {
+	    			throw new Exception(criterioBloccoDmx.getMessaggioUtente());
+	    		}
 	    		
 	    		//scatola piena ??
 	    		List<EtichettePezzi> etichettePezzi = this.repositoryImballi.getEtichettaPezzoByEtichettaImballo(etichettaImballo.getIdEtichettaImballo());
@@ -300,4 +308,6 @@ public class PackingListView extends MyCustomView {
     	addComponents(verticalLayout);
     	setExpandRatio(verticalLayout, expandRatio);
 	}
+	
+	public boolean isViewPackingList() { return true; }
 }

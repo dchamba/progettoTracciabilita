@@ -14,6 +14,7 @@ public class RepositoryProvider {
 	private static RepositoryProveTenuta repositoryProveTenuta = null;
 	private static RepositoryConfig repositoryConfig = null;
 	private static RepositoryAnimeImballi repositoryAnimeImballi = null;
+	private static RepositoryCriteriBloccoDatamatrix repositoryCriteriBloccoDatamatrix = null;
 	
 	
 	public static RepositoryDatamatrix getRepositoryDatamatrix() {
@@ -99,5 +100,12 @@ public class RepositoryProvider {
 			RepositoryProvider.repositoryConfig = new RepositoryConfig();
 		}
 		return RepositoryProvider.repositoryConfig;
+	}
+	
+	public static RepositoryCriteriBloccoDatamatrix getRepositoryCriteriBloccoDatamatrix() {
+		if (RepositoryProvider.repositoryCriteriBloccoDatamatrix == null) {
+			RepositoryProvider.repositoryCriteriBloccoDatamatrix = new RepositoryCriteriBloccoDatamatrix();
+		}
+		return RepositoryProvider.repositoryCriteriBloccoDatamatrix;
 	}
 }

@@ -17,6 +17,7 @@ import com.vaadin.demo.dashboard.data.model.Accessi;
 import com.vaadin.demo.dashboard.data.model.AnimeImballi;
 import com.vaadin.demo.dashboard.data.model.Aziende;
 import com.vaadin.demo.dashboard.data.model.Config;
+import com.vaadin.demo.dashboard.data.model.CriteriBloccoDatamatrix;
 import com.vaadin.demo.dashboard.data.model.Datamatrix;
 import com.vaadin.demo.dashboard.data.model.FasiProcesso;
 import com.vaadin.demo.dashboard.data.model.FasiProcessoProdotto;
@@ -72,6 +73,7 @@ public class DatabaseHibernateConnection {
                 configuration.addAnnotatedClass(Accessi.class);
                 configuration.addAnnotatedClass(Aziende.class);
                 configuration.addAnnotatedClass(Config.class);
+                configuration.addAnnotatedClass(CriteriBloccoDatamatrix.class);
                 configuration.addAnnotatedClass(Datamatrix.class);
                 configuration.addAnnotatedClass(DatamatrixFasiProcesso.class);
                 configuration.addAnnotatedClass(DatamatrixFasiProcessoTT.class);
