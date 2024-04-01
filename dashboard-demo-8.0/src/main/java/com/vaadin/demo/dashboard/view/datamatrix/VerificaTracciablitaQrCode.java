@@ -1,5 +1,7 @@
 package com.vaadin.demo.dashboard.view.datamatrix;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import com.vaadin.demo.dashboard.data.model.DatamatrixFasiEseguite;
 import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
 import com.vaadin.demo.dashboard.data.model.Prodotti;
 import com.vaadin.demo.dashboard.data.model.Utenti;
+import com.vaadin.demo.dashboard.data.model.VistaDatamatrixFasiProcesso;
 import com.vaadin.demo.dashboard.data.model.VistaPackingList;
 import com.vaadin.demo.dashboard.data.repository.RepositoryDatamatrix;
 import com.vaadin.demo.dashboard.data.repository.RepositoryDatamatrixFasiProcesso;
@@ -183,9 +186,8 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 			
 	        if(prodottoCorrente != null) {
 	        	Map<String, List<DatamatrixFasiEseguite>> mappaFasiEseguite = repositoryVerificaQrCode.getDatamatrixFasiEseguite(codiceDataMatrixInserito);
-	        	//si tratta di qrcode inserito
-	        	//componento con 3 griglie
-	        	
+	        	//si tratta di qrcode inserito, componento con 3 griglie
+	        	this.aggiungiTabDatiDataMatrix(mappaFasiEseguite, codiceDataMatrixInserito);	        	
 	        } else if(etichettaImballo != null){
 	        	this.aggiungiTabIballo(etichettaImballo);
 	        } else {
@@ -337,6 +339,46 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 
         pezziScatolaHorizontalLayout.setId(etichettaImballo.getCodiceEtichettaImballoSmeup());
 		this.tabsheet.addTab(pezziScatolaHorizontalLayout, etichettaImballo.getCodiceEtichettaImballoSmeup()).setClosable(true);
+		this.tabsheet.setSelectedTab((this.tabsheet.getComponentCount() - 1));
+	}
+
+	private void aggiungiTabDatiDataMatrix(Map<String, List<DatamatrixFasiEseguite>> mappaFasiEseguite, String datamatrix) {
+		VerticalLayout layoutGridDatiImballo = new VerticalLayout();
+		
+//		Label titleCodiceProdotto = new Label(primoVistaPacking == null ? "" : primoVistaPacking.getCodiceProdotto());
+		Label titleCodiceProdotto = new Label("Dati QrCode");
+		setPezziScatolaGridTitleStyle(titleCodiceProdotto);
+		titleCodiceProdotto.addStyleName(ValoTheme.LABEL_BOLD);
+		layoutGridDatiImballo.addComponent(titleCodiceProdotto);
+		
+		Label lableEtichetta = new Label("Datamatrix: " + datamatrix);
+		setInfoScatolaStyle(lableEtichetta);
+		layoutGridDatiImballo.addComponent(lableEtichetta);
+		
+		//fare griglia e colonne
+		Grid<DatamatrixFasiEseguite> gridDatiImballo = new Grid<DatamatrixFasiEseguite>();
+		gridDatiImballo.setSizeFull();   
+		gridDatiImballo.addColumn(v -> v.getDataMatrix()).setCaption("QRCode pz");
+		gridDatiImballo.addColumn(v -> CommonUtils.DATETIMEFORMAT.format(v.getDataOra()), new TextRenderer("")).setCaption("Data/ora");
+		gridDatiImballo.addColumn(v -> v.getFaseProcesso()).setCaption("Fase processo");
+		gridDatiImballo.addColumn(v -> v.getImpianto()).setCaption("Operatore");
+		gridDatiImballo.addColumn(v -> v.getEsito()).setCaption("Esito");
+		gridDatiImballo.addColumn(v -> v.getEsitoValore()).setCaption("Esito valore");
+		gridDatiImballo.addColumn(v -> v.getImpianto()).setCaption("Impianto");
+		gridDatiImballo.setColumnReorderingAllowed(true);
+
+
+		List<DatamatrixFasiEseguite> listaDataSource = new ArrayList<DatamatrixFasiEseguite>();		
+
+		for(List<DatamatrixFasiEseguite> listaVista : mappaFasiEseguite.values()) {
+			listaDataSource.addAll(listaVista);
+		} 
+		
+		gridDatiImballo.setItems(listaDataSource);
+		
+		layoutGridDatiImballo.addComponent(gridDatiImballo); 
+		layoutGridDatiImballo.setId(datamatrix);
+		this.tabsheet.addTab(layoutGridDatiImballo, datamatrix).setClosable(true);
 		this.tabsheet.setSelectedTab((this.tabsheet.getComponentCount() - 1));
 	}
 
