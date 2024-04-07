@@ -45,7 +45,7 @@ public class RepositoryProveTenuta {
 		if(esitiTenuta == null || esitiTenuta.size() == 0) return ProveTenutaUtils.NON_PROVATO_PT;
 		else {
 			for(Object[] oggettoEsitoTenuta : esitiTenuta) {
-				if(oggettoEsitoTenuta[4].equals("GOOD")) {
+				if(oggettoEsitoTenuta[5].equals("GOOD") || oggettoEsitoTenuta[6].equals("GOOD")) {
 					return ProveTenutaUtils.PROVATO_OK;
 				}
 			}
@@ -100,6 +100,7 @@ public class RepositoryProveTenuta {
 			for(Object nomeTabella : list) {
 				if(!queryProvaTenuta.isEmpty()) { queryProvaTenuta += " UNION "; }
 				
+				//ATTENZIONE a cambiare colonne in query perchè impatta su funzione "verificaEsitoProvaTenutaAria"
 				queryProvaTenuta += " SELECT Id, Data, Ora, DMC, Operatore, EsitoTOT, PerdPT1 "
 						+ " FROM " + nomeTabella + " "
 						+ " WHERE DMC LIKE '" + dataMatrix + "' ";
