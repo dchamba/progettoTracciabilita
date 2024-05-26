@@ -23,6 +23,8 @@ public class ProdottiUtils {
 		OMR0006,
 		OMR0007,
 		OMR0008,
+		OMR0041,
+		OMR0050,
 		FIA000504,
 		FIA000505,
 		FIA0010;

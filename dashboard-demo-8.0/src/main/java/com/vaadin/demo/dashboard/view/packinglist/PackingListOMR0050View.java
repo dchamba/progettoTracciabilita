@@ -1,4 +1,4 @@
- package com.vaadin.demo.dashboard.view.packinglist;
+  package com.vaadin.demo.dashboard.view.packinglist;
 
 import com.vaadin.demo.dashboard.component.utils.PermessiUtils.PermessiUtentiLista;
 import com.vaadin.demo.dashboard.component.utils.ProdottiUtils.CodiciProdottiLista;
@@ -7,9 +7,9 @@ import com.vaadin.demo.dashboard.data.model.VistaPackingList;
 import com.vaadin.ui.Grid;
 
 @SuppressWarnings("serial")
-public final class PackingListPAN11View extends PackingListViewSingleCode {
+public final class PackingListOMR0050View extends PackingListViewSingleCode {
 	
-	public PackingListPAN11View() { }
+	public PackingListOMR0050View() { }
 
 	@Override
 	void initializeGrid() {
@@ -18,7 +18,7 @@ public final class PackingListPAN11View extends PackingListViewSingleCode {
 
 	@Override
     EtichetteImballi getVariabileEtichettaImballo(String codiceProdotto) {
-		if(codiceProdotto.equals(CodiciProdottiLista.PAN0011.toString())) {
+		if(codiceProdotto.equals(CodiciProdottiLista.OMR0050.toString())) {
 			return this.etichettaImballoSingleCode;
 		} 
 		return null;
@@ -26,6 +26,6 @@ public final class PackingListPAN11View extends PackingListViewSingleCode {
 
 	@Override
 	String getStringPermessoPackingList() {
-		return PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTACFSHIELD.toString();
+		return PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR0050.toString();
 	}
 }
