@@ -24,16 +24,18 @@ public class PackingListViewSingleCode extends PackingListView {
 	
 	Label lableEtichettaImballoSingleCode = null, lableQtaPzSingleCode = null;
 	EtichetteImballi etichettaImballoSingleCode;
+
+	Grid<VistaPackingList> gridSingleCode = new Grid<VistaPackingList>();
 	
 	@Override
 	void aggiornaDatiImballi() {
     	if(this.etichettaImballoSingleCode != null) {
-    		gridPan11.setItems(new ArrayList<VistaPackingList>());
-    		gridPan11.setItems(this.repositoryImballi.getVistaPackingListFromEtichettaScatola(null, this.etichettaImballoSingleCode.getIdEtichettaImballo()));
+    		gridSingleCode.setItems(new ArrayList<VistaPackingList>());
+    		gridSingleCode.setItems(this.repositoryImballi.getVistaPackingListFromEtichettaScatola(null, this.etichettaImballoSingleCode.getIdEtichettaImballo()));
 
     		lableEtichettaImballoSingleCode.setValue("Cod.etic.:"+ this.etichettaImballoSingleCode.getCodiceEtichettaImballoSmeup());
 
-        	ListDataProvider<VistaPackingList> dataProvider = (ListDataProvider<VistaPackingList>) gridPan11.getDataProvider();
+        	ListDataProvider<VistaPackingList> dataProvider = (ListDataProvider<VistaPackingList>) gridSingleCode.getDataProvider();
     		lableQtaPzSingleCode.setValue("Qtà pz in scatola:  " + String.valueOf(dataProvider.getItems().size()));
     	}
 	}
@@ -41,7 +43,7 @@ public class PackingListViewSingleCode extends PackingListView {
 	@Override
 	int getPzMancantiInScatolaAttualeRispettoQuellaNuova(Prodotti prodottoEtichettaDaVerificare) {
 		if(this.etichettaImballoSingleCode == null) return -1;
-		int totPzInScatola = ((ListDataProvider<VistaPackingList>) gridPan11.getDataProvider()).getItems().size();
+		int totPzInScatola = ((ListDataProvider<VistaPackingList>) gridSingleCode.getDataProvider()).getItems().size();
 		int pzMancantiInScatola = this.etichettaImballoSingleCode.getTipoImballo().getQtaPezziPerScatola() - totPzInScatola;
 		return pzMancantiInScatola;
 	}
@@ -59,7 +61,7 @@ public class PackingListViewSingleCode extends PackingListView {
         header.addStyleName(StyleUtils.viewHeaderStyle);
         Responsive.makeResponsive(header);
         
-    	this.gridPan11 = new Grid<VistaPackingList>();
+    	this.gridSingleCode = new Grid<VistaPackingList>();
         
         Label title = new Label(ViewUtils.titoloFaseProcessoPackingListPan11);
         title.addStyleName(ValoTheme.LABEL_H1);
@@ -107,8 +109,8 @@ public class PackingListViewSingleCode extends PackingListView {
         setInfoScatolaStyle(lableEtichettaImballoSingleCode);        
     	layoutPezziScatolaGes1.addComponent(lableEtichettaImballoSingleCode);
 
-    	addColumnToGrid(gridPan11);
-    	layoutPezziScatolaGes1.addComponent(gridPan11);
+    	addColumnToGrid(gridSingleCode);
+    	layoutPezziScatolaGes1.addComponent(gridSingleCode);
 
     	lableQtaPzSingleCode = new Label("Qtà pz in scatola: 0");
         setInfoScatolaStyle(lableQtaPzSingleCode);

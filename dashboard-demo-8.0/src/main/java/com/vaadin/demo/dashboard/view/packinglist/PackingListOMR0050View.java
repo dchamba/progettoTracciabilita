@@ -13,7 +13,7 @@ public final class PackingListOMR0050View extends PackingListViewSingleCode {
 
 	@Override
 	void initializeGrid() {
-		gridPan11 = new Grid<VistaPackingList>();
+		gridSingleCode = new Grid<VistaPackingList>();
 	}
 
 	@Override
@@ -26,6 +26,6 @@ public final class PackingListOMR0050View extends PackingListViewSingleCode {
 
 	@Override
 	String getStringPermessoPackingList() {
-		return PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR0050.toString();
+		return PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR50.toString();
 	}
 }

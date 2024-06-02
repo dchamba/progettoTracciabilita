@@ -26,6 +26,8 @@ public class TipoImballi implements Serializable {
 	//private int idProdotto;
 
 	private Boolean imballoStandard;
+
+	private String formatoDatamatrixImballo;
 	
 	private Boolean eliminato;
 
