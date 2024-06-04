@@ -365,6 +365,11 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 		gridDatiImballo.addColumn(v -> v.getEsito()).setCaption("Esito");
 		gridDatiImballo.addColumn(v -> v.getEsitoValore()).setCaption("Esito valore");
 		gridDatiImballo.addColumn(v -> v.getImpianto()).setCaption("Impianto");
+		gridDatiImballo.addColumn(v -> v.getDurezza()).setCaption("Durezza");
+		gridDatiImballo.addColumn(v -> v.getNumeroFornata()).setCaption("N. fornata");
+		gridDatiImballo.addColumn(v -> v.getFornitore()).setCaption("Fornitore");
+		gridDatiImballo.addColumn(v -> v.getUtente()).setCaption("Oper. trattam.");
+		gridDatiImballo.addColumn(v -> v.getNote()).setCaption("Note");
 		gridDatiImballo.setColumnReorderingAllowed(true);
 
 

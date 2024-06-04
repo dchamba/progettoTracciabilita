@@ -29,6 +29,8 @@ public class DatamatrixFasiEseguite {
 	
 	private String numeroFornata;
 	
+	private String note;
+	
 	private ArrayList<DatamatrixFasiEseguite> controlliMaster;
 	
 	public DatamatrixFasiEseguite () {
@@ -138,6 +140,14 @@ public class DatamatrixFasiEseguite {
 
 	public void setNumeroFornata(String numeroFornata) {
 		this.numeroFornata = numeroFornata;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 	
 	

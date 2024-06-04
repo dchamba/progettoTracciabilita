@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.demo.dashboard.component.model.FilterDatamatrix;
+import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils;
 import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils.FasiProcessoLista;
 import com.vaadin.demo.dashboard.data.model.Datamatrix;
 import com.vaadin.demo.dashboard.data.model.DatamatrixFasiEseguite;
 import com.vaadin.demo.dashboard.data.model.DatamatrixFasiProcesso;
 import com.vaadin.demo.dashboard.data.model.DatamatrixFasiProcessoTT;
+import com.vaadin.demo.dashboard.data.model.VistaPackingList;
 
 @SuppressWarnings("unchecked")
 public class RepositoryVerificaQrCode {
@@ -22,6 +24,7 @@ public class RepositoryVerificaQrCode {
 		
 		Datamatrix datamatriCercato = RepositoryProvider.getRepositoryDatamatrix().getDataMatrix(new FilterDatamatrix(codiceDatamatrix), null).getResult().get(0);
 		List<DatamatrixFasiProcesso> fasiProcessoProcessoEseguite = RepositoryProvider.getRepositoryDatamatrixTrattamenti().getListaDatamatrixFasiProcesso(datamatriCercato.getIdDataMatrix());
+		List<VistaPackingList> vistaPackingList = RepositoryProvider.repositoryImballi().getVistaPackingListByDatamatrix(codiceDatamatrix);
 		
 		//Fasi processo
 		List<DatamatrixFasiEseguite> listaFasiEseguite = new ArrayList<DatamatrixFasiEseguite>();
@@ -53,14 +56,36 @@ public class RepositoryVerificaQrCode {
 				datamatrixTrattamentoFaseEseguita.setFaseProcesso(dfp.getFaseProcesso().getDescrizione());
 				datamatrixTrattamentoFaseEseguita.setCodiceFaseProcesso(dfp.getFaseProcesso().getCodiceFase());
 				
-				DatamatrixFasiProcessoTT dfpTT = RepositoryProvider.getRepositoryDatamatrixTrattamentiTT().getDatamatrixFasiProcessoTTByIdFaseProcesso(dfp.getIdDatamatrixFaseProcesso());
 				
-				datamatrixTrattamentoFaseEseguita.setUtente(dfpTT.getOperatore());
-				datamatrixTrattamentoFaseEseguita.setDurezza(dfpTT.getValoreDurezza().toString()); 
-				datamatrixTrattamentoFaseEseguita.setNumeroFornata(dfpTT.getNumeroFornata());
-				datamatrixTrattamentoFaseEseguita.setFornitore(dfp.getUtenteOperatore().getAzienda().getRagioneSociale());
+				
+				DatamatrixFasiProcessoTT dfpTT = RepositoryProvider.getRepositoryDatamatrixTrattamentiTT().getDatamatrixFasiProcessoTTByIdFaseProcesso(dfp.getIdDatamatrixFaseProcesso());
+				if(dfpTT != null) {
+					datamatrixTrattamentoFaseEseguita.setUtente(dfpTT.getOperatore());
+					datamatrixTrattamentoFaseEseguita.setDurezza(dfpTT.getValoreDurezza().toString()); 
+					datamatrixTrattamentoFaseEseguita.setNumeroFornata(dfpTT.getNumeroFornata());
+					datamatrixTrattamentoFaseEseguita.setFornitore(dfp.getUtenteOperatore().getAzienda().getRagioneSociale());
+				}
 				
 				listaFasiTrattamentoEseguite.add(datamatrixTrattamentoFaseEseguita);
+			}
+		}
+		
+		//Packing List
+		List<DatamatrixFasiEseguite> listaPackingListEseguite = new ArrayList<DatamatrixFasiEseguite>();
+		if(vistaPackingList != null) {
+			for(VistaPackingList dfp : vistaPackingList) {
+				DatamatrixFasiEseguite datamatrixPackingListaFaseEseguita = new DatamatrixFasiEseguite();;
+				
+				datamatrixPackingListaFaseEseguita.setDataMatrix(dfp.getDataMatrix());
+				datamatrixPackingListaFaseEseguita.setIdDataMatrix(dfp.getIdDataMatrix());
+				datamatrixPackingListaFaseEseguita.setDataOra(dfp.getDataOraCreazioneEtichettaPezzo());
+				datamatrixPackingListaFaseEseguita.setFaseProcesso("Packing list");
+				datamatrixPackingListaFaseEseguita.setCodiceFaseProcesso(FasiProcessoUtils.FasiProcessoLista.PACKINGLISTCCU.toString());
+				datamatrixPackingListaFaseEseguita.setImpianto(dfp.getNomeCognome());
+				datamatrixPackingListaFaseEseguita.setNote(dfp.getCodiceEtichetta());
+				
+				listaPackingListEseguite.add(datamatrixPackingListaFaseEseguita);
+				
 			}
 		}
 		
@@ -70,6 +95,9 @@ public class RepositoryVerificaQrCode {
 		mappaListaFasiEseguite.put(TipoDatamatrixFasiEseguite.FASI_PROCESSO.toString(), listaFasiEseguite);
 		mappaListaFasiEseguite.put(TipoDatamatrixFasiEseguite.TRATTAMENTO_TERMICO.toString(), listaFasiTrattamentoEseguite);
 		mappaListaFasiEseguite.put(TipoDatamatrixFasiEseguite.PROVE_TENUTA.toString(), fasiProcessoProveTenutaEseguite);
+		mappaListaFasiEseguite.put(TipoDatamatrixFasiEseguite.PACKING_LIST.toString(), listaPackingListEseguite);
+		
+		//Fusione/Laser
 		
 		return mappaListaFasiEseguite;
 	}
@@ -77,6 +105,8 @@ public class RepositoryVerificaQrCode {
 	public enum TipoDatamatrixFasiEseguite {
 		FASI_PROCESSO, 
 		TRATTAMENTO_TERMICO,
+		PACKING_LIST,
+		FUSIONE_LASER,
 		PROVE_TENUTA;
 	}
 }
