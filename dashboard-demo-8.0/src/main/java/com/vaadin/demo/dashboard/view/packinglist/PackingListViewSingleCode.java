@@ -50,11 +50,14 @@ public class PackingListViewSingleCode extends PackingListView {
 	
 	@Override
     void aggiornaVariabileEtichettaImballo(EtichetteImballi etichettaImballo) {
-		if(etichettaImballo.getTipoImballo().getProdotto().getCodiceProdotto().equals(CodiciProdottiLista.PAN0011.toString())) {
+		if(etichettaImballo.getTipoImballo().getProdotto().getCodiceProdotto().equals(getCodiceProdotto())) {
 			this.etichettaImballoSingleCode = etichettaImballo;
 		} 
 	}
 	
+	public String getCodiceProdotto() { return "";}
+	public String getTitoloPaginaPackigList() { return "";}
+
 	@Override
 	void buildDatamatrixForm() {
         HorizontalLayout header = new HorizontalLayout();
@@ -63,7 +66,7 @@ public class PackingListViewSingleCode extends PackingListView {
         
     	this.gridSingleCode = new Grid<VistaPackingList>();
         
-        Label title = new Label(ViewUtils.titoloFaseProcessoPackingListPan11);
+        Label title = new Label(getTitoloPaginaPackigList());
         title.addStyleName(ValoTheme.LABEL_H1);
         title.addStyleName(ValoTheme.LABEL_NO_MARGIN);
         header.addComponent(title);
@@ -100,7 +103,7 @@ public class PackingListViewSingleCode extends PackingListView {
     	VerticalLayout layoutPezziScatolaGes1 = new VerticalLayout();
 //    	layoutPezziScatolaGes1.setWidth("400px");
 
-    	Label titleGes001 = new Label("PAN0011");
+    	Label titleGes001 = new Label(getCodiceProdotto());
         setPezziScatolaGridTitleStyle(titleGes001);    
         
     	layoutPezziScatolaGes1.addComponent(titleGes001);

@@ -44,6 +44,8 @@ public class ViewUtils {
 	public static String titoloFaseProcessoPackingListFia0505 = "Packing list - FIA0505";
 	public static String titoloFaseProcessoPackingListFia0504 = "Packing list - FIA0504";
 	public static String titoloFaseProcessoPackingListATTCO = "Packing list - ATTCO";
+	public static String titoloFaseProcessoPackingListOMR0041 = "Packing list - OMR0041";
+	public static String titoloFaseProcessoPackingListOMR0050 = "Packing list - OMR0050";
 	public static String titoloFaseProcessoPackingListOmr01e02 = "Packing list - OMR01 e OMR02";
 	public static String titoloFaseProcessoPackingListOmr03e04 = "Packing list - OMR03 e OMR04";
 	public static String titoloFaseProcessoPackingListOmr05e06 = "Packing list - OMR05 e OMR06";

@@ -39,10 +39,26 @@ public class RepositoryVerificaQrCode {
 			datamatrixFaseEseuita.setDataOra(dfp.getDataOra());
 			datamatrixFaseEseuita.setFaseProcesso(dfp.getFaseProcesso().getDescrizione());
 			datamatrixFaseEseuita.setCodiceFaseProcesso(dfp.getFaseProcesso().getCodiceFase());
-			datamatrixFaseEseuita.setImpianto(dfp.getUtenteOperatore().getUsername());
+			
+			if(dfp.getImpianto() != null && !dfp.getImpianto().isEmpty()) {
+				datamatrixFaseEseuita.setImpianto(dfp.getImpianto());
+				
+				String note = "";
+				if(!dfp.getPallet().isEmpty() && dfp.getPallet() != null) {
+					note += "Pallet: " + dfp.getPallet();
+				}
+				if(!dfp.getPosizione().isEmpty() && dfp.getPosizione() != null) {
+					note += " Pos.: " + dfp.getPosizione();
+				}
+				datamatrixFaseEseuita.setNote(note);
+			} else {
+				datamatrixFaseEseuita.setImpianto(dfp.getUtenteOperatore().getUsername());
+			}
+				
 			listaFasiEseguite.add(datamatrixFaseEseuita);
 		}
 
+		//Trattamento termico
 		List<DatamatrixFasiEseguite> listaFasiTrattamentoEseguite = new ArrayList<DatamatrixFasiEseguite>();
 		
 		for(DatamatrixFasiProcesso dfp : fasiProcessoProcessoEseguite) {
@@ -89,6 +105,7 @@ public class RepositoryVerificaQrCode {
 			}
 		}
 		
+		//Prova tenuta
 		List<DatamatrixFasiEseguite> fasiProcessoProveTenutaEseguite = RepositoryProvider.getRepositoryProveTenuta().getDatamatrixProveTenutaEseguite(codiceDatamatrix);
 		
 		Map<String, List<DatamatrixFasiEseguite>> mappaListaFasiEseguite = new HashMap<>();

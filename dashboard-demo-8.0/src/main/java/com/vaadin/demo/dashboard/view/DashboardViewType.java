@@ -24,6 +24,8 @@ import com.vaadin.demo.dashboard.view.packinglist.PackingListFia0504;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListFia0505;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListFia10;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListGestampView;
+import com.vaadin.demo.dashboard.view.packinglist.PackingListOMR0041View;
+import com.vaadin.demo.dashboard.view.packinglist.PackingListOMR0050View;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListOMR07e08;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListPAN11View;
 import com.vaadin.demo.dashboard.view.trattamenti.TrattamentoView;
@@ -54,6 +56,8 @@ public enum DashboardViewType {
 		FASE_PROCESSO_PACKINGLISTFIA10("FASE_PROCESSO_PACKINGLISTFIA10", ViewUtils.titoloFaseProcessoPackingListFia10, PackingListFia10.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTFIA10),
 		FASE_PROCESSO_PACKINGLISTFIA0505("FASE_PROCESSO_PACKINGLISTFIA0505", ViewUtils.titoloFaseProcessoPackingListFia0505, PackingListFia0505.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTFIA0505),
 		FASE_PROCESSO_PACKINGLISTFIA0504("FASE_PROCESSO_PACKINGLISTFIA0504", ViewUtils.titoloFaseProcessoPackingListFia0504, PackingListFia0504.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTFIA0504),
+		FASE_PROCESSO_PACKINGLISTOMR41("FASE_PROCESSO_PACKINGLISTOMR41", ViewUtils.titoloFaseProcessoPackingListOMR0041, PackingListOMR0041View.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR41),
+		FASE_PROCESSO_PACKINGLISTOMR50("FASE_PROCESSO_PACKINGLISTOMR50", ViewUtils.titoloFaseProcessoPackingListOMR0050, PackingListOMR0050View.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR50),
 //		FASE_PROCESSO_PACKINGLISTOMR1e2("FASE_PROCESSO_PACKINGLISTOMR1e2", ViewUtils.titoloFaseProcessoPackingListOmr01e02, PackingListOMR07e08.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR1e2),
 //		FASE_PROCESSO_PACKINGLISTOMR3e4("FASE_PROCESSO_PACKINGLISTOMR3e4", ViewUtils.titoloFaseProcessoPackingListOmr03e04, PackingListOMR07e08.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR3e4),
 //		FASE_PROCESSO_PACKINGLISTOMR5e6("FASE_PROCESSO_PACKINGLISTOMR5e6", ViewUtils.titoloFaseProcessoPackingListOmr05e06, PackingListOMR07e08.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR5e6),

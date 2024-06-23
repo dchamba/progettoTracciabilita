@@ -49,6 +49,12 @@ public class DatamatrixFasiProcesso implements Serializable {
 	private FasiProcesso faseProcesso;
 	
 	private Boolean eliminato;
+	
+	private String impianto;
+	
+	private String pallet;
+	
+	private String posizione;
 
 	public DatamatrixFasiProcesso() {
 	}
@@ -139,6 +145,30 @@ public class DatamatrixFasiProcesso implements Serializable {
 
 	public void setFaseProcesso(FasiProcesso faseProcesso) {
 		this.faseProcesso = faseProcesso;
+	}
+
+	public String getPosizione() {
+		return posizione;
+	}
+
+	public void setPosizione(String posizione) {
+		this.posizione = posizione;
+	}
+
+	public String getPallet() {
+		return pallet;
+	}
+
+	public void setPallet(String pallet) {
+		this.pallet = pallet;
+	}
+
+	public String getImpianto() {
+		return impianto;
+	}
+
+	public void setImpianto(String impianto) {
+		this.impianto = impianto;
 	}
 
 }

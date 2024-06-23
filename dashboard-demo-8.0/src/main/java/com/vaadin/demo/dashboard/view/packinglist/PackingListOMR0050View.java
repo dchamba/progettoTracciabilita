@@ -1,5 +1,6 @@
   package com.vaadin.demo.dashboard.view.packinglist;
 
+import com.vaadin.demo.dashboard.component.utils.ViewUtils;
 import com.vaadin.demo.dashboard.component.utils.PermessiUtils.PermessiUtentiLista;
 import com.vaadin.demo.dashboard.component.utils.ProdottiUtils.CodiciProdottiLista;
 import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
@@ -27,5 +28,15 @@ public final class PackingListOMR0050View extends PackingListViewSingleCode {
 	@Override
 	String getStringPermessoPackingList() {
 		return PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR50.toString();
+	}
+	
+	@Override
+	public String getCodiceProdotto() {
+		return CodiciProdottiLista.OMR0050.toString();
+	}
+	
+	@Override
+	public String getTitoloPaginaPackigList() {
+		return ViewUtils.titoloFaseProcessoPackingListOMR0050;
 	}
 }
