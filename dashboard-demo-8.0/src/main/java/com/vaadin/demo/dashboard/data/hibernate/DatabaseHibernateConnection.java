@@ -23,6 +23,7 @@ import com.vaadin.demo.dashboard.data.model.FasiProcesso;
 import com.vaadin.demo.dashboard.data.model.FasiProcessoProdotto;
 import com.vaadin.demo.dashboard.data.model.DatamatrixFasiProcesso;
 import com.vaadin.demo.dashboard.data.model.DatamatrixFasiProcessoTT;
+import com.vaadin.demo.dashboard.data.model.DatiProvaTenutaElio;
 import com.vaadin.demo.dashboard.data.model.EtichetteBancali;
 import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
 import com.vaadin.demo.dashboard.data.model.EtichettePezzi;
@@ -45,30 +46,9 @@ public class DatabaseHibernateConnection {
     	try {
         	if (configuration == null) {
         		configuration = new Configuration();
-                
-                Properties settings = new Properties();
-                settings.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
-                settings.put(Environment.URL, "jdbc:mysql://localhost:3306/datamatrixnewolef?useSSL=false");
-                settings.put(Environment.USER, "dchamba");
-                settings.put(Environment.PASS, "Ch@Dha881");
 
-//               settings.put(Environment.URL, "jdbc:mysql://52.236.142.113:3306/datamatrixnewolef?useSSL=false");
-//                settings.put(Environment.USER, "UtExt01");
-//                settings.put(Environment.PASS, "P@sDB0001");
-                
-                settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
-                settings.put(Environment.SHOW_SQL, "true");
-                settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-                settings.put(Environment.HBM2DDL_AUTO, "none");
-                settings.put(Environment.USE_QUERY_CACHE, "false");
-                settings.put(Environment.USE_SECOND_LEVEL_CACHE, "false");
-                settings.put(Environment.C3P0_MAX_STATEMENTS, "0");
-                settings.put(Environment.ISOLATION, String.valueOf(Connection.TRANSACTION_READ_COMMITTED));
-                configuration.setProperties(settings);
-                
-//                <property name="hibernate.cache.use_second_level_cache">false</property>
-//                <property name="hibernate.cache.use_query_cache">false</property>
-//                <property name="hibernate.c3p0.max_statements">0</property>
+        		Properties properties = DatabaseHibernateConnectionUtils.getDatabaseHibernateConnectionProperties("datamatrixnewolef");
+        		configuration.setProperties(properties);
                 
                 configuration.addAnnotatedClass(Accessi.class);
                 configuration.addAnnotatedClass(Aziende.class);

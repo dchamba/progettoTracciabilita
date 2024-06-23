@@ -177,13 +177,13 @@ public class RepositoryProveTenuta {
 
 				// SELECT Id, Data, Ora, DMC, Operatore, EsitoTOT, PerdPT1 
 				
-	    	    SimpleDateFormat formatter = new SimpleDateFormat(CommonUtils.DATETIMEFORMAT.toString());
+	    	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				dme.setDataOra(formatter.parse(esutoTenuta[1].toString() + " " + esutoTenuta[2].toString()));
 				
 				dme.setUtente(esutoTenuta[4].toString());
 				dme.setEsito(esutoTenuta[5].toString());
 				
-				String doubleEsito = CommonUtils.toDouble(esutoTenuta[6].toString().replace(".", ",")).toString();
+				String doubleEsito = esutoTenuta[6].toString().replace(".", ",");
 				dme.setEsitoValore(doubleEsito.toString());
 				
 				dme.setImpianto(nomeImpianto);
@@ -199,13 +199,13 @@ public class RepositoryProveTenuta {
 
 			// SELECT , , , , , EsitoTOT, PerdPT1 
 			
-    	    SimpleDateFormat formatter = new SimpleDateFormat(CommonUtils.DATETIMEFORMAT.toString());
+    	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			dme.setDataOra(formatter.parse(esitoTenutaElio.getData() + " " + esitoTenutaElio.getOra()));
 			
 			dme.setUtente(esitoTenutaElio.getOperatore());
 			dme.setEsito(esitoTenutaElio.getEsito());
 			
-			String doubleEsito = CommonUtils.toDouble(esitoTenutaElio.getPerdita().replace(".", ",")).toString();
+			String doubleEsito = esitoTenutaElio.getPerdita().replace(".", ",");
 			dme.setEsitoValore(doubleEsito.toString());
 			
 			dme.setImpianto("Leonardo 7003920");

@@ -195,7 +195,7 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
         		throw new Exception("Datamatrix/qrcode inserito non trovato in sistema");
 	        }
 		} catch (Exception e) {
-          	ViewUtils.showErrorNotification(e.getMessage());
+          	ViewUtils.showErrorNotification("Errore durante caricamento dati: " + e.getMessage());
 		}
 	}
 

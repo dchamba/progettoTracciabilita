@@ -24,24 +24,8 @@ public class DatabaseHibernateConnectionl7002619 {
         	if (configuration == null) {
         		configuration = new Configuration();
                 
-                Properties settings = new Properties();
-                settings.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
-                settings.put(Environment.URL, "jdbc:mysql://localhost:3306/l7002619?useSSL=false");
-                settings.put(Environment.USER, "dchamba");
-                settings.put(Environment.PASS, "Ch@Dha881");
-                settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
-                settings.put(Environment.SHOW_SQL, "true");
-                settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-                settings.put(Environment.HBM2DDL_AUTO, "none");
-                settings.put(Environment.USE_QUERY_CACHE, "false");
-                settings.put(Environment.USE_SECOND_LEVEL_CACHE, "false");
-                settings.put(Environment.C3P0_MAX_STATEMENTS, "0");
-                settings.put(Environment.ISOLATION, String.valueOf(Connection.TRANSACTION_READ_COMMITTED));
-                configuration.setProperties(settings);
-                
-//                <property name="hibernate.cache.use_second_level_cache">false</property>
-//                <property name="hibernate.cache.use_query_cache">false</property>
-//                <property name="hibernate.c3p0.max_statements">0</property>
+        		Properties properties = DatabaseHibernateConnectionUtils.getDatabaseHibernateConnectionProperties("l7002619");
+        		configuration.setProperties(properties);
                 
                 configuration.addAnnotatedClass(Archive_21.class);
                 configuration.addAnnotatedClass(Archive_22.class);
