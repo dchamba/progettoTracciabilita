@@ -29,14 +29,14 @@ public final class PackingListOMR0041View extends PackingListViewSingleCode {
 	String getStringPermessoPackingList() {
 		return PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTOMR41.toString();
 	}
-	
+
 	@Override
-	public String getCodiceProdotto() {
-		return CodiciProdottiLista.OMR0041.toString();
+	String getTitoloPagina() {
+		return ViewUtils.titoloFaseProcessoPackingListOmr41;
 	}
 	
 	@Override
-	public String getTitoloPaginaPackigList() {
-		return ViewUtils.titoloFaseProcessoPackingListOMR0041;
+	String getCodiceProdottoString() {
+		return CodiciProdottiLista.OMR0041.toString();
 	}
 }

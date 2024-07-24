@@ -31,12 +31,12 @@ public final class PackingListPAN11View extends PackingListViewSingleCode {
 	}
 	
 	@Override
-	public String getCodiceProdotto() {
-		return CodiciProdottiLista.PAN0011.toString();
+	String getTitoloPagina() {
+		return ViewUtils.titoloFaseProcessoPackingListPan11;
 	}
 	
 	@Override
-	public String getTitoloPaginaPackigList() {
-		return ViewUtils.titoloFaseProcessoPackingListPan11;
+	String getCodiceProdottoString() {
+		return CodiciProdottiLista.PAN0011.toString();
 	}
 }

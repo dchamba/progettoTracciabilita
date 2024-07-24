@@ -31,12 +31,12 @@ public final class PackingListOMR0050View extends PackingListViewSingleCode {
 	}
 	
 	@Override
-	public String getCodiceProdotto() {
-		return CodiciProdottiLista.OMR0050.toString();
+	String getTitoloPagina() {
+		return ViewUtils.titoloFaseProcessoPackingListOmr50;
 	}
 	
 	@Override
-	public String getTitoloPaginaPackigList() {
-		return ViewUtils.titoloFaseProcessoPackingListOMR0050;
+	String getCodiceProdottoString() {
+		return CodiciProdottiLista.OMR0050.toString();
 	}
 }

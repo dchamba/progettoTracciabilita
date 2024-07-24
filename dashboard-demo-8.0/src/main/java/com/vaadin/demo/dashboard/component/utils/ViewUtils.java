@@ -41,6 +41,7 @@ public class ViewUtils {
 	public static String titoloFaseProcessoPackingListPan11 = "Packing list - PAN0011";
 	public static String titoloFaseProcessoPackingListCCU = "Packing list - Panasonic CCU";
 	public static String titoloFaseProcessoPackingListFia10 = "Packing list - FIA10";
+	public static String titoloFaseProcessoPackingListFia1201 = "Packing list - FIA1201";
 	public static String titoloFaseProcessoPackingListFia0505 = "Packing list - FIA0505";
 	public static String titoloFaseProcessoPackingListFia0504 = "Packing list - FIA0504";
 	public static String titoloFaseProcessoPackingListATTCO = "Packing list - ATTCO";
@@ -50,6 +51,8 @@ public class ViewUtils {
 	public static String titoloFaseProcessoPackingListOmr03e04 = "Packing list - OMR03 e OMR04";
 	public static String titoloFaseProcessoPackingListOmr05e06 = "Packing list - OMR05 e OMR06";
 	public static String titoloFaseProcessoPackingListOmr07e08 = "Packing list - OMR07 e OMR08";
+	public static String titoloFaseProcessoPackingListOmr41 = "Packing list - OMR41";
+	public static String titoloFaseProcessoPackingListOmr50 = "Packing list - OMR50";
 	
 	public static String titoloAgiornamentoDatiLogistica = "Aggiornamento dati logistica";
 

@@ -50,7 +50,7 @@ public class PackingListViewSingleCode extends PackingListView {
 	
 	@Override
     void aggiornaVariabileEtichettaImballo(EtichetteImballi etichettaImballo) {
-		if(etichettaImballo.getTipoImballo().getProdotto().getCodiceProdotto().equals(getCodiceProdotto())) {
+		if(etichettaImballo.getTipoImballo().getProdotto().getCodiceProdotto().equals(getCodiceProdottoString())) {
 			this.etichettaImballoSingleCode = etichettaImballo;
 		} 
 	}
@@ -66,7 +66,7 @@ public class PackingListViewSingleCode extends PackingListView {
         
     	this.gridSingleCode = new Grid<VistaPackingList>();
         
-        Label title = new Label(getTitoloPaginaPackigList());
+        Label title = new Label(getTitoloPagina());
         title.addStyleName(ValoTheme.LABEL_H1);
         title.addStyleName(ValoTheme.LABEL_NO_MARGIN);
         header.addComponent(title);
@@ -103,7 +103,7 @@ public class PackingListViewSingleCode extends PackingListView {
     	VerticalLayout layoutPezziScatolaGes1 = new VerticalLayout();
 //    	layoutPezziScatolaGes1.setWidth("400px");
 
-    	Label titleGes001 = new Label(getCodiceProdotto());
+    	Label titleGes001 = new Label(getCodiceProdottoString());
         setPezziScatolaGridTitleStyle(titleGes001);    
         
     	layoutPezziScatolaGes1.addComponent(titleGes001);
@@ -138,4 +138,8 @@ public class PackingListViewSingleCode extends PackingListView {
         addComponent(fields);
     	//setExpandRatio(fields, 8);
 	}
+
+	String getTitoloPagina() { return ""; }
+	
+	String getCodiceProdottoString() { return ""; }
 }

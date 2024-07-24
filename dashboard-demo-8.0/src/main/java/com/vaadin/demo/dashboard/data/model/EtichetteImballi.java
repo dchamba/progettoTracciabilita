@@ -60,7 +60,19 @@ public class EtichetteImballi implements Serializable {
 	}
 
 	public String getCodiceEtichettaImballoSmeup() {
-		return codiceEtichetta.split(";")[0];
+		String codiceEtichettaSplittato = "";
+		
+		String splitter = ";";
+		if(codiceEtichetta.contains(";")) { } 
+		else if(codiceEtichetta.contains("-")) { 
+			splitter = "-"; 
+		} else if(codiceEtichetta.contains("'")) { 
+			splitter = "'"; 
+		}
+
+		codiceEtichettaSplittato = codiceEtichetta.split(splitter)[0];
+		
+		return codiceEtichettaSplittato;
 	}
 
 	public String getCodiceEtichettaBancaleSmeup() {

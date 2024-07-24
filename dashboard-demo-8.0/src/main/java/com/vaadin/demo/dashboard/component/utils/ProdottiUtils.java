@@ -27,7 +27,8 @@ public class ProdottiUtils {
 		OMR0050,
 		FIA000504,
 		FIA000505,
-		FIA0010;
+		FIA0010,
+		FIA001201;
 	}
 	
 }
