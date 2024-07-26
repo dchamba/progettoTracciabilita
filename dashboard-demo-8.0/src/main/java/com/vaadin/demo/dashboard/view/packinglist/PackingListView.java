@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.vaadin.demo.dashboard.component.model.FilterDatamatrix;
 import com.vaadin.demo.dashboard.component.utils.CustomPopupWindow;
@@ -133,7 +134,12 @@ public class PackingListView extends MyCustomView {
 		        if(verificaCodiceImballo(codiceDataMatrixInserito)) {
 		        	
 		        	//Verifico che la scatola attuale sia completa e chiedo conferma operatre di cambio scatola (in caso attuale scatola è parziale)
-		        	Prodotti prodottoPerCodiceImballoInserito = this.listaProdottiPackingList.stream().filter(p -> codiceDataMatrixInserito.contains(p.getNumeroDisegno())).findFirst().get();
+		        	List<Prodotti> listaProdottiPerCodiceImballoInserito = this.listaProdottiPackingList.stream().filter(p -> codiceDataMatrixInserito.contains(p.getNumeroDisegno())).collect(Collectors.toList());
+		        	if(listaProdottiPerCodiceImballoInserito.size() == 0) {
+		        		throw new Exception("Formato QrCode non riconosciuto");
+		        	}
+		        	Prodotti prodottoPerCodiceImballoInserito = listaProdottiPerCodiceImballoInserito.get(0);
+		        	//Prodotti prodottoPerCodiceImballoInserito = this.listaProdottiPackingList.stream().filter(p -> codiceDataMatrixInserito.contains(p.getNumeroDisegno())).findFirst().get();
 		        	int pzMancantiInScatola = getPzMancantiInScatolaAttualeRispettoQuellaNuova(prodottoPerCodiceImballoInserito);
 		        	
 		    		if(pzMancantiInScatola > 0) {

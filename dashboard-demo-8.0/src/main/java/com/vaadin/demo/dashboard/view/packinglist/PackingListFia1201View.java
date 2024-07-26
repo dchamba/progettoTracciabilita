@@ -13,11 +13,6 @@ public final class PackingListFia1201View extends PackingListViewSingleCode {
 	public PackingListFia1201View() { }
 
 	@Override
-	void initializeGrid() {
-		gridSingleCode = new Grid<VistaPackingList>();
-	}
-
-	@Override
     EtichetteImballi getVariabileEtichettaImballo(String codiceProdotto) {
 		if(codiceProdotto.equals(CodiciProdottiLista.FIA001201.toString())) {
 			return this.etichettaImballoSingleCode;

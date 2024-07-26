@@ -37,14 +37,6 @@ public final class PackingListCCUView extends PackingListView {
 	public PackingListCCUView() { }
 
 	@Override
-	void initializeGrid() {
-		gridPan3 = new Grid<VistaPackingList>();
-		gridPan4 = new Grid<VistaPackingList>();
-		//gridPan5 = new Grid<VistaPackingList>();
-		gridPan10 = new Grid<VistaPackingList>();
-	}
-
-	@Override
     void buildDatamatrixForm() {
         HorizontalLayout header = new HorizontalLayout();
         header.addStyleName(StyleUtils.viewHeaderStyle);

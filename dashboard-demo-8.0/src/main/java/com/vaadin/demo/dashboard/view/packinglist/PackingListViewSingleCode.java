@@ -22,10 +22,14 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class PackingListViewSingleCode extends PackingListView {
 	
-	Label lableEtichettaImballoSingleCode = null, lableQtaPzSingleCode = null;
+	Label lableEtichettaImballoSingleCode, lableQtaPzSingleCode;
 	EtichetteImballi etichettaImballoSingleCode;
 
-	Grid<VistaPackingList> gridSingleCode = new Grid<VistaPackingList>();
+	Grid<VistaPackingList> gridSingleCode;
+	
+	public PackingListViewSingleCode() {
+		super();
+	}
 	
 	@Override
 	void aggiornaDatiImballi() {
@@ -33,7 +37,7 @@ public class PackingListViewSingleCode extends PackingListView {
     		gridSingleCode.setItems(new ArrayList<VistaPackingList>());
     		gridSingleCode.setItems(this.repositoryImballi.getVistaPackingListFromEtichettaScatola(null, this.etichettaImballoSingleCode.getIdEtichettaImballo()));
 
-    		lableEtichettaImballoSingleCode.setValue("Cod.etic.:"+ this.etichettaImballoSingleCode.getCodiceEtichettaImballoSmeup());
+    		this.lableEtichettaImballoSingleCode.setValue("Cod.etic.:"+ this.etichettaImballoSingleCode.getCodiceEtichettaImballoSmeup());
 
         	ListDataProvider<VistaPackingList> dataProvider = (ListDataProvider<VistaPackingList>) gridSingleCode.getDataProvider();
     		lableQtaPzSingleCode.setValue("Qtà pz in scatola:  " + String.valueOf(dataProvider.getItems().size()));
@@ -108,7 +112,7 @@ public class PackingListViewSingleCode extends PackingListView {
         
     	layoutPezziScatolaGes1.addComponent(titleGes001);
     	
-    	lableEtichettaImballoSingleCode = new Label("Cod.etic.:");
+    	this.lableEtichettaImballoSingleCode = new Label("Cod.etic.:");
         setInfoScatolaStyle(lableEtichettaImballoSingleCode);        
     	layoutPezziScatolaGes1.addComponent(lableEtichettaImballoSingleCode);
 
