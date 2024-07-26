@@ -134,7 +134,7 @@ public class PackingListView extends MyCustomView {
 		        if(verificaCodiceImballo(codiceDataMatrixInserito)) {
 		        	
 		        	//Verifico che la scatola attuale sia completa e chiedo conferma operatre di cambio scatola (in caso attuale scatola è parziale)
-		        	List<Prodotti> listaProdottiPerCodiceImballoInserito = this.listaProdottiPackingList.stream().filter(p -> codiceDataMatrixInserito.contains(p.getNumeroDisegno())).collect(Collectors.toList());
+		        	List<Prodotti> listaProdottiPerCodiceImballoInserito = this.listaProdottiPackingList.stream().filter(p -> getNumeroDisegnoDaVericareInImballo(codiceDataMatrixInserito).contains(p.getNumeroDisegno())).collect(Collectors.toList());
 		        	if(listaProdottiPerCodiceImballoInserito.size() == 0) {
 		        		throw new Exception("Formato QrCode non riconosciuto");
 		        	}
@@ -235,7 +235,11 @@ public class PackingListView extends MyCustomView {
 		}
 	}
 
-    protected void creaOCaricaImballo(String codiceDataMatrixInserito, Prodotti prodottoPerCodiceImballoInserito) {
+    public String getNumeroDisegnoDaVericareInImballo(String codiceDataMatrixInserito) {
+		return codiceDataMatrixInserito;
+	}
+
+	protected void creaOCaricaImballo(String codiceDataMatrixInserito, Prodotti prodottoPerCodiceImballoInserito) {
     	EtichetteImballi etichettaImballo = repositoryImballi.getEtichettaImballo(codiceDataMatrixInserito);
      	if (etichettaImballo == null) {
     		etichettaImballo = new EtichetteImballi();

@@ -21,6 +21,11 @@ public final class PackingListFia1201View extends PackingListViewSingleCode {
 	}
 
 	@Override
+	public String getNumeroDisegnoDaVericareInImballo(String codiceDataMatrixInserito) {
+		return "670053447";
+	}
+	
+	@Override
 	String getStringPermessoPackingList() {
 		return PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTFIA1201.toString();
 	}
