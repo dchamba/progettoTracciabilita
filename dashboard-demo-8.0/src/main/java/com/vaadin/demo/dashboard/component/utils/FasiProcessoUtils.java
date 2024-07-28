@@ -3,6 +3,7 @@ package com.vaadin.demo.dashboard.component.utils;
 import com.vaadin.demo.dashboard.data.model.Datamatrix;
 import com.vaadin.demo.dashboard.data.model.FasiProcesso;
 import com.vaadin.demo.dashboard.data.model.FasiProcessoProdotto;
+import com.vaadin.demo.dashboard.data.model.Pan5;
 import com.vaadin.demo.dashboard.data.model.Prodotti;
 import com.vaadin.demo.dashboard.data.repository.RepositoryProvider;
 
@@ -28,23 +29,6 @@ public class FasiProcessoUtils {
     			continue;
     		
     		if(faseCorrentePagina.equals(codiceFaseDaVerificareSeEseguita)) { break; }
-    		//if(codiceFase.equals(FasiProcessoLista.FIN.toString())) { continue; }
-    		//if(codiceFaseDaVerificareSeEseguita.equals(FasiProcessoLista.HB.toString())) { continue; }
-    		
-//    		//verifico se lavorazione eseguita
-//			if(codiceFaseDaVerificareSeEseguita.equals(FasiProcessoLista.LAV.toString()) || 
-//				codiceFaseDaVerificareSeEseguita.equals(FasiProcessoLista.LIQ.toString()) ||
-//				codiceFaseDaVerificareSeEseguita.equals(FasiProcessoLista.RX.toString()) ||
-//				codiceFaseDaVerificareSeEseguita.equals(FasiProcessoLista.STE.toString())) {
-//			
-//			boolean esitoVerificaFasePricessoEseguita = RepositoryProvider.repositoryFasiProcesso().getFaseProcessoPerDatamtarix(datamatrix.getIdDataMatrix(), faseProcessoProdottoDaVerificareSeEseguita.getFaseProcesso().getIdFaseProcesso());
-//
-//			if(!esitoVerificaFasePricessoEseguita) {
-//				if(fasiNonEseguite.length() > 0) { fasiNonEseguite += ", "; }
-//				
-//				fasiNonEseguite += faseProcessoProdottoDaVerificareSeEseguita.getFaseProcesso().getDescrizione();
-//			}
-//		} 
 			
 			if(codiceFaseDaVerificareSeEseguita.equals(FasiProcessoLista.TEN.toString())) {
 				if(!datamatrix.getProddoto().isProvatenutNecessaria()) continue;
@@ -60,6 +44,21 @@ public class FasiProcessoUtils {
 					esitoProvaTenutaElio = RepositoryProvider.getRepositoryProveTenuta().verificaEsitoProvaTenutaElio(datamatrix.getDataMatrix());
 					ProveTenutaUtils.verificaEsitoTenutaELanciaErrore(esitoProvaTenutaElio);
 				}
+    		} else if (codiceFaseDaVerificareSeEseguita.equals(FasiProcessoLista.ASS.toString())) { 
+        		//verifico se assemblaggio pin è stato eseguito
+    			Pan5 datiAssemblaggioPin = RepositoryProvider.getRepositoryPin5().caricaAssemblaggioPinPan5(datamatrix.getDataMatrix());
+    			if(datiAssemblaggioPin == null) {
+    				throw new Exception("ATTENZIONE! Per questo pezzo NON è stato eseguito ASSEMBLAGGIO PIN");
+    			} else {
+//    				boolean assemblyPin1Ok = datiAssemblaggioPin.getPosizionePin1() > 0 && datiAssemblaggioPin.getPressionePin1() > 0;
+//    				boolean assemblyPin2Ok = datiAssemblaggioPin.getPosizionePin2() > 0 && datiAssemblaggioPin.getPressionePin2() > 0;
+//    				if(!assemblyPin1Ok || !assemblyPin2Ok) {
+//    					String numPin = "";
+//    					numPin = !assemblyPin1Ok ? "1" : numPin;
+//    					numPin = !assemblyPin2Ok ? "2" : numPin;
+//        				throw new Exception("ATTENZIONE! Per questo pezzo NON è stato eseguito ASSEMBLAGGIO sul PIN "+numPin);
+//    				}
+    			}
     		} else {
         		//verifico se questa fase è stata eseguita
     			boolean esitoVerificaFasePricessoEseguita = RepositoryProvider.repositoryFasiProcesso().getFaseProcessoPerDatamtarix(datamatrix.getIdDataMatrix(), faseProcessoProdottoDaVerificareSeEseguita.getFaseProcesso().getIdFaseProcesso());
@@ -94,7 +93,7 @@ public class FasiProcessoUtils {
 		FIN,
 		LIQ,
 		RX,
-		ANU,
+		ASS,
 		PACKINGLISTCCU,
 		PACKINGLISTGESTAMP,
 		PACKINGLISTFIA0505,

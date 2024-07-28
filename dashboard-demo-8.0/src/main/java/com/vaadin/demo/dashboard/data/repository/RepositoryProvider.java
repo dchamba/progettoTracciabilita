@@ -15,6 +15,7 @@ public class RepositoryProvider {
 	private static RepositoryConfig repositoryConfig = null;
 	private static RepositoryAnimeImballi repositoryAnimeImballi = null;
 	private static RepositoryCriteriBloccoDatamatrix repositoryCriteriBloccoDatamatrix = null;
+	private static RepositoryPin5 repositoryPin5 = null;
 	
 	
 	public static RepositoryDatamatrix getRepositoryDatamatrix() {
@@ -107,5 +108,12 @@ public class RepositoryProvider {
 			RepositoryProvider.repositoryCriteriBloccoDatamatrix = new RepositoryCriteriBloccoDatamatrix();
 		}
 		return RepositoryProvider.repositoryCriteriBloccoDatamatrix;
+	}
+	
+	public static RepositoryPin5 getRepositoryPin5() {
+		if (RepositoryProvider.repositoryPin5 == null) {
+			RepositoryProvider.repositoryPin5 = new RepositoryPin5();
+		}
+		return RepositoryProvider.repositoryPin5;
 	}
 }
