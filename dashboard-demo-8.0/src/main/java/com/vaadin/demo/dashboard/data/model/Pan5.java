@@ -18,25 +18,27 @@ public class Pan5 implements Serializable {
 	@Id
 	private int ID;
 
-	@Column(name="QR-Code")
+	//********** per nomi colonne che contengono '-' SI DEVE USARE i `` intorno al nome colonna **********
+	
+	@Column(name="`QR-Code`")
 	private String QRCode;
 
 	@Column(name="Date_Time")
 	private String dataOra;
 
-	@Column(name="Pres-pin-1")
+	@Column(name="`Pres-pin-1`")
 	private Double pressionePin1;
 
-	@Column(name="Pres-pin-2")
+	@Column(name="`Pres-pin-2`")
 	private Double pressionePin2;
 
-	@Column(name="Pos-pin-1")
+	@Column(name="`Pos-pin-1`")
 	private Double posizionePin1;
 
-	@Column(name="Pos-pin-2")
+	@Column(name="`Pos-pin-2`")
 	private Double posizionePin2;
 
-	@Column(name="Pz-OK")
+	@Column(name="`Pz-OK`")
 	private boolean esito;
 	
 	public Pan5() { }
@@ -81,28 +83,28 @@ public class Pan5 implements Serializable {
 		this.pressionePin2 = pressionePin2;
 	}
 
-//	public Double getPosizionePin1() {
-//		return posizionePin1;
-//	}
-//
-//	public void setPosizionePin1(Double posizionePin1) {
-//		this.posizionePin1 = posizionePin1;
-//	}
-//
-//	public Double getPosizionePin2() {
-//		return posizionePin2;
-//	}
-//
-//	public void setPosizionePin2(Double posizionePin2) {
-//		this.posizionePin2 = posizionePin2;
-//	}
-//
-//	public boolean isEsito() {
-//		return esito;
-//	}
-//
-//	public void setEsito(boolean esito) {
-//		this.esito = esito;
-//	}
+	public Double getPosizionePin1() {
+		return posizionePin1;
+	}
+
+	public void setPosizionePin1(Double posizionePin1) {
+		this.posizionePin1 = posizionePin1;
+	}
+
+	public Double getPosizionePin2() {
+		return posizionePin2;
+	}
+
+	public void setPosizionePin2(Double posizionePin2) {
+		this.posizionePin2 = posizionePin2;
+	}
+
+	public boolean isEsito() {
+		return esito;
+	}
+
+	public void setEsito(boolean esito) {
+		this.esito = esito;
+	}
 	
 }

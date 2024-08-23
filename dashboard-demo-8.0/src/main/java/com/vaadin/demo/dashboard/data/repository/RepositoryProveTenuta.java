@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,13 +13,11 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import com.vaadin.demo.dashboard.component.utils.CommonUtils;
-import com.vaadin.demo.dashboard.component.utils.ProveTenutaUtils;
+import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils;
 import com.vaadin.demo.dashboard.data.hibernate.DatabaseHibernateConnectionDatamatrix_Syncro;
 import com.vaadin.demo.dashboard.data.hibernate.DatabaseHibernateConnectionl7002619;
 import com.vaadin.demo.dashboard.data.hibernate.DatabaseHibernateConnectionl7003820;
 import com.vaadin.demo.dashboard.data.model.DatamatrixFasiEseguite;
-import com.vaadin.demo.dashboard.data.model.DatamatrixFasiProcesso;
 import com.vaadin.demo.dashboard.data.model.DatiProvaTenutaElio;
 
 @SuppressWarnings("unchecked")
@@ -32,24 +29,24 @@ public class RepositoryProveTenuta {
 		String esitoProvaTenutaAria7002619 = verificaEsitoProvaTenutaAria(caricaEsitoProvaTenutaAria7002619(dataMatrix));
 		String esitoProvaTenutaAria7003820 = verificaEsitoProvaTenutaAria(caricaEsitoProvaTenutaAria7003820(dataMatrix));
 		
-		if(esitoProvaTenutaAria7002619.equals(ProveTenutaUtils.PROVATO_OK) || esitoProvaTenutaAria7003820.equals(ProveTenutaUtils.PROVATO_OK)) {
-			return ProveTenutaUtils.PROVATO_OK;
-		} else if(esitoProvaTenutaAria7002619.equals(ProveTenutaUtils.NON_PROVATO_PT) && esitoProvaTenutaAria7003820.equals(ProveTenutaUtils.NON_PROVATO_PT)) {
-			return ProveTenutaUtils.NON_PROVATO_PT;
+		if(esitoProvaTenutaAria7002619.equals(FasiProcessoUtils.PROVATO_OK) || esitoProvaTenutaAria7003820.equals(FasiProcessoUtils.PROVATO_OK)) {
+			return FasiProcessoUtils.PROVATO_OK;
+		} else if(esitoProvaTenutaAria7002619.equals(FasiProcessoUtils.NON_PROVATO_PT) && esitoProvaTenutaAria7003820.equals(FasiProcessoUtils.NON_PROVATO_PT)) {
+			return FasiProcessoUtils.NON_PROVATO_PT;
 		} else {
-			return ProveTenutaUtils.PROVATO_KO;
+			return FasiProcessoUtils.PROVATO_KO;
 		}
 	}
 	
 	public String verificaEsitoProvaTenutaAria(List<Object[]> esitiTenuta) {
-		if(esitiTenuta == null || esitiTenuta.size() == 0) return ProveTenutaUtils.NON_PROVATO_PT;
+		if(esitiTenuta == null || esitiTenuta.size() == 0) return FasiProcessoUtils.NON_PROVATO_PT;
 		else {
 			for(Object[] oggettoEsitoTenuta : esitiTenuta) {
 				if(oggettoEsitoTenuta[5].equals("GOOD") || oggettoEsitoTenuta[6].equals("GOOD")) {
-					return ProveTenutaUtils.PROVATO_OK;
+					return FasiProcessoUtils.PROVATO_OK;
 				}
 			}
-			return ProveTenutaUtils.PROVATO_KO;
+			return FasiProcessoUtils.PROVATO_KO;
 		}
 	}
 	
@@ -68,7 +65,7 @@ public class RepositoryProveTenuta {
 			for(Object nomeTabella : list) {
 				if(!queryProvaTenuta.isEmpty()) { queryProvaTenuta += " UNION "; }
 				
-				queryProvaTenuta += " SELECT Id, Data, Ora, DMC, Operatore, EsitoTOT, PerdPT1 "
+				queryProvaTenuta += " SELECT Id, Data, Ora, DMC, CodOperatore, EsitoTOT, PerdPT1 "
 						+ " FROM " + nomeTabella + " "
 						+ " WHERE DMC LIKE '" + dataMatrix + "' ";	
 				//+ " WHERE EsitoTOT LIKE 'GOOD' AND DMC LIKE '" + dataMatrix + "' ";	
@@ -101,7 +98,7 @@ public class RepositoryProveTenuta {
 				if(!queryProvaTenuta.isEmpty()) { queryProvaTenuta += " UNION "; }
 				
 				//ATTENZIONE a cambiare colonne in query perchè impatta su funzione "verificaEsitoProvaTenutaAria"
-				queryProvaTenuta += " SELECT Id, Data, Ora, DMC, Operatore, EsitoTOT, PerdPT1 "
+				queryProvaTenuta += " SELECT Id, Data, Ora, DMC, CodOperatore, EsitoTOT, PerdPT1 "
 						+ " FROM " + nomeTabella + " "
 						+ " WHERE DMC LIKE '" + dataMatrix + "' ";
 					//+ " WHERE EsitoTOT LIKE 'GOOD' AND DMC LIKE '" + dataMatrix + "' ";
@@ -123,16 +120,16 @@ public class RepositoryProveTenuta {
         String esitoTenutaElio = "";
         
         if(listaProvetenuta == null || listaProvetenuta.size() == 0) {
-        	esitoTenutaElio = ProveTenutaUtils.NON_PROVATO_PT;
+        	esitoTenutaElio = FasiProcessoUtils.NON_PROVATO_PT;
         } else {
 
 			for(DatiProvaTenutaElio rigaEsitoTenutaElio : listaProvetenuta) {
 				if(rigaEsitoTenutaElio.getEsito().equals("BUONO")) {
-					esitoTenutaElio = ProveTenutaUtils.PROVATO_OK;
+					esitoTenutaElio = FasiProcessoUtils.PROVATO_OK;
 				}
 			}
 			if(esitoTenutaElio.isEmpty()) {
-				esitoTenutaElio = ProveTenutaUtils.PROVATO_KO;
+				esitoTenutaElio = FasiProcessoUtils.PROVATO_KO;
 			}
         }
         return esitoTenutaElio;

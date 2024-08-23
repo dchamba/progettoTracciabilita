@@ -1,16 +1,17 @@
 package com.vaadin.demo.dashboard.data.hibernate;
 
-import java.sql.Connection;
 import java.util.Properties;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
 import com.vaadin.demo.dashboard.data.model.DatiProvaTenutaElio;
+import com.vaadin.demo.dashboard.data.model.LaserIsolaFisep_Log;
+import com.vaadin.demo.dashboard.data.model.LaserMaicoFisep_Log;
+import com.vaadin.demo.dashboard.data.model.Pan5;
 
 public class DatabaseHibernateConnectionDatamatrix_Syncro {
 	static Session sessione = null;	
@@ -27,6 +28,9 @@ public class DatabaseHibernateConnectionDatamatrix_Syncro {
         		configuration.setProperties(properties);
         		
                 configuration.addAnnotatedClass(DatiProvaTenutaElio.class);
+                configuration.addAnnotatedClass(LaserIsolaFisep_Log.class);
+                configuration.addAnnotatedClass(LaserMaicoFisep_Log.class);
+                configuration.addAnnotatedClass(Pan5.class);
 
                 serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
         	}

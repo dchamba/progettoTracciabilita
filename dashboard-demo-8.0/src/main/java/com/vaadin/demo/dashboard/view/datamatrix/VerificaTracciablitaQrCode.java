@@ -1,6 +1,7 @@
 package com.vaadin.demo.dashboard.view.datamatrix;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +31,7 @@ import com.vaadin.demo.dashboard.data.repository.RepositoryVerificaQrCode;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -361,23 +363,26 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 		gridDatiImballo.addColumn(v -> v.getDataMatrix()).setCaption("QRCode pz");
 		gridDatiImballo.addColumn(v -> CommonUtils.DATETIMEFORMAT.format(v.getDataOra()), new TextRenderer("")).setCaption("Data/ora");
 		gridDatiImballo.addColumn(v -> v.getFaseProcesso()).setCaption("Fase processo");
-		gridDatiImballo.addColumn(v -> v.getImpianto()).setCaption("Operatore");
+		gridDatiImballo.addColumn(v -> v.getImpianto()).setCaption("Operatore/Macchina");
 		gridDatiImballo.addColumn(v -> v.getEsito()).setCaption("Esito");
 		gridDatiImballo.addColumn(v -> v.getEsitoValore()).setCaption("Esito valore");
 		gridDatiImballo.addColumn(v -> v.getImpianto()).setCaption("Impianto");
 		gridDatiImballo.addColumn(v -> v.getDurezza()).setCaption("Durezza");
 		gridDatiImballo.addColumn(v -> v.getNumeroFornata()).setCaption("N. fornata");
 		gridDatiImballo.addColumn(v -> v.getFornitore()).setCaption("Fornitore");
-		gridDatiImballo.addColumn(v -> v.getUtente()).setCaption("Oper. trattam.");
+		gridDatiImballo.addColumn(v -> v.getUtente()).setCaption("Operatore");
 		gridDatiImballo.addColumn(v -> v.getNote()).setCaption("Note");
 		gridDatiImballo.setColumnReorderingAllowed(true);
 
-
 		List<DatamatrixFasiEseguite> listaDataSource = new ArrayList<DatamatrixFasiEseguite>();		
+		//listaDataSource.sort(Comparator.comparing(dato -> dato.));
 
 		for(List<DatamatrixFasiEseguite> listaVista : mappaFasiEseguite.values()) {
 			listaDataSource.addAll(listaVista);
 		} 
+		
+		//Ordinare dati per data/ora
+		listaDataSource.sort(Comparator.comparing(DatamatrixFasiEseguite::getDataOra));
 		
 		gridDatiImballo.setItems(listaDataSource);
 		

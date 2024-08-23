@@ -8,6 +8,27 @@ import com.vaadin.demo.dashboard.data.model.Prodotti;
 import com.vaadin.demo.dashboard.data.repository.RepositoryProvider;
 
 public class FasiProcessoUtils {
+
+	public static String NON_PROVATO_PT = "NON_PROVATO_PT";
+	public static String PROVATO_KO = "PROVATO_KO";
+	public static String PROVATO_OK = "PROVATO_OK";
+
+	public static String ASSEMBLAGGIO_PIN_NON_ESEGUITO = "ASSEMBLAGGIO_PIN_NON_ESEGUITO";
+	public static String ASSEMBLAGGIO_PIN_KO = "ASSEMBLAGGIO_PIN_KO";
+	public static String ASSEMBLAGGIO_PIN_OK = "ASSEMBLAGGIO_PIN_OK";
+	
+	public static void verificaEsitoTenutaELanciaErrore(String esitoProvaTenuta) throws Exception {
+		if(esitoProvaTenuta.equals(NON_PROVATO_PT)) {
+            throw new Exception("ATTENZIONE! Questo pezzo NON è stato provato a tenuta");
+		} else if(esitoProvaTenuta.equals(PROVATO_KO)) {
+            throw new Exception("ATTENZIONE! Questo pezzo risulta KO a provato tenuta");
+		} else if(esitoProvaTenuta.equals(ASSEMBLAGGIO_PIN_NON_ESEGUITO)) {
+            throw new Exception("ATTENZIONE! Assemblaggio Pin NON è stato eseguito");
+		} else if(esitoProvaTenuta.equals(PROVATO_OK)) { }
+		else {
+			throw new Exception(esitoProvaTenuta);
+		}
+	}
 	
 	public static void controlloFasiEseguiteCorrettamente(Prodotti prodottoCorrente, Datamatrix datamatrix, String faseCorrentePagina) throws Exception {
     	if(prodottoCorrente.getFasiProcesso() == null || prodottoCorrente.getFasiProcesso().size() == 0) {
@@ -36,29 +57,22 @@ public class FasiProcessoUtils {
 				String esitoProvaTenutaAria = "";
 				if(datamatrix.getProddoto().isProvatenutaaria()) {
 					esitoProvaTenutaAria = RepositoryProvider.getRepositoryProveTenuta().verificaEsitoProvaTenutaAria(datamatrix.getDataMatrix());
-					ProveTenutaUtils.verificaEsitoTenutaELanciaErrore(esitoProvaTenutaAria);
+					FasiProcessoUtils.verificaEsitoTenutaELanciaErrore(esitoProvaTenutaAria);
 				}
 
 				String esitoProvaTenutaElio = "";
 				if(datamatrix.getProddoto().isProvatenutaelio()) {
 					esitoProvaTenutaElio = RepositoryProvider.getRepositoryProveTenuta().verificaEsitoProvaTenutaElio(datamatrix.getDataMatrix());
-					ProveTenutaUtils.verificaEsitoTenutaELanciaErrore(esitoProvaTenutaElio);
+					FasiProcessoUtils.verificaEsitoTenutaELanciaErrore(esitoProvaTenutaElio);
 				}
     		} else if (codiceFaseDaVerificareSeEseguita.equals(FasiProcessoLista.ASS.toString())) { 
         		//verifico se assemblaggio pin è stato eseguito
-    			Pan5 datiAssemblaggioPin = RepositoryProvider.getRepositoryPin5().caricaAssemblaggioPinPan5(datamatrix.getDataMatrix());
-    			if(datiAssemblaggioPin == null) {
+    			String result = RepositoryProvider.getRepositoryPin5().verificaAssemblaggioPinOK(datamatrix.getDataMatrix());
+    			if(result.equals(FasiProcessoUtils.ASSEMBLAGGIO_PIN_NON_ESEGUITO)) {
     				throw new Exception("ATTENZIONE! Per questo pezzo NON è stato eseguito ASSEMBLAGGIO PIN");
-    			} else {
-//    				boolean assemblyPin1Ok = datiAssemblaggioPin.getPosizionePin1() > 0 && datiAssemblaggioPin.getPressionePin1() > 0;
-//    				boolean assemblyPin2Ok = datiAssemblaggioPin.getPosizionePin2() > 0 && datiAssemblaggioPin.getPressionePin2() > 0;
-//    				if(!assemblyPin1Ok || !assemblyPin2Ok) {
-//    					String numPin = "";
-//    					numPin = !assemblyPin1Ok ? "1" : numPin;
-//    					numPin = !assemblyPin2Ok ? "2" : numPin;
-//        				throw new Exception("ATTENZIONE! Per questo pezzo NON è stato eseguito ASSEMBLAGGIO sul PIN "+numPin);
-//    				}
-    			}
+    			} 
+    			else if(result.equals(FasiProcessoUtils.ASSEMBLAGGIO_PIN_OK)) { }
+    			else { throw new Exception(result); }
     		} else {
         		//verifico se questa fase è stata eseguita
     			boolean esitoVerificaFasePricessoEseguita = RepositoryProvider.repositoryFasiProcesso().getFaseProcessoPerDatamtarix(datamatrix.getIdDataMatrix(), faseProcessoProdottoDaVerificareSeEseguita.getFaseProcesso().getIdFaseProcesso());

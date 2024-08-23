@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.vaadin.demo.dashboard.component.model.FilterDatamatrix;
+import com.vaadin.demo.dashboard.component.utils.ConfigsUtils;
 import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils;
 import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils.FasiProcessoLista;
 import com.vaadin.demo.dashboard.data.model.Datamatrix;
@@ -22,8 +23,14 @@ public class RepositoryVerificaQrCode {
 	
 	public Map<String, List<DatamatrixFasiEseguite>> getDatamatrixFasiEseguite(String codiceDatamatrix) throws ParseException {
 		
-		Datamatrix datamatriCercato = RepositoryProvider.getRepositoryDatamatrix().getDataMatrix(new FilterDatamatrix(codiceDatamatrix), null).getResult().get(0);
-		List<DatamatrixFasiProcesso> fasiProcessoProcessoEseguite = RepositoryProvider.getRepositoryDatamatrixTrattamenti().getListaDatamatrixFasiProcesso(datamatriCercato.getIdDataMatrix());
+		List<Datamatrix> datamatrixCaricati = RepositoryProvider.getRepositoryDatamatrix().getDataMatrix(new FilterDatamatrix(codiceDatamatrix), null).getResult();
+		
+		List<DatamatrixFasiProcesso> fasiProcessoProcessoEseguite = new ArrayList<DatamatrixFasiProcesso>();
+		if(datamatrixCaricati != null && datamatrixCaricati.size() > 0) {
+			fasiProcessoProcessoEseguite = RepositoryProvider.getRepositoryDatamatrixTrattamenti().getListaDatamatrixFasiProcesso(datamatrixCaricati.get(0).getIdDataMatrix());
+		}
+		
+		//Carico packing list
 		List<VistaPackingList> vistaPackingList = RepositoryProvider.repositoryImballi().getVistaPackingListByDatamatrix(codiceDatamatrix);
 		
 		//Fasi processo
@@ -97,7 +104,7 @@ public class RepositoryVerificaQrCode {
 				datamatrixPackingListaFaseEseguita.setDataOra(dfp.getDataOraCreazioneEtichettaPezzo());
 				datamatrixPackingListaFaseEseguita.setFaseProcesso("Packing list");
 				datamatrixPackingListaFaseEseguita.setCodiceFaseProcesso(FasiProcessoUtils.FasiProcessoLista.PACKINGLISTCCU.toString());
-				datamatrixPackingListaFaseEseguita.setImpianto(dfp.getNomeCognome());
+				datamatrixPackingListaFaseEseguita.setUtente(dfp.getNomeCognome());
 				datamatrixPackingListaFaseEseguita.setNote(dfp.getCodiceEtichetta());
 				
 				listaPackingListEseguite.add(datamatrixPackingListaFaseEseguita);
@@ -108,11 +115,20 @@ public class RepositoryVerificaQrCode {
 		//Prova tenuta
 		List<DatamatrixFasiEseguite> fasiProcessoProveTenutaEseguite = RepositoryProvider.getRepositoryProveTenuta().getDatamatrixProveTenutaEseguite(codiceDatamatrix);
 		
+		//Assemblaggio pin PAN10
+		List<DatamatrixFasiEseguite> fasiProcessoAssemblaggioPinEseguite = RepositoryProvider.getRepositoryPin5().getDatamatrixAssemblaggioPinEseguito(codiceDatamatrix);
+
+		//Marcature laser
+		List<DatamatrixFasiEseguite> fasiMarcatureLaserEseguite = RepositoryProvider.getRepositoryMarcatoriLaser().getDatamatrixFasiEseguiteMarcatureLaser(codiceDatamatrix);
+		
+		
 		Map<String, List<DatamatrixFasiEseguite>> mappaListaFasiEseguite = new HashMap<>();
+		mappaListaFasiEseguite.put(TipoDatamatrixFasiEseguite.MARCATURA_LASER.toString(), fasiMarcatureLaserEseguite);
 		mappaListaFasiEseguite.put(TipoDatamatrixFasiEseguite.FASI_PROCESSO.toString(), listaFasiEseguite);
 		mappaListaFasiEseguite.put(TipoDatamatrixFasiEseguite.TRATTAMENTO_TERMICO.toString(), listaFasiTrattamentoEseguite);
 		mappaListaFasiEseguite.put(TipoDatamatrixFasiEseguite.PROVE_TENUTA.toString(), fasiProcessoProveTenutaEseguite);
 		mappaListaFasiEseguite.put(TipoDatamatrixFasiEseguite.PACKING_LIST.toString(), listaPackingListEseguite);
+		mappaListaFasiEseguite.put(TipoDatamatrixFasiEseguite.ASSEMBLAGGIO.toString(), fasiProcessoAssemblaggioPinEseguite);
 		
 		//Fusione/Laser
 		
@@ -121,8 +137,10 @@ public class RepositoryVerificaQrCode {
 		
 	public enum TipoDatamatrixFasiEseguite {
 		FASI_PROCESSO, 
+		MARCATURA_LASER,
 		TRATTAMENTO_TERMICO,
 		PACKING_LIST,
+		ASSEMBLAGGIO,
 		FUSIONE_LASER,
 		PROVE_TENUTA;
 	}

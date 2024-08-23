@@ -18,6 +18,9 @@ import java.util.stream.Stream;
 
 public class CommonUtils {
 
+	public static String formatoDataEu = "dd/MM/yyyy HH:mm:ss";
+	public static String formatoDataJpn = "yyyy-MM-dd HH:mm:ss";
+	
     public static final DateFormat DATETIMEFORMAT = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     public static final DateFormat DATEFORMAT = new SimpleDateFormat("dd/MM/yyyy");
     public static final DateFormat YEARTWODIGITFORMAT = new SimpleDateFormat("yy");
@@ -61,6 +64,22 @@ public class CommonUtils {
 			return null;
 		}
 		return  Date.from(value.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	}
+
+	public static Date toDate(String dataStringa) {
+		Date dataResult = null;
+		
+		try {
+			dataResult =  new SimpleDateFormat(formatoDataEu, Locale.ITALIAN).parse(dataStringa);
+		} catch (Exception ex) { dataResult = null; }
+
+		if(dataResult == null) {
+			try {
+				dataResult =  new SimpleDateFormat(formatoDataJpn, Locale.ITALIAN).parse(dataStringa);
+			} catch (Exception ex) { dataResult = null; }
+		}
+		
+		return dataResult;
 	}
 
 	public static Date toDate(String formato, String dataStringa) throws ParseException {

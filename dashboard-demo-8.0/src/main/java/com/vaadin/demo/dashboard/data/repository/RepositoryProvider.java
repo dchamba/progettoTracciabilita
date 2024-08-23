@@ -16,7 +16,7 @@ public class RepositoryProvider {
 	private static RepositoryAnimeImballi repositoryAnimeImballi = null;
 	private static RepositoryCriteriBloccoDatamatrix repositoryCriteriBloccoDatamatrix = null;
 	private static RepositoryPin5 repositoryPin5 = null;
-	
+	private static RepositoryMarcatoriLaser repositoryMarcatoriLaser = null;
 	
 	public static RepositoryDatamatrix getRepositoryDatamatrix() {
 		if (RepositoryProvider.repositoryDatamatrix == null) {
@@ -67,7 +67,6 @@ public class RepositoryProvider {
 		return RepositoryProvider.repositoryDatamatrixTrattamentiTT;
 	}
 
-
 	public static RepositoryUtentiPermessi repositoryUtentiPermessi() {
 		if (RepositoryProvider.repositoryUtentiPermessi == null) {
 			RepositoryProvider.repositoryUtentiPermessi = new RepositoryUtentiPermessi();
@@ -115,5 +114,12 @@ public class RepositoryProvider {
 			RepositoryProvider.repositoryPin5 = new RepositoryPin5();
 		}
 		return RepositoryProvider.repositoryPin5;
+	}
+
+	public static RepositoryMarcatoriLaser getRepositoryMarcatoriLaser() {
+		if (RepositoryProvider.repositoryMarcatoriLaser == null) {
+			RepositoryProvider.repositoryMarcatoriLaser = new RepositoryMarcatoriLaser();
+		}
+		return RepositoryProvider.repositoryMarcatoriLaser;
 	}
 }
