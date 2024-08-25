@@ -27,7 +27,11 @@ public class RepositoryVerificaQrCode {
 		
 		List<DatamatrixFasiProcesso> fasiProcessoProcessoEseguite = new ArrayList<DatamatrixFasiProcesso>();
 		if(datamatrixCaricati != null && datamatrixCaricati.size() > 0) {
-			fasiProcessoProcessoEseguite = RepositoryProvider.getRepositoryDatamatrixTrattamenti().getListaDatamatrixFasiProcesso(datamatrixCaricati.get(0).getIdDataMatrix());
+			List<DatamatrixFasiProcesso> resultFasiProcessoProcessoEseguite = RepositoryProvider.getRepositoryDatamatrixTrattamenti().getListaDatamatrixFasiProcesso(datamatrixCaricati.get(0).getIdDataMatrix());
+			
+			if(resultFasiProcessoProcessoEseguite != null) { 
+				fasiProcessoProcessoEseguite = resultFasiProcessoProcessoEseguite; 
+			}
 		}
 		
 		//Carico packing list

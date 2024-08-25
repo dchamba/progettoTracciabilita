@@ -238,6 +238,7 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 		if(vistaPackingList.size() < etichettaImballo.getTipoImballo().getQtaPezziPerScatola()) {
 			String testoMaxQtaImballo = "Scatola non completa! Necessari tot : " + etichettaImballo.getTipoImballo().getQtaPezziPerScatola() + " pz";
 			testoMaxQtaImballo = "<b style='color:red;'>" + testoMaxQtaImballo + "</b>";
+			testoMaxQtaImballo += "<br>";
 			Label lableQtaMaxImballo = new Label(testoMaxQtaImballo);
 			setInfoScatolaStyle(lableQtaMaxImballo);
 			lableQtaMaxImballo.setContentMode(com.vaadin.shared.ui.ContentMode.HTML);
@@ -245,8 +246,8 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 		}
 		
 		if(statoBancale.getQtyOfMissingPcsInThePallet() > 0) {
-			//int qtaPzMancanti = etichettaImballo.getTipoImballo().getQtaPezziPerScatola() - vistaPackingList.size();
 			String qtaPzMantantiStringa = "<b style='color:red;'>Qtà. pz mancanti in pallet: " + statoBancale.getQtyOfMissingPcsInThePallet() + "</b>";
+			qtaPzMantantiStringa += "<br>";
 			
 			labelQtaPzMancanti = new Label(qtaPzMantantiStringa);
 			setInfoScatolaStyle(labelQtaPzMancanti);
@@ -254,20 +255,18 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 		}
 		
 		if(statoBancale.getBoxesWithMissingPcs().size() > 0) {
-			String qtaScatoleMantantiStringa = "<br><br><b style='color:red;'>Scatole incomplete:";
+			String qtaScatoleMantantiStringa = "<br><b style='color:red;'>Scatole incomplete:</b>";
 			
 			for(Map.Entry<String, Integer> bancaleNonCompleto : statoBancale.getBoxesWithMissingPcs().entrySet()) {
-				qtaScatoleMantantiStringa += "<br>" + bancaleNonCompleto.getKey() + "   -" + bancaleNonCompleto.getValue() + " pz";
+				qtaScatoleMantantiStringa += "<br><b style='color:red;'>" + bancaleNonCompleto.getKey() + "   -" + bancaleNonCompleto.getValue() + " pz</b>";
 			}
-			
-			qtaScatoleMantantiStringa += "</b>";
 			
 			labelQtaScatoleMancanti = new Label(qtaScatoleMantantiStringa);
 			setInfoScatolaStyle(labelQtaScatoleMancanti);
 			labelQtaScatoleMancanti.setContentMode(com.vaadin.shared.ui.ContentMode.HTML);
 		}
 
-		if(vistaPackingList.size() == statoBancale.getQtyOfPcsInThePallet()) {
+		if(statoBancale.isPcsQtyForPalletComplete()) {
 			labelQtaScatolePzSonoCorrette = new Label("Pallet completo!");
 			setPezziScatolaGridTitleStyle(labelQtaScatolePzSonoCorrette);
 			labelQtaScatolePzSonoCorrette.addStyleName(ValoTheme.LABEL_SUCCESS);
@@ -289,13 +288,20 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 		
 //		layoutStatoBancale.addComponent(new Label(" "));
 		
-		Label labelQtaScatoleNecessarie = new Label("Qtà. scatole necessarie: " + etichettaImballo.getTipoImballo().getQtaScatolePerBancale());
-		setInfoScatolaStyle(labelQtaScatoleNecessarie);
-		layoutStatoBancale.addComponent(labelQtaScatoleNecessarie);
+//		Label labelQtaScatoleNecessarie = new Label("Qtà. scatole necessarie: " + etichettaImballo.getTipoImballo().getQtaScatolePerBancale());
+//		setInfoScatolaStyle(labelQtaScatoleNecessarie);
+//		layoutStatoBancale.addComponent(labelQtaScatoleNecessarie);
 		
-		Label labelQtaPzNecessari = new Label("Qtà. pz necessari: " + statoBancale.getStandardPcsQtyPerPallet());
-		setInfoScatolaStyle(labelQtaPzNecessari);
-		layoutStatoBancale.addComponent(labelQtaPzNecessari);
+		String labelHtmlNumeroBancaleQtaScatoleNecessarie = "<b style='font-size:1.2em;color:blue;'>Qtà. scatole necessarie: " + etichettaImballo.getTipoImballo().getQtaScatolePerBancale() + "</b>";
+		labelHtmlNumeroBancaleQtaScatoleNecessarie += "</br>";
+		labelHtmlNumeroBancaleQtaScatoleNecessarie += "<b style='font-size:1.2em;color:blue;'>Qtà. pz necessari: " + statoBancale.getStandardPcsQtyPerPallet() + "</b>";
+		Label labelNumeroBancaleQtaScatoleNecessarie = new Label(labelHtmlNumeroBancaleQtaScatoleNecessarie);
+		labelNumeroBancaleQtaScatoleNecessarie.setContentMode(com.vaadin.shared.ui.ContentMode.HTML);
+		layoutStatoBancale.addComponent(labelNumeroBancaleQtaScatoleNecessarie);
+		
+//		Label labelQtaPzNecessari = new Label("Qtà. pz necessari: " + statoBancale.getStandardPcsQtyPerPallet());
+//		setInfoScatolaStyle(labelQtaPzNecessari);
+//		layoutStatoBancale.addComponent(labelQtaPzNecessari);
 		
 		layoutStatoBancale.addComponent(new Label(" "));
 
@@ -308,8 +314,6 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 		setInfoScatolaStyle(labelQtaPzCaricatiInBancale);
 		labelQtaPzCaricatiInBancale.setContentMode(com.vaadin.shared.ui.ContentMode.HTML);
 		layoutStatoBancale.addComponent(labelQtaPzCaricatiInBancale);
-
-		layoutStatoBancale.addComponent(new Label(" "));
 		
 		if(labelQtaScatoleMancanti != null) {
 			layoutStatoBancale.addComponent(labelQtaScatoleMancanti);

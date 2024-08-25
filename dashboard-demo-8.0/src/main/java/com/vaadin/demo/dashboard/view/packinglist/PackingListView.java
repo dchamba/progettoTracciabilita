@@ -111,7 +111,6 @@ public class PackingListView extends MyCustomView {
         
         DashboardEventBus.register(this);
 
-        //initializeGrid();
         buildDatamatrixForm();
 	}
 	
@@ -128,20 +127,26 @@ public class PackingListView extends MyCustomView {
 			//Verifico che il formato del valore sia compatibile con uno dei DM
 			Optional<Prodotti> prodottoCaricoPerFormatoDmc = this.listaProdottiPackingList.stream().filter(p -> Pattern.matches(p.getFormatoDatamatrix(), codiceDataMatrixInserito)).findFirst();
 			Prodotti prodottoCorrente = prodottoCaricoPerFormatoDmc.isPresent() ? prodottoCaricoPerFormatoDmc.get() : null;
-	        
+			
 	        if(prodottoCorrente == null) {
-		        //verifico che non sia una scatola letta
-		        if(verificaCodiceImballo(codiceDataMatrixInserito)) {
+	        	TipoImballi tipoImballocaricato = repositoryImballi.getTipoImballoByFormatoQrCodeMatchCodiceImballo(codiceDataMatrixInserito);
+	        	Optional<Prodotti> prodottoCaricoDaTipoImballo = this.listaProdottiPackingList.stream().filter(p -> p.getIdProdotto() == tipoImballocaricato.getProdotto().getIdProdotto()).findFirst();
+	        	//verifico che non sia una scatola letta
+		        if(verificaCodiceImballo(codiceDataMatrixInserito) || prodottoCaricoDaTipoImballo.isPresent()) {
 		        	
-		        	//Verifico che la scatola attuale sia completa e chiedo conferma operatre di cambio scatola (in caso attuale scatola è parziale)
-		        	List<Prodotti> listaProdottiPerCodiceImballoInserito = this.listaProdottiPackingList.stream().filter(p -> getNumeroDisegnoDaVericareInImballo(codiceDataMatrixInserito).contains(p.getNumeroDisegno())).collect(Collectors.toList());
-		        	if(listaProdottiPerCodiceImballoInserito.size() == 0) {
-		        		throw new Exception("Formato QrCode non riconosciuto");
+		        	Prodotti prodottoPerCodiceImballoInserito;
+		        	if(tipoImballocaricato == null) {
+			        	//Verifico che la scatola attuale sia completa e chiedo conferma operatre di cambio scatola (in caso attuale scatola è parziale)
+			        	List<Prodotti> listaProdottiPerCodiceImballoInserito = this.listaProdottiPackingList.stream().filter(p -> getNumeroDisegnoDaVericareInImballo(codiceDataMatrixInserito).contains(p.getNumeroDisegno())).collect(Collectors.toList());
+			        	if(listaProdottiPerCodiceImballoInserito.size() == 0) {
+			        		throw new Exception("Formato QrCode non riconosciuto");
+			        	}
+			        	prodottoPerCodiceImballoInserito = listaProdottiPerCodiceImballoInserito.get(0);
+		        	} else {
+			        	prodottoPerCodiceImballoInserito = prodottoCaricoDaTipoImballo.get();
 		        	}
-		        	Prodotti prodottoPerCodiceImballoInserito = listaProdottiPerCodiceImballoInserito.get(0);
-		        	//Prodotti prodottoPerCodiceImballoInserito = this.listaProdottiPackingList.stream().filter(p -> codiceDataMatrixInserito.contains(p.getNumeroDisegno())).findFirst().get();
-		        	int pzMancantiInScatola = getPzMancantiInScatolaAttualeRispettoQuellaNuova(prodottoPerCodiceImballoInserito);
 		        	
+		        	int pzMancantiInScatola = getPzMancantiInScatolaAttualeRispettoQuellaNuova(prodottoPerCodiceImballoInserito);
 		    		if(pzMancantiInScatola > 0) {
 		    			String messaggio = "Scantola NON completa. Mancano " + pzMancantiInScatola + " pz! \rVuoi proseguire comunque con la nuova scatola ?";
 		    			CustomPopupWindow window = new CustomPopupWindow("Conferma", messaggio);

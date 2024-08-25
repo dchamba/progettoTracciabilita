@@ -82,6 +82,14 @@ public class TipoImballi implements Serializable {
 		this.imballoStandard = imballoStandard;
 	}
 
+	public String getFormatoDatamatrixImballo() {
+		return formatoDatamatrixImballo;
+	}
+
+	public void setFormatoDatamatrixImballo(String formatoDatamatrixImballo) {
+		this.formatoDatamatrixImballo = formatoDatamatrixImballo;
+	}
+
 //	public Integer getIdProdotto() {
 //		return idProdotto;
 //	}

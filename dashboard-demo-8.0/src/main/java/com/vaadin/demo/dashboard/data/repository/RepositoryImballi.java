@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.hibernate.Criteria;
@@ -20,6 +22,7 @@ import com.vaadin.demo.dashboard.component.utils.CommonUtils;
 import com.vaadin.demo.dashboard.data.hibernate.DatabaseHibernateConnection;
 import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
 import com.vaadin.demo.dashboard.data.model.EtichettePezzi;
+import com.vaadin.demo.dashboard.data.model.Prodotti;
 import com.vaadin.demo.dashboard.data.model.TipoImballi;
 import com.vaadin.demo.dashboard.data.model.VistaPackingList;
 import com.vaadin.demo.dashboard.data.repository.campi.CampiTipoImballi;
@@ -67,6 +70,25 @@ public class RepositoryImballi {
 
         session.close();
         return tipoImballi;
+	}
+	
+	public TipoImballi getTipoImballoByFormatoQrCodeMatchCodiceImballo(String codiceImballo) {
+        System.out.println("Reading tipo imballi by formato qrcode match");
+
+		Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
+		session.beginTransaction();
+
+        List<TipoImballi> tipoImballi = new ArrayList<TipoImballi>();
+		Criteria criteria = session.createCriteria(TipoImballi.class);
+		criteria.add(RepositoryUtils.getCriteraEliminato());
+		
+        tipoImballi = criteria.list();
+        session.close();
+        
+		Optional<TipoImballi> tipoImballoCaricoPerFormatoDmc = tipoImballi.stream().filter(p -> Pattern.matches(p.getFormatoDatamatrixImballo(), codiceImballo)).findFirst();
+		TipoImballi result = tipoImballoCaricoPerFormatoDmc.isPresent() ? tipoImballoCaricoPerFormatoDmc.get() : null;
+		
+        return result;
 	}
 		
 	public EtichettePezzi getEtichettaPezzo(Integer idEtichettaPezzo, Integer idEtichettaImballo) {
@@ -319,13 +341,13 @@ public class RepositoryImballi {
 		List<VistaPackingList> listaEtichette = pzInBancale.stream().filter(CommonUtils.distinctByKey(p -> p.getCodiceEtichetta())).collect(Collectors.toList());
 		
 		result.setQtyOfPcsInThePallet(pzInBancale.size());
-		result.setStandardPcsQtyPerBoxes(tipoImballoCorrente.getQtaPezziPerScatola());
 		result.setQtyOfBoxesInThePallet(listaEtichette.size());
 		result.setBoxesQtyPerPalletComplete(listaEtichette.size() == tipoImballoCorrente.getQtaScatolePerBancale());
 		
 		result.setStandardBoxesQtyPerPallet(tipoImballoCorrente.getQtaScatolePerBancale());
 		result.setStandardPcsQtyPerBoxes(tipoImballoCorrente.getQtaPezziPerScatola());
-
+		result.setStandardPcsQtyPerPallet(result.getStandardPcsQtyPerBoxes() * result.getStandardBoxesQtyPerPallet());
+		
 		for (VistaPackingList etichetta : listaEtichette) {
 			int totPzImballo = this.getVistaPackingListFromEtichettaScatola(etichetta.getCodiceEtichetta(), null).size();
 			int pzMancanti = (result.getStandardPcsQtyPerBoxes() - totPzImballo);
@@ -335,4 +357,6 @@ public class RepositoryImballi {
 		}
 		return result;
 	}
+	
+	
 }

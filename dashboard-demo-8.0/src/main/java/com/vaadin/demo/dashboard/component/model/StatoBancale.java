@@ -37,7 +37,7 @@ public class StatoBancale {
 	}
 
 	public boolean isPcsQtyForPalletComplete() {
-		return this.standardPcsQtyPerPallet == this.qtyOfPcsInThePallet;
+		return this.getStandardPcsQtyPerPallet() == this.qtyOfPcsInThePallet;
 	}
 
 	public int getQtyOfPcsInThePallet() {
@@ -78,6 +78,10 @@ public class StatoBancale {
 
 	public int getStandardBoxesQtyPerPallet() {
 		return standardBoxesQtyPerPallet;
+	}
+
+	public void setStandardPcsQtyPerPallet(int standardPcsQtyPerPallet) {
+		this.standardPcsQtyPerPallet = standardPcsQtyPerPallet;
 	}
 
 }
