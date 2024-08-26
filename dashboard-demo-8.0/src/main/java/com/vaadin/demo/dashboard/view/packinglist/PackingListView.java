@@ -129,10 +129,14 @@ public class PackingListView extends MyCustomView {
 			Prodotti prodottoCorrente = prodottoCaricoPerFormatoDmc.isPresent() ? prodottoCaricoPerFormatoDmc.get() : null;
 			
 	        if(prodottoCorrente == null) {
-	        	TipoImballi tipoImballocaricato = repositoryImballi.getTipoImballoByFormatoQrCodeMatchCodiceImballo(codiceDataMatrixInserito);
-	        	Optional<Prodotti> prodottoCaricoDaTipoImballo = this.listaProdottiPackingList.stream().filter(p -> p.getIdProdotto() == tipoImballocaricato.getProdotto().getIdProdotto()).findFirst();
+ 	        	TipoImballi tipoImballocaricato = repositoryImballi.getTipoImballoByFormatoQrCodeMatchCodiceImballo(codiceDataMatrixInserito);
+	        	Prodotti prodottoCaricoDaTipoImballo = null;
+	        	if(tipoImballocaricato != null) {
+	        		//Controllo nella lista prodotti Packinglist che etichetta sia del prodotto di QUESTA PAGINA PACKING LIST
+	        		prodottoCaricoDaTipoImballo = this.listaProdottiPackingList.stream().filter(p -> p.getIdProdotto() == tipoImballocaricato.getProdotto().getIdProdotto()).findFirst().get();
+	        	}
 	        	//verifico che non sia una scatola letta
-		        if(verificaCodiceImballo(codiceDataMatrixInserito) || prodottoCaricoDaTipoImballo.isPresent()) {
+		        if(verificaCodiceImballo(codiceDataMatrixInserito) || prodottoCaricoDaTipoImballo != null) {
 		        	
 		        	Prodotti prodottoPerCodiceImballoInserito;
 		        	if(tipoImballocaricato == null) {
@@ -143,7 +147,7 @@ public class PackingListView extends MyCustomView {
 			        	}
 			        	prodottoPerCodiceImballoInserito = listaProdottiPerCodiceImballoInserito.get(0);
 		        	} else {
-			        	prodottoPerCodiceImballoInserito = prodottoCaricoDaTipoImballo.get();
+			        	prodottoPerCodiceImballoInserito = prodottoCaricoDaTipoImballo;
 		        	}
 		        	
 		        	int pzMancantiInScatola = getPzMancantiInScatolaAttualeRispettoQuellaNuova(prodottoPerCodiceImballoInserito);
