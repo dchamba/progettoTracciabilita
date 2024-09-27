@@ -15,6 +15,8 @@ import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
 import com.vaadin.demo.dashboard.data.model.Prodotti;
 import com.vaadin.demo.dashboard.data.model.TipoImballi;
 import com.vaadin.demo.dashboard.data.model.VistaPackingList;
+import com.vaadin.demo.dashboard.data.repository.RepositoryConfig;
+import com.vaadin.demo.dashboard.data.repository.RepositoryProvider;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
 import com.vaadin.ui.Alignment;

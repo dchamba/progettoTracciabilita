@@ -9,6 +9,7 @@ import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.demo.dashboard.component.style.StyleUtils;
 import com.vaadin.demo.dashboard.component.utils.PermessiUtils.PermessiUtentiLista;
 import com.vaadin.demo.dashboard.component.utils.ProdottiUtils.CodiciProdottiLista;
+import com.vaadin.demo.dashboard.component.utils.CommonUtils;
 import com.vaadin.demo.dashboard.component.utils.CustomPopupWindow;
 import com.vaadin.demo.dashboard.component.utils.ViewUtils;
 import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
@@ -24,6 +25,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.renderers.ButtonRenderer;
+import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
 @SuppressWarnings("serial")
@@ -266,5 +269,22 @@ public final class PackingListCCUView extends PackingListView {
 			pzMancantiInScatola = this.etichettaImballoPan010.getTipoImballo().getQtaPezziPerScatola() - totPzInScatola;
 		}
 		return pzMancantiInScatola;
+	}
+
+	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	void addColumnToGrid(Grid<VistaPackingList> grid) {
+
+		grid.setSizeFull();
+		
+		grid.addColumn(v -> v.getDataMatrix()).setCaption("QRCode");
+		
+		grid.addColumn(v -> "Cancella",
+		      new ButtonRenderer(clickEvent -> { 
+		    	  VistaPackingList v = (VistaPackingList)clickEvent.getItem();
+		    	  eliminaPezzoDaScatola(v); 
+	    	  })).setCaption("Elimina").setWidth(120);
+		
+		grid.setColumnReorderingAllowed(true);
 	}
 }

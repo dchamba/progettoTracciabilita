@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.vaadin.demo.dashboard.component.model.FilterDatamatrix;
+import com.vaadin.demo.dashboard.component.utils.CommonUtils;
 import com.vaadin.demo.dashboard.component.utils.CustomPopupWindow;
 import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils;
 import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils.FasiProcessoLista;
@@ -42,6 +43,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.renderers.ButtonRenderer;
+import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
 public class PackingListView extends MyCustomView {
@@ -283,6 +285,7 @@ public class PackingListView extends MyCustomView {
 		grid.setSizeFull();
 		
 		grid.addColumn(v -> v.getDataMatrix()).setCaption("QRCode");
+		grid.addColumn(v -> CommonUtils.DATETIMEFORMAT.format(v.getDataOraCreazioneEtichettaPezzo()), new TextRenderer("")).setCaption("Data/ora").setWidth(200);
 		
 		grid.addColumn(v -> "Cancella",
 		      new ButtonRenderer(clickEvent -> { 
