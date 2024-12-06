@@ -1,8 +1,8 @@
 package com.vaadin.demo.dashboard.view.datamatrix;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -18,20 +18,14 @@ import com.vaadin.demo.dashboard.data.model.DatamatrixFasiEseguite;
 import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
 import com.vaadin.demo.dashboard.data.model.Prodotti;
 import com.vaadin.demo.dashboard.data.model.Utenti;
-import com.vaadin.demo.dashboard.data.model.VistaDatamatrixFasiProcesso;
 import com.vaadin.demo.dashboard.data.model.VistaPackingList;
-import com.vaadin.demo.dashboard.data.repository.RepositoryDatamatrix;
-import com.vaadin.demo.dashboard.data.repository.RepositoryDatamatrixFasiProcesso;
-import com.vaadin.demo.dashboard.data.repository.RepositoryFasiProcesso;
 import com.vaadin.demo.dashboard.data.repository.RepositoryImballi;
 import com.vaadin.demo.dashboard.data.repository.RepositoryProdotti;
-import com.vaadin.demo.dashboard.data.repository.RepositoryProveTenuta;
 import com.vaadin.demo.dashboard.data.repository.RepositoryProvider;
 import com.vaadin.demo.dashboard.data.repository.RepositoryVerificaQrCode;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.server.Responsive;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -182,20 +176,36 @@ public class VerificaTracciablitaQrCode extends MyCustomView {
 				}
 			}
 			
-			//Verifico che il formato del valore sia compatibile con uno dei DM
-			Prodotti prodottoCorrente  = this.repositoryProdotti.getProdottoFromDatamatrixFormat(codiceDataMatrixInserito, false);
-			EtichetteImballi etichettaImballo = this.repositoryImballi.getEtichettaImballoByCodiceEtichettaOrStartWith(codiceDataMatrixInserito);
+			List<String> listaCodiceDataMatrixInseritoSplittato = new ArrayList<>();
+			listaCodiceDataMatrixInseritoSplittato.add(codiceDataMatrixInserito);
+			if(codiceDataMatrixInserito.contains(";")) {
+				listaCodiceDataMatrixInseritoSplittato.addAll(Arrays.asList(codiceDataMatrixInserito.split(";")));
+			}
 			
-	        if(prodottoCorrente != null) {
-	        	Map<String, List<DatamatrixFasiEseguite>> mappaFasiEseguite = repositoryVerificaQrCode.getDatamatrixFasiEseguite(codiceDataMatrixInserito);
-	        	//si tratta di qrcode inserito, componento con 3 griglie
-	        	this.aggiungiTabDatiDataMatrix(mappaFasiEseguite, codiceDataMatrixInserito);	        	
-	        } else if(etichettaImballo != null){
-	        	this.aggiungiTabIballo(etichettaImballo);
-	        } else {
-	        	//verifica numero ddt
-        		throw new Exception("Datamatrix/qrcode inserito non trovato in sistema");
-	        }
+			Integer tabCreate = 0;
+			
+			for (String codiceDataMatrixInseritoSplittato : listaCodiceDataMatrixInseritoSplittato) {
+				//Verifico che il formato del valore sia compatibile con uno dei DM
+				Prodotti prodottoCorrente  = this.repositoryProdotti.getProdottoFromDatamatrixFormat(codiceDataMatrixInseritoSplittato, false);
+				EtichetteImballi etichettaImballo = this.repositoryImballi.getEtichettaImballoByCodiceEtichettaOrStartWith(codiceDataMatrixInseritoSplittato);
+				
+		        if(prodottoCorrente != null) {
+		        	Map<String, List<DatamatrixFasiEseguite>> mappaFasiEseguite = repositoryVerificaQrCode.getDatamatrixFasiEseguite(codiceDataMatrixInseritoSplittato);
+		        	//si tratta di qrcode inserito, componento con 3 griglie
+		        	this.aggiungiTabDatiDataMatrix(mappaFasiEseguite, codiceDataMatrixInseritoSplittato);	  
+		        	++tabCreate;      	
+		        } else if(etichettaImballo != null){
+		        	this.aggiungiTabIballo(etichettaImballo);
+		        	++tabCreate;
+		        } else {
+		        	//verifica numero ddt
+		        }
+			}
+			
+			if(tabCreate == 0) {
+	    		throw new Exception("Datamatrix/qrcode inserito non trovato in sistema");
+			}
+			
 		} catch (Exception e) {
           	ViewUtils.showErrorNotification("Errore durante caricamento dati: " + e.getMessage());
 		}
