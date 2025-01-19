@@ -21,6 +21,7 @@ import com.vaadin.demo.dashboard.data.model.CriteriBloccoDatamatrix;
 import com.vaadin.demo.dashboard.data.model.Datamatrix;
 import com.vaadin.demo.dashboard.data.model.FasiProcesso;
 import com.vaadin.demo.dashboard.data.model.FasiProcessoProdotto;
+import com.vaadin.demo.dashboard.data.model.VistaLottiFusioneAssegnazioneStampi;
 import com.vaadin.demo.dashboard.data.model.DatamatrixFasiProcesso;
 import com.vaadin.demo.dashboard.data.model.DatamatrixFasiProcessoTT;
 import com.vaadin.demo.dashboard.data.model.DatiProvaTenutaElio;
@@ -68,9 +69,11 @@ public class DatabaseHibernateConnection {
                 configuration.addAnnotatedClass(EtichettePezzi.class);
                 configuration.addAnnotatedClass(EtichetteBancali.class);
                 configuration.addAnnotatedClass(AnimeImballi.class);
+                configuration.addAnnotatedClass(VistaLottiFusioneAssegnazioneStampi.class);
                 configuration.addAnnotatedClass(VistaPackingList.class);
                 configuration.addAnnotatedClass(VistaDatamatrixFasiProcesso.class);
                 configuration.addAnnotatedClass(VistaDatamatrixFasiProcessoTT.class);
+                configuration.addAnnotatedClass(VistaLottiFusioneAssegnazioneStampi.class);
 
                 serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
         	}

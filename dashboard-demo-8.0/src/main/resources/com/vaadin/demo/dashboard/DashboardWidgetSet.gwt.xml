@@ -30,5 +30,5 @@
 
     <inherits name="fi.jasoft.qrcode.QrcodeWidgetset" />
 
-    <inherits name="com.vaadin.addon.charts.Widgetset" />
+    
 </module>
