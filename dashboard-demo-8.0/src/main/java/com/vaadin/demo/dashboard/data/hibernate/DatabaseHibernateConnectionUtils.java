@@ -12,7 +12,7 @@ public class DatabaseHibernateConnectionUtils {
         Properties settings = new Properties();
         settings.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
         
-        setLocalhostDatabaseProperties(settings, databaseName, true);
+        setLocalhostDatabaseProperties(settings, databaseName, false);
         
         settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
         settings.put(Environment.SHOW_SQL, "true");
