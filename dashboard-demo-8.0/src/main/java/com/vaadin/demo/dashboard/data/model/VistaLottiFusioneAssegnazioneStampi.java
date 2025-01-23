@@ -122,4 +122,60 @@ public class VistaLottiFusioneAssegnazioneStampi implements Serializable {
 	public void setUtenteAggiornamento(String utenteAggiornamento) {
 		this.utenteAggiornamento = utenteAggiornamento;
 	}
+
+	public String getCodiceProdotto() {
+		return codiceProdotto;
+	}
+
+	public void setCodiceProdotto(String codiceProdotto) {
+		this.codiceProdotto = codiceProdotto;
+	}
+
+	public String getDescrizioneStampo() {
+		return descrizioneStampo;
+	}
+
+	public void setDescrizioneStampo(String descrizioneStampo) {
+		this.descrizioneStampo = descrizioneStampo;
+	}
+
+	public String getCodificaStampo() {
+		return codificaStampo;
+	}
+
+	public void setCodificaStampo(String codificaStampo) {
+		this.codificaStampo = codificaStampo;
+	}
+
+	public String getDescrizioneProdotto() {
+		return descrizioneProdotto;
+	}
+
+	public void setDescrizioneProdotto(String descrizioneProdotto) {
+		this.descrizioneProdotto = descrizioneProdotto;
+	}
+
+	public String getDescrizioneStampoPackingList() {
+		return descrizioneStampoPackingList;
+	}
+
+	public void setDescrizioneStampoPackingList(String descrizioneStampoPackingList) {
+		this.descrizioneStampoPackingList = descrizioneStampoPackingList;
+	}
+
+	public Integer getIdStampoProdotto() {
+		return idStampoProdotto;
+	}
+
+	public void setIdStampoProdotto(Integer idStampoProdotto) {
+		this.idStampoProdotto = idStampoProdotto;
+	}
+
+	public Integer getIdProdotto() {
+		return idProdotto;
+	}
+
+	public void setIdProdotto(Integer idProdotto) {
+		this.idProdotto = idProdotto;
+	}
 }

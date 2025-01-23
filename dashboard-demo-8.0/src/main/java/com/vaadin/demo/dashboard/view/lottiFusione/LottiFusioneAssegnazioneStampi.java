@@ -1,8 +1,12 @@
 package com.vaadin.demo.dashboard.view.lottiFusione;
 
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
@@ -11,6 +15,8 @@ import com.vaadin.demo.dashboard.component.model.FilterDatamatrix;
 import com.vaadin.demo.dashboard.component.style.StyleUtils;
 import com.vaadin.demo.dashboard.component.utils.CommonUtils;
 import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils;
+import com.vaadin.demo.dashboard.component.utils.PermessiUtils;
+import com.vaadin.demo.dashboard.component.utils.PermessiUtils.PermessiUtentiLista;
 import com.vaadin.demo.dashboard.component.utils.UtentiUtils;
 import com.vaadin.demo.dashboard.component.utils.ViewUtils;
 import com.vaadin.demo.dashboard.component.view.MyCustomView;
@@ -20,15 +26,21 @@ import com.vaadin.demo.dashboard.data.model.DatamatrixFasiProcessoTT;
 import com.vaadin.demo.dashboard.data.model.FasiProcesso;
 import com.vaadin.demo.dashboard.data.model.Prodotti;
 import com.vaadin.demo.dashboard.data.model.VistaDatamatrixFasiProcessoTT;
+import com.vaadin.demo.dashboard.data.model.VistaLottiFusioneAssegnazioneStampi;
 import com.vaadin.demo.dashboard.data.repository.RepositoryDatamatrix;
 import com.vaadin.demo.dashboard.data.repository.RepositoryDatamatrixFasiProcesso;
 import com.vaadin.demo.dashboard.data.repository.RepositoryDatamatrixFasiProcessoTT;
 import com.vaadin.demo.dashboard.data.repository.RepositoryProdotti;
 import com.vaadin.demo.dashboard.data.repository.RepositoryProvider;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.Responsive;
+import com.vaadin.shared.ui.grid.ColumnResizeMode;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.DateField;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -49,6 +61,8 @@ public final class LottiFusioneAssegnazioneStampi extends MyCustomView {
 	private Label lableQtaPzFornataTrattamento, lableNumeroTrattamento;
 
 	private Integer numeroFornata;
+	
+	private List<Prodotti> listaProdotti = new ArrayList<Prodotti>();
 
 	public LottiFusioneAssegnazioneStampi() {
 		setSizeFull();
@@ -60,11 +74,14 @@ public final class LottiFusioneAssegnazioneStampi extends MyCustomView {
 		this.repositoryDatamatrixTrattamenti = RepositoryProvider.getRepositoryDatamatrixTrattamenti();
 		this.repositoryDatamatrixTrattamentiTT = RepositoryProvider.getRepositoryDatamatrixTrattamentiTT();
 		this.repositoryProdotti = RepositoryProvider.getRepositoryProdotti();
+		
+		listaProdotti = this.repositoryProdotti.getProdottoByPackingListPermesso(PermessiUtentiLista.FASE_PROCESSO_PACKINGLISTCCU.toString());
 
 		DashboardEventBus.register(this);
 
 		buildToolbar();
 		// addSpacigComponent(1);
+		addFilters();
 		buildDatamatrixFormVerticalLayoutContainer();
 		// addSpacigComponent(1);
 		builGridPezziFornata();
@@ -87,16 +104,134 @@ public final class LottiFusioneAssegnazioneStampi extends MyCustomView {
 	}
 
     private void addFilters() {
-        ComboBox<String> dataComboBox = new ComboBox<>("Data Selection", dataSelection);
-        ComboBox<Integer> yearComboBox = new ComboBox<>("Year Selection", yearSelection);
-        ComboBox<String> monthComboBox = new ComboBox<>("Month Selection", monthSelection);
+    	
+    	ComboBox<Integer> yearComboBox = new ComboBox<>("Anno");
+	    int currentYear = Year.now().getValue();
+	    yearComboBox.setItems(IntStream.rangeClosed(2019, currentYear).boxed().collect(Collectors.toList()));
+	    yearComboBox.setEmptySelectionAllowed(false);
+	    yearComboBox.setPlaceholder("Anno...");
 
+	    ComboBox<String> monthComboBox = new ComboBox<>("Mese");
+        List<String> monthsInItalian = Arrays.asList(
+            "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", 
+            "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
+        );
+        monthComboBox.setItems(monthsInItalian);
+        monthComboBox.setPlaceholder("Mese...");
+        monthComboBox.setEmptySelectionAllowed(true);
 
+        ComboBox<Prodotti> prodottiComboBox = new ComboBox<>("Prodotto");
+        prodottiComboBox.setItems(listaProdotti);
+        prodottiComboBox.setItemCaptionGenerator(Prodotti::getDescrizione);
+        prodottiComboBox.setPlaceholder("Prodotto...");
+        prodottiComboBox.setEmptySelectionAllowed(false);
+        
+        
         HorizontalLayout layoutFilter = new HorizontalLayout();
-        layoutFilter.add(dataComboBox, yearComboBox, monthComboBox);
+        layoutFilter.addComponent(prodottiComboBox);
+        layoutFilter.addComponent(yearComboBox);
+        layoutFilter.addComponent(monthComboBox);
 		addComponent(layoutFilter);
     }
+    
+    public void buildGridAndFormLottiFusioneAssegnazioneStampi() {
+    	
+        Grid<VistaLottiFusioneAssegnazioneStampi> grid = new Grid<VistaLottiFusioneAssegnazioneStampi>();
+        grid.setSizeFull();
+        grid.addColumn(VistaLottiFusioneAssegnazioneStampi::getCodiceProdotto).setCaption("Codice Prodotto");
+        grid.addColumn(VistaLottiFusioneAssegnazioneStampi::getDescrizioneStampoPackingList).setCaption("Descrizione Stampo Packing List");
+        grid.addColumn(VistaLottiFusioneAssegnazioneStampi::getCodificaStampo).setCaption("Codifica Stampo");
+        grid.addColumn(v -> v.getDaData().toString()).setCaption("Da Data");
+        grid.addColumn(v -> v.getaData().toString()).setCaption("A Data");
+        grid.addColumn(VistaLottiFusioneAssegnazioneStampi::getDaProgressivo).setCaption("Da Progressivo");
+        grid.addColumn(VistaLottiFusioneAssegnazioneStampi::getaProgressivo).setCaption("A Progressivo");
+        grid.addColumn(item -> {
+            int month = item.getDaData().getMonth();
+            String[] mesi = {"Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"};
+            return mesi[month - 1];
+        }).setCaption("Mese").setStyleGenerator(item -> {
+            int month = item.getDaData().getMonth();
+            return getStyleForMonth(month);
+        });
+        grid.addColumn(VistaLottiFusioneAssegnazioneStampi::getNote).setCaption("Note");
+        
 
+        grid.addComponentColumn(item -> {
+            Button editButton = new Button("Modifica", VaadinIcons.EDIT);
+            editButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+
+            Button deleteButton = new Button("Elimina", VaadinIcons.TRASH);
+            deleteButton.addStyleName(ValoTheme.BUTTON_DANGER);
+
+            HorizontalLayout actions = new HorizontalLayout(editButton, deleteButton);
+            return actions;
+        }).setCaption("Azioni");
+
+        grid.setColumnResizeMode(ColumnResizeMode.ANIMATED);
+        grid.setWidth(60, Unit.PERCENTAGE);
+
+        grid.setItems(items);
+        
+        
+
+        // Form sulla destra
+        FormLayout formLayout = new FormLayout();
+        formLayout.setSizeFull();
+        formLayout.setSpacing(true);
+
+        ComboBox<String> comboBoxStampo = new ComboBox<>("Seleziona Stampo");
+        comboBoxStampo.setItems("Stampo 1", "Stampo 2", "Stampo 3");
+        formLayout.addComponent(comboBoxStampo);
+
+        DateField daData = new DateField("Da Data");
+        formLayout.addComponent(daData);
+
+        DateField aData = new DateField("A Data");
+        formLayout.addComponent(aData);
+
+        TextField daProgressivo = new TextField("Da Progressivo");
+        daProgressivo.setMaxLength(4);
+        formLayout.addComponent(daProgressivo);
+
+        TextField aProgressivo = new TextField("A Progressivo");
+        aProgressivo.setMaxLength(4);
+        formLayout.addComponent(aProgressivo);
+
+        TextField note = new TextField("Note");
+        formLayout.addComponent(note);
+
+        Button saveButton = new Button("Salva");
+        saveButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        formLayout.addComponent(saveButton);
+
+        // Aggiungere tabella e form all'HorizontalLayout
+        addComponents(grid, formLayout);
+        setExpandRatio(grid, 2);
+        setExpandRatio(formLayout, 1);
+    	
+		HorizontalLayout layoutGridAndForm = new HorizontalLayout();
+		layoutGridAndForm.addComponent(grid);
+		layoutGridAndForm.addComponent(formLayout);
+		addComponent(layoutGridAndForm);
+    }
+
+    public String getStyleForMonth(int month) {
+        switch (month) {
+            case 1: return "background-color: #f9f9e0; color: #000;"; // Gennaio - Giallo chiaro
+            case 2: return "background-color: #e8f3f8; color: #000;"; // Febbraio - Azzurro chiaro
+            case 3: return "background-color: #f3e9f5; color: #000;"; // Marzo - Rosa chiaro
+            case 4: return "background-color: #eaf7e1; color: #000;"; // Aprile - Verde chiaro
+            case 5: return "background-color: #fef5e5; color: #000;"; // Maggio - Beige chiaro
+            case 6: return "background-color: #f9ece6; color: #000;"; // Giugno - Albicocca chiaro
+            case 7: return "background-color: #fef7e0; color: #000;"; // Luglio - Oro pallido
+            case 8: return "background-color: #eaf4f8; color: #000;"; // Agosto - Cielo chiaro
+            case 9: return "background-color: #f9f2e5; color: #000;"; // Settembre - Sabbia chiaro
+            case 10: return "background-color: #f4e8ee; color: #000;"; // Ottobre - Lavanda chiaro
+            case 11: return "background-color: #eaf6f2; color: #000;"; // Novembre - Verde acqua chiaro
+            case 12: return "background-color: #f9f0f5; color: #000;"; // Dicembre - Rosa pallido
+            default: return "background-color: #ffffff; color: #000;"; // Default - Bianco
+        }
+    }
 
 	private void buildDatamatrixFormVerticalLayoutContainer() {
 

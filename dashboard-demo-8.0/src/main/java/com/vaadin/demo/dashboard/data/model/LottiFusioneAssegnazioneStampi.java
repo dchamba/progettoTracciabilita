@@ -19,10 +19,9 @@ public class LottiFusioneAssegnazioneStampi implements Serializable {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private int idLottoFusioneAssegnazioneStampo;
 	
-    @ManyToOne
-    @MapsId("idProdotto")
-    @JoinColumn(name = "idStampoProdotto")
-	private Prodotti prodotto;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name ="idStampoProdotto")
+    private StampiProdotti stampiProdotto;
     
     private Date daData;
     private Date aData;
@@ -43,12 +42,12 @@ public class LottiFusioneAssegnazioneStampi implements Serializable {
 		this.idLottoFusioneAssegnazioneStampo = idLottoFusioneAssegnazioneStampo;
 	}
 
-	public Prodotti getProdotto() {
-		return prodotto;
+	public StampiProdotti getProdotto() {
+		return stampiProdotto;
 	}
 
-	public void setProdotto(Prodotti prodotto) {
-		this.prodotto = prodotto;
+	public void setProdotto(StampiProdotti prodotto) {
+		this.stampiProdotto = prodotto;
 	}
 
 	public Date getDaData() {
