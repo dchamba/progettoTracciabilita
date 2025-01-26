@@ -25,8 +25,12 @@ public class VistaLottiFusioneAssegnazioneStampi implements Serializable {
     private String descrizioneStampoPackingList;
     private String codificaStampo;
     private Integer idProdotto;
-    private Integer idStampoProdotto;
-	
+    //private Integer idStampoProdotto;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name ="idStampoProdotto")
+	private StampiProdotti stampiProdotto;
+    
     @ManyToOne
     @MapsId("idProdotto")
     @JoinColumn(name = "idStampoProdotto")
@@ -163,19 +167,19 @@ public class VistaLottiFusioneAssegnazioneStampi implements Serializable {
 		this.descrizioneStampoPackingList = descrizioneStampoPackingList;
 	}
 
-	public Integer getIdStampoProdotto() {
-		return idStampoProdotto;
-	}
-
-	public void setIdStampoProdotto(Integer idStampoProdotto) {
-		this.idStampoProdotto = idStampoProdotto;
-	}
-
 	public Integer getIdProdotto() {
 		return idProdotto;
 	}
 
 	public void setIdProdotto(Integer idProdotto) {
 		this.idProdotto = idProdotto;
+	}
+
+	public StampiProdotti getStampiProdotto() {
+		return stampiProdotto;
+	}
+
+	public void setStampiProdotto(StampiProdotti stampiProdotto) {
+		this.stampiProdotto = stampiProdotto;
 	}
 }

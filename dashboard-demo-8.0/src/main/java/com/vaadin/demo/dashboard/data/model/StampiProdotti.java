@@ -26,9 +26,9 @@ public class StampiProdotti implements Serializable {
 	    private String descrizioneStampo;
 	    private String descrizioneStampoPackingList;
 	    private String codificaStampo;
-	    private boolean isDefault;
-	    private boolean isAttivo;
-	    private boolean isEliminato;
+//	    private boolean default;
+	    private boolean attivo;
+	    private boolean eliminato;
 
 	    public StampiProdotti() { }
 	    
@@ -72,28 +72,28 @@ public class StampiProdotti implements Serializable {
 	        this.codificaStampo = codificaStampo;
 	    }
 
-	    public boolean isDefault() {
-	        return isDefault;
-	    }
-
-	    public void setDefault(boolean isDefault) {
-	        this.isDefault = isDefault;
-	    }
+//	    public boolean isDefault() {
+//	        return default;
+//	    }
+//
+//	    public void setDefault(boolean isDefault) {
+//	        this.default = isDefault;
+//	    }
 
 	    public boolean isAttivo() {
-	        return isAttivo;
+	        return attivo;
 	    }
 
 	    public void setAttivo(boolean isAttivo) {
-	        this.isAttivo = isAttivo;
+	        this.attivo = isAttivo;
 	    }
 
 	    public boolean isEliminato() {
-	        return isEliminato;
+	        return eliminato;
 	    }
 
 	    public void setEliminato(boolean isEliminato) {
-	        this.isEliminato = isEliminato;
+	        this.eliminato = isEliminato;
 	    }
 
 }

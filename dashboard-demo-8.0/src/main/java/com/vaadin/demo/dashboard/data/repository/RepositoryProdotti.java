@@ -1,7 +1,9 @@
 package com.vaadin.demo.dashboard.data.repository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.hibernate.Criteria;
@@ -63,6 +65,22 @@ public class RepositoryProdotti {
         List<Prodotti> prodotti = criteria.list();
         session.close();
         return prodotti;
+	}
+	
+	public List<Prodotti> getProdottiByIdProdotti(List<Integer> listaIdProdotti) {
+        System.out.println("Reading id prodotti");
+        
+		Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
+		session.beginTransaction();
+		
+		Criteria criteria = session.createCriteria(Prodotti.class);
+		criteria.add(RepositoryUtils.getCriteraEliminato());
+		criteria.add(Restrictions.in(CampiProdotti.idProdotto, listaIdProdotti));
+
+        List<Prodotti> listaprodotti = criteria.list();
+        Set<Prodotti> prodotti = new HashSet<>(listaprodotti);
+        session.close();
+        return new ArrayList<Prodotti>(prodotti);
 	}
 	
 	public Prodotti getProdottoByNumeroDisegno(String numeroDisegno) {

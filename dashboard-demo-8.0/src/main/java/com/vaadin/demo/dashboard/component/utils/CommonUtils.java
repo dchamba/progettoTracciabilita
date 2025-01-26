@@ -5,11 +5,13 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -85,6 +87,27 @@ public class CommonUtils {
 	public static Date toDate(String formato, String dataStringa) throws ParseException {
 		return  new SimpleDateFormat(formato, Locale.ITALIAN).parse(dataStringa);
 	}
+	
+    public static Optional<LocalDate[]> calcolaIntervallo(Integer anno, Integer mese) {
+        LocalDate dataInizio = null;
+        LocalDate dataFine = null;
+
+        if (anno != null && mese != null) {
+            // Entrambi anno e mese forniti
+            YearMonth yearMonth = YearMonth.of(anno, mese);
+            dataInizio = yearMonth.atDay(1);
+            dataFine = yearMonth.atEndOfMonth();
+        } else if (anno != null) {
+            // Solo l'anno fornito, considera l'intero anno
+            dataInizio = LocalDate.of(anno, 1, 1);
+            dataFine = LocalDate.of(anno, 12, 31);
+        } else {
+            // Nessun anno e mese fornito, restituisce un Optional vuoto
+            return Optional.empty();
+        }
+
+        return Optional.of(new LocalDate[]{dataInizio, dataFine});
+    }
 
 	public static String fromIntConZeroIniziali(Integer numero, Integer lunghezzaString) {
 		if (numero == null) {

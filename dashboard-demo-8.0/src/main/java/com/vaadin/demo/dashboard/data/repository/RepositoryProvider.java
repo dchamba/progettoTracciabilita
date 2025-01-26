@@ -17,6 +17,8 @@ public class RepositoryProvider {
 	private static RepositoryCriteriBloccoDatamatrix repositoryCriteriBloccoDatamatrix = null;
 	private static RepositoryPin5 repositoryPin5 = null;
 	private static RepositoryMarcatoriLaser repositoryMarcatoriLaser = null;
+	private static RepositoryStampiProdotti repositoryStampiProdotti = null;
+	private static RepositoryLottiFusioneAssegnazioneStampi repositoryLottiFusioneAssegnazioneStampi = null;
 	
 	public static RepositoryDatamatrix getRepositoryDatamatrix() {
 		if (RepositoryProvider.repositoryDatamatrix == null) {
@@ -121,5 +123,19 @@ public class RepositoryProvider {
 			RepositoryProvider.repositoryMarcatoriLaser = new RepositoryMarcatoriLaser();
 		}
 		return RepositoryProvider.repositoryMarcatoriLaser;
+	}
+
+	public static RepositoryStampiProdotti getRepositoryStampiProdotti() {
+		if (RepositoryProvider.repositoryStampiProdotti == null) {
+			RepositoryProvider.repositoryStampiProdotti = new RepositoryStampiProdotti();
+		}
+		return RepositoryProvider.repositoryStampiProdotti;
+	}
+
+	public static RepositoryLottiFusioneAssegnazioneStampi getRepositoryLottiFusioneAssegnazioneStampi() {
+		if (RepositoryProvider.repositoryLottiFusioneAssegnazioneStampi == null) {
+			RepositoryProvider.repositoryLottiFusioneAssegnazioneStampi = new RepositoryLottiFusioneAssegnazioneStampi();
+		}
+		return RepositoryProvider.repositoryLottiFusioneAssegnazioneStampi;
 	}
 }

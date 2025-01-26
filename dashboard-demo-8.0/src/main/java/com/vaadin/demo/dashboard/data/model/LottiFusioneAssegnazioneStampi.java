@@ -42,11 +42,11 @@ public class LottiFusioneAssegnazioneStampi implements Serializable {
 		this.idLottoFusioneAssegnazioneStampo = idLottoFusioneAssegnazioneStampo;
 	}
 
-	public StampiProdotti getProdotto() {
+	public StampiProdotti getStampiProdotto() {
 		return stampiProdotto;
 	}
 
-	public void setProdotto(StampiProdotti prodotto) {
+	public void setStampoProdotto(StampiProdotti prodotto) {
 		this.stampiProdotto = prodotto;
 	}
 
@@ -62,7 +62,7 @@ public class LottiFusioneAssegnazioneStampi implements Serializable {
 		return aData;
 	}
 
-	public void setaData(Date aData) {
+	public void setAData(Date aData) {
 		this.aData = aData;
 	}
 
@@ -78,7 +78,7 @@ public class LottiFusioneAssegnazioneStampi implements Serializable {
 		return aProgressivo;
 	}
 
-	public void setaProgressivo(Integer aProgressivo) {
+	public void setAProgressivo(Integer aProgressivo) {
 		this.aProgressivo = aProgressivo;
 	}
 

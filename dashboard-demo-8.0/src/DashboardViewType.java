@@ -5,7 +5,6 @@ import com.vaadin.demo.dashboard.component.utils.PermessiUtils.PermessiUtentiLis
 import com.vaadin.demo.dashboard.component.utils.ViewUtils;
 import com.vaadin.demo.dashboard.view.anime.VerificaUtilizzoImballiAnime;
 import com.vaadin.demo.dashboard.view.anime.VistaImballiAnime;
-import com.vaadin.demo.dashboard.view.datamatrix.DatamatrixView;
 import com.vaadin.demo.dashboard.view.datamatrix.NewDatamatrixView;
 import com.vaadin.demo.dashboard.view.datamatrix.VerificaTracciablitaQrCode;
 import com.vaadin.demo.dashboard.view.fasiprocesso.FaseAnimeUtilizzoView;
@@ -18,6 +17,7 @@ import com.vaadin.demo.dashboard.view.fasiprocesso.FaseProvaTenutaView;
 import com.vaadin.demo.dashboard.view.fasiprocesso.FaseSabbiaturaView;
 import com.vaadin.demo.dashboard.view.fasiprocesso.FaseSbavaturaView;
 import com.vaadin.demo.dashboard.view.fasiprocesso.FaseSterraturaView;
+import com.vaadin.demo.dashboard.view.lottiFusione.LottiFusioneAssegnazioneStampiView;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListATTCOView;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListCCUView;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListFia0504;
@@ -41,6 +41,7 @@ public enum DashboardViewType {
     	TRATTAMENTOHTT("GESTIONE_TRATTAMENTO", ViewUtils.titoloTrattamentoHtt, TrattamentoView.class, FontAwesome.FIRE, false, PermessiUtentiLista.GESTIONE_TRATTAMENTO),
     	IMBALLI_ANIME("IMBALLI_ANIME", ViewUtils.titoloVistaImballiAnime, VistaImballiAnime.class, FontAwesome.FIRE, false, PermessiUtentiLista.IMBALLI_ANIME),
     	IMBALLI_ANIME_UTILIZZO("IMBALLI_ANIME_UTILIZZO", ViewUtils.titoloVistaImballiAnimeUtilizzo, VerificaUtilizzoImballiAnime.class, FontAwesome.FIRE, false, PermessiUtentiLista.IMBALLI_ANIME_UTILIZZO),
+    	LOTTI_FUSIONE_DATAMATRIX("LOTTI_FUSIONE_DATAMATRIX", ViewUtils.titoloAssegnazioneStampiLottiFusione, LottiFusioneAssegnazioneStampiView.class, FontAwesome.FIRE, false, PermessiUtentiLista.LOTTI_FUSIONE_DATAMATRIX),
     	FASE_PROCESSO_FIN("FASE_PROCESSO_FIN", ViewUtils.titoloFaseProcessoFin, FaseControlloFinaleView.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_FIN),
 		FASE_PROCESSO_TEN("FASE_PROCESSO_TEN", ViewUtils.titoloFaseProcessoTen, FaseProvaTenutaView.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_TEN),
 		FASE_PROCESSO_LAV("FASE_PROCESSO_LAV", ViewUtils.titoloFaseProcessoLav, FaseLavorazioneView.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_LAV),

@@ -1,5 +1,8 @@
 package com.vaadin.demo.dashboard.component.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.vaadin.server.Page;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.shared.Position;
@@ -24,7 +27,7 @@ public class ViewUtils {
 	public static String titoloVistaImballiAnimeUtilizzo = "Imballi anime utilizzo";
 	public static String titoloVistaTracciabilitàDatamatrix = "Tracciabilità datamatrix";
 	public static String titoloVistaVerificaQrCode = "Verifica QrCode";
-	public static String titoloAssegnazioneStampiLottiFusione = "Assegnazione stampi a lotti fusione (QrCode)";
+	public static String titoloAssegnazioneStampiLottiFusione = "Ass. stampi a lotti fusione";
 	
 	
 	public static String titoloFaseProcessoFin = "Controllo finale";
@@ -61,6 +64,11 @@ public class ViewUtils {
 	public static String nomeStampaEtichettaImballoView = "stampaEtichettaImballo";
 	
 	public static int defaultPaginationLimit = 10;
+	
+	public static List<String> mesiInItaliano = Arrays.asList(
+            "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", 
+            "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
+        );
 	
 	public static void showSuccessfullNotification(String caption) {
         Notification success = new Notification(caption, Notification.Type.WARNING_MESSAGE);
