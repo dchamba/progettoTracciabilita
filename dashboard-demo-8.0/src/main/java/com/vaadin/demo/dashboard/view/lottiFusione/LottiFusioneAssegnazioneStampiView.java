@@ -228,8 +228,8 @@ public final class LottiFusioneAssegnazioneStampiView extends MyCustomView {
             String mese = ViewUtils.mesiInItaliano.get(month);
             return mese;
         }).setCaption("Mese");
-        grid.addColumn(v -> CommonUtils.formatDate(v.getaData(), CommonUtils.DATEFORMAT)).setCaption("Da Data");
-        grid.addColumn(v -> CommonUtils.formatDate(v.getDaData(), CommonUtils.DATEFORMAT)).setCaption("A Data");
+        grid.addColumn(v -> CommonUtils.formatDate(v.getDaData(), CommonUtils.DATEFORMAT)).setCaption("Da Data");
+        grid.addColumn(v -> CommonUtils.formatDate(v.getaData(), CommonUtils.DATEFORMAT)).setCaption("A Data");
         grid.addColumn(VistaLottiFusioneAssegnazioneStampi::getDaProgressivo).setCaption("Da Prog.");
         grid.addColumn(VistaLottiFusioneAssegnazioneStampi::getaProgressivo).setCaption("A Prog.");
         grid.addColumn(VistaLottiFusioneAssegnazioneStampi::getNote).setCaption("Note");
