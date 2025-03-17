@@ -17,6 +17,7 @@ import com.vaadin.demo.dashboard.view.fasiprocesso.FaseProvaTenutaView;
 import com.vaadin.demo.dashboard.view.fasiprocesso.FaseSabbiaturaView;
 import com.vaadin.demo.dashboard.view.fasiprocesso.FaseSbavaturaView;
 import com.vaadin.demo.dashboard.view.fasiprocesso.FaseSterraturaView;
+import com.vaadin.demo.dashboard.view.lottiFusione.CriteriBloccoDatamatrixView;
 import com.vaadin.demo.dashboard.view.lottiFusione.LottiFusioneAssegnazioneStampiView;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListATTCOView;
 import com.vaadin.demo.dashboard.view.packinglist.PackingListCCUView;
@@ -42,6 +43,7 @@ public enum DashboardViewType {
     	IMBALLI_ANIME("IMBALLI_ANIME", ViewUtils.titoloVistaImballiAnime, VistaImballiAnime.class, FontAwesome.FIRE, false, PermessiUtentiLista.IMBALLI_ANIME),
     	IMBALLI_ANIME_UTILIZZO("IMBALLI_ANIME_UTILIZZO", ViewUtils.titoloVistaImballiAnimeUtilizzo, VerificaUtilizzoImballiAnime.class, FontAwesome.FIRE, false, PermessiUtentiLista.IMBALLI_ANIME_UTILIZZO),
     	LOTTI_FUSIONE_DATAMATRIX("LOTTI_FUSIONE_DATAMATRIX", ViewUtils.titoloAssegnazioneStampiLottiFusione, LottiFusioneAssegnazioneStampiView.class, FontAwesome.FIRE, false, PermessiUtentiLista.LOTTI_FUSIONE_DATAMATRIX),
+    	CRITERI_BLOCCO_DATAMATRIX("CRITERI_BLOCCO_DATAMATRIX", ViewUtils.titoloCriteriBloccoDatamatrix, CriteriBloccoDatamatrixView.class, FontAwesome.FIRE, false, PermessiUtentiLista.CRITERI_BLOCCO_DATAMATRIX),
     	FASE_PROCESSO_FIN("FASE_PROCESSO_FIN", ViewUtils.titoloFaseProcessoFin, FaseControlloFinaleView.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_FIN),
 		FASE_PROCESSO_TEN("FASE_PROCESSO_TEN", ViewUtils.titoloFaseProcessoTen, FaseProvaTenutaView.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_TEN),
 		FASE_PROCESSO_LAV("FASE_PROCESSO_LAV", ViewUtils.titoloFaseProcessoLav, FaseLavorazioneView.class, FontAwesome.FIRE, false, PermessiUtentiLista.FASE_PROCESSO_LAV),

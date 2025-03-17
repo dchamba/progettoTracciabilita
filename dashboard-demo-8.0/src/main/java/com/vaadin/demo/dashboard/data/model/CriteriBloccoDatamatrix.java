@@ -35,6 +35,8 @@ public class CriteriBloccoDatamatrix implements Serializable {
 	
 	private Boolean attivo; 
 	
+	private Boolean eliminato; 
+	
 	public CriteriBloccoDatamatrix() { }
 
 	public int getIdBloccoDatamatrix() {
@@ -115,6 +117,14 @@ public class CriteriBloccoDatamatrix implements Serializable {
 
 	public void setAttivo(Boolean attivo) {
 		this.attivo = attivo;
+	}
+
+	public Boolean getEliminato() {
+		return eliminato;
+	}
+
+	public void setEliminato(Boolean eliminato) {
+		this.eliminato = eliminato;
 	}
 
 }

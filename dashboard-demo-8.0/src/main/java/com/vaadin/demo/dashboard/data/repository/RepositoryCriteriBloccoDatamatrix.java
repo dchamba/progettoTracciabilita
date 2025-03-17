@@ -1,23 +1,21 @@
 package com.vaadin.demo.dashboard.data.repository;
 
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.MatchMode;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.vaadin.demo.dashboard.component.utils.CommonUtils;
 import com.vaadin.demo.dashboard.data.hibernate.DatabaseHibernateConnection;
-import com.vaadin.demo.dashboard.data.model.Config;
 import com.vaadin.demo.dashboard.data.model.CriteriBloccoDatamatrix;
 import com.vaadin.demo.dashboard.data.model.Datamatrix;
-import com.vaadin.demo.dashboard.data.repository.campi.CampiDatamatrix;
+import com.vaadin.demo.dashboard.data.model.Prodotti;
 
 @SuppressWarnings("unchecked")
 public class RepositoryCriteriBloccoDatamatrix {
@@ -90,4 +88,60 @@ public class RepositoryCriteriBloccoDatamatrix {
     	
     	return null;
 	}
+
+    public List<CriteriBloccoDatamatrix> findAll() {
+        Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
+        Criteria criteria = session.createCriteria(CriteriBloccoDatamatrix.class);
+        criteria.add(Restrictions.eq("eliminato", false)); // Escludi i record eliminati
+        criteria.addOrder(Order.desc("dataUltimoAggiornamento"));
+        List<CriteriBloccoDatamatrix> results = criteria.list();
+        session.close();
+        return results;
+    }
+
+    public void saveOrUpdate(CriteriBloccoDatamatrix record) {
+        Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        session.saveOrUpdate(record);
+        transaction.commit();
+        session.close();
+    }
+
+    public void delete(CriteriBloccoDatamatrix record) {
+        Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        record.setEliminato(true);
+        record.setAttivo(false);
+        session.update(record);
+        transaction.commit();
+        session.close();
+    }
+
+    public List<CriteriBloccoDatamatrix> findByProdottoAndIntervallo(Prodotti prodotto, Date daData, Date aData, Integer daProgressivo, Integer aProgressivo) {
+        Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
+        Criteria criteria = session.createCriteria(CriteriBloccoDatamatrix.class);
+        criteria.add(Restrictions.eq("eliminato", false));
+
+        if (prodotto != null) {
+            criteria.add(Restrictions.eq("prodotto", prodotto));
+        }
+
+        if (daData != null && aData != null) {
+            criteria.add(Restrictions.and(
+                    Restrictions.le("daData", aData),
+                    Restrictions.ge("aData", daData)
+            ));
+        }
+
+        if (daProgressivo != null && aProgressivo != null) {
+            criteria.add(Restrictions.and(
+                    Restrictions.le("daProgressivo", aProgressivo),
+                    Restrictions.ge("aProgressivo", daProgressivo)
+            ));
+        }
+
+        List<CriteriBloccoDatamatrix> results = criteria.list();
+        session.close();
+        return results;
+    }
 }

@@ -28,7 +28,7 @@ public class ViewUtils {
 	public static String titoloVistaTracciabilitàDatamatrix = "Tracciabilità datamatrix";
 	public static String titoloVistaVerificaQrCode = "Verifica QrCode";
 	public static String titoloAssegnazioneStampiLottiFusione = "Ass. stampi a lotti fusione";
-	
+	public static String titoloCriteriBloccoDatamatrix = "Criteri blocco datamatrix";
 	
 	public static String titoloFaseProcessoFin = "Controllo finale";
 	public static String titoloFaseProcessoTen = "Prova tenuta";
