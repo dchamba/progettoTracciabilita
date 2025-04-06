@@ -15,6 +15,7 @@ import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils.FasiProcessoL
 import com.vaadin.demo.dashboard.component.utils.PermessiUtils;
 import com.vaadin.demo.dashboard.component.utils.ViewUtils;
 import com.vaadin.demo.dashboard.component.view.MyCustomView;
+import com.vaadin.demo.dashboard.component.view.SegmentedProgressBar;
 import com.vaadin.demo.dashboard.data.model.CriteriBloccoDatamatrix;
 import com.vaadin.demo.dashboard.data.model.Datamatrix;
 import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
@@ -81,6 +82,18 @@ public class PackingListView extends MyCustomView {
 	Grid<VistaPackingList> gridOmr06 = new Grid<VistaPackingList>();
 	Grid<VistaPackingList> gridOmr07 = new Grid<VistaPackingList>();
 	Grid<VistaPackingList> gridOmr08 = new Grid<VistaPackingList>();
+
+	SegmentedProgressBar progressBarScatolaPan003 = null;
+	SegmentedProgressBar progressBarScatolaPan004 = null;
+	SegmentedProgressBar progressBarScatolaPan010 = null;
+
+	SegmentedProgressBar progressBarBancalePan003 = null;
+	SegmentedProgressBar progressBarBancalePan004 = null;
+	SegmentedProgressBar progressBarBancalePan010 = null;
+	
+	TipoImballi tipoImballoPan003 = null;
+	TipoImballi tipoImballoPan004 =  null;
+	TipoImballi tipoImballoPan010 = null;
 	
 	TextField textDatamatrix;
 	
@@ -112,11 +125,13 @@ public class PackingListView extends MyCustomView {
         this.verificaFasiProcessoPrecedentiDatamatrix = Boolean.valueOf(RepositoryProvider.getRepositoryConfig().getConfigByChiave(RepositoryUtils.verificaFasiProcessoPrecedentiDatamatrix));
         
         DashboardEventBus.register(this);
-
+        initializeVariables();
         buildDatamatrixForm();
 	}
 	
 	void initializeGrid() { }
+	
+	void initializeVariables() { }
 
 	String getStringPermessoPackingList() { return null; }
 	

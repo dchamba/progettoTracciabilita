@@ -1,9 +1,12 @@
 package com.vaadin.demo.dashboard.component.utils;
 
+import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Sizeable.Unit;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -13,17 +16,25 @@ public class CustomPopupWindow extends Window  {
 	
 	boolean esito = false;
 	
-	public CustomPopupWindow (String titolo, String messaggio) {
+	public static String urlImmagineBancaleScatole = "https://as2.ftcdn.net/v2/jpg/00/50/39/73/1000_F_50397356_rp298gZXSTYhFqExqkRKmY1Exec4phRW.jpg";
+	public static String urlImmagineBancaleScatole1 = "https://quicargo.com/wp-content/uploads/2022/05/goods-exceed-pallet-1.png";
+	
+    public CustomPopupWindow(String titolo, String messaggio) {
+        this(titolo, messaggio, null);
+    }
+
+    public CustomPopupWindow(String titolo, String messaggio, String imageUrl) {
 		setCaption(titolo);
         setWidth(700.0f, Unit.PIXELS);
-        setHeight(200.0f, Unit.PIXELS);
+        if(imageUrl == null) setHeight(200.0f, Unit.PIXELS);
+        else setHeight(350.0f, Unit.PIXELS);
         setModal(true);
         setClosable(false);
         setDraggable(true);
         setResizable(false);
 
-        
         Label labelMessaggio = new Label(messaggio);
+        labelMessaggio.setContentMode(ContentMode.HTML);
 
         HorizontalLayout lyoutPulsanti = new HorizontalLayout();
         
@@ -49,6 +60,16 @@ public class CustomPopupWindow extends Window  {
         content.setDefaultComponentAlignment(Alignment.TOP_CENTER);
         content.setMargin(true);
         content.addComponent(labelMessaggio);
+        // Inserisci immagine se specificata
+        if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+            Image img = new Image(null, new ExternalResource(imageUrl));
+            img.setHeight("100px");
+
+            //lyoutPulsanti.setSpacing(true);
+            content.addComponent(img);
+            content.addComponent(new Label());
+        }
+        
         content.addComponent(lyoutPulsanti);
 
         content.setStyleName(Type.ERROR_MESSAGE.getStyle());

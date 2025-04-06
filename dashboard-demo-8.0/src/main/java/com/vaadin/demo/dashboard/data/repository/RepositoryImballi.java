@@ -340,10 +340,12 @@ public class RepositoryImballi {
 		List<VistaPackingList> pzInBancale = getVistaPackingListByCodiceBancale(etichettaImballo.getCodiceEtichettaBancaleSmeup());
 		List<VistaPackingList> listaEtichette = pzInBancale.stream().filter(CommonUtils.distinctByKey(p -> p.getCodiceEtichetta())).collect(Collectors.toList());
 		
+		result.setCodiceBancale(etichettaImballo.getCodiceEtichettaBancaleSmeup());
 		result.setQtyOfPcsInThePallet(pzInBancale.size());
 		result.setQtyOfBoxesInThePallet(listaEtichette.size());
 		result.setBoxesQtyPerPalletComplete(listaEtichette.size() == tipoImballoCorrente.getQtaScatolePerBancale());
 		
+		//Qtà standard bancale/scatole
 		result.setStandardBoxesQtyPerPallet(tipoImballoCorrente.getQtaScatolePerBancale());
 		result.setStandardPcsQtyPerBoxes(tipoImballoCorrente.getQtaPezziPerScatola());
 		result.setStandardPcsQtyPerPallet(result.getStandardPcsQtyPerBoxes() * result.getStandardBoxesQtyPerPallet());

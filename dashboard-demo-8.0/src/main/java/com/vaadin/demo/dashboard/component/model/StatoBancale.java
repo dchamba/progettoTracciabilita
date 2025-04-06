@@ -18,6 +18,8 @@ public class StatoBancale {
 	
 	private int standardBoxesQtyPerPallet;
 	
+	private String codiceBancale;
+	
 	public StatoBancale() {	}
 
 	public boolean isBoxesQtyPerPalletComplete() {
@@ -51,6 +53,16 @@ public class StatoBancale {
 	public HashMap<String, Integer> getBoxesWithMissingPcs() {
 		return boxesWithMissingPcs;
 	}
+	
+	public int getBoxesWithNotCompleteQty() {		
+		int countZeroMissing = 0;
+		for (Integer value : boxesWithMissingPcs.values()) {
+		    if (value > 0 && value != standardPcsQtyPerBoxes) {
+		        countZeroMissing++;
+		    }
+		}
+		return countZeroMissing;
+	}
 
 	public void setBoxesWithMissingPcs(HashMap<String, Integer> boxesWithMissingPcs) {
 		this.boxesWithMissingPcs = boxesWithMissingPcs;
@@ -82,6 +94,14 @@ public class StatoBancale {
 
 	public void setStandardPcsQtyPerPallet(int standardPcsQtyPerPallet) {
 		this.standardPcsQtyPerPallet = standardPcsQtyPerPallet;
+	}
+
+	public String getCodiceBancale() {
+		return codiceBancale;
+	}
+
+	public void setCodiceBancale(String codiceBancale) {
+		this.codiceBancale = codiceBancale;
 	}
 
 }
