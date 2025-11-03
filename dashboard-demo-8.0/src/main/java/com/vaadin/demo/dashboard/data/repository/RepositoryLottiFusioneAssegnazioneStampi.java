@@ -172,7 +172,10 @@ public class RepositoryLottiFusioneAssegnazioneStampi {
                 Restrictions.ge("aProgressivo", lottoFusione.getDaProgressivo())
             ));
         }
-
+        
+        if(lottoFusione.getIdLottoFusioneAssegnazioneStampo() > 0) {
+            criteria.add(Restrictions.ne("idLottoFusioneAssegnazioneStampo", lottoFusione.getIdLottoFusioneAssegnazioneStampo()));
+        }
         // Aggiungi la congiunzione ai criteri principali
         criteria.add(conjunction);
 

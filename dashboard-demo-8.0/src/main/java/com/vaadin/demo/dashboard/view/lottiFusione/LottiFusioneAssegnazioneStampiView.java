@@ -337,8 +337,22 @@ public final class LottiFusioneAssegnazioneStampiView extends MyCustomView {
     	    this.fieldAData.setValue(vista.getaData().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
     	    this.fieldDaData.setValue(vista.getDaData().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
     	    
-    	    this.fieldDaProgressivo.setValue(String.valueOf(vista.getDaProgressivo()));
-    	    this.fieldAProgressivo.setValue(String.valueOf(vista.getaProgressivo()));
+    	    //this.fieldDaProgressivo.setValue(String.valueOf(vista.getDaProgressivo()));
+    	    //this.fieldAProgressivo.setValue(String.valueOf(vista.getaProgressivo()));
+    	    
+    	    Integer da = vista.getDaProgressivo();
+    	    if (da != null) {
+    	        this.fieldDaProgressivo.setValue(da.toString());
+    	    } else {
+    	        this.fieldDaProgressivo.clear(); // evita di passare "null"
+    	    }
+
+    	    Integer a = vista.getaProgressivo();
+    	    if (a != null) {
+    	        this.fieldAProgressivo.setValue(a.toString());
+    	    } else {
+    	        this.fieldAProgressivo.clear();
+    	    }
     	    
     	    this.fieldNote.setValue(vista.getNote() != null ? vista.getNote() : "");
     	}
@@ -401,7 +415,13 @@ public final class LottiFusioneAssegnazioneStampiView extends MyCustomView {
 
 	    // Salvataggio dell'oggetto nel database
 	    try {
-	        Integer idLottoFusione = this.repositoryLottiFusioneAssegnazioneStampi.save(nuovoLotto);
+	    	Integer idLottoFusione = null;
+	    	if(nuovoLotto.getIdLottoFusioneAssegnazioneStampo() > 0) {
+		        this.repositoryLottiFusioneAssegnazioneStampi.saveOrUpdate(nuovoLotto);
+		        idLottoFusione = this.currentVistaLottiFusioneAssegnazioneStampi.getIdLottoFusioneAssegnazioneStampo();
+	    	} else {
+		        idLottoFusione = this.repositoryLottiFusioneAssegnazioneStampi.save(nuovoLotto);
+	    	}
 	        ViewUtils.showSuccessfullNotification("Il lotto è stato salvato correttamente");
 	        
 	        this.setFormField(null);

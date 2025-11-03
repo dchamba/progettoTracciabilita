@@ -13,6 +13,9 @@ public class NumericField extends TextField  {
 			@Override
 			public void valueChange(ValueChangeEvent<String> event) {
 			    String text = event.getValue();
+
+			    if (text == null || text.trim().isEmpty()) { return; }
+			    
 			    try {
 			        new Double(text);
 			    } catch (NumberFormatException e) {
