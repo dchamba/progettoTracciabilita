@@ -18,6 +18,7 @@ import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
 import com.vaadin.demo.dashboard.data.model.Prodotti;
 import com.vaadin.demo.dashboard.data.model.TipoImballi;
 import com.vaadin.demo.dashboard.data.model.VistaPackingList;
+import com.vaadin.demo.dashboard.view.scarto.ScartoWindow;
 import com.vaadin.server.Page;
 import com.vaadin.server.Responsive;
 import com.vaadin.ui.Alignment;
@@ -34,6 +35,7 @@ import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.ui.Button;
 
 @SuppressWarnings("serial")
 public final class PackingListCCUView extends PackingListView {
@@ -43,6 +45,9 @@ public final class PackingListCCUView extends PackingListView {
 	private Label lableQtaPzPan003, lableQtaPzPan004, lableQtaPzPan005, lableQtaPzPan010;
 	private Label lableEtichettaPan003, lableEtichettaPan004, lableEtichettaPan005, lableEtichettaPan010;
 	private Label lableBancalePan003, lableBancalePan004, lableBancalePan010;
+	
+	private Button toggleButtonScarto;
+	private boolean modalitaScarto = false;
 	
 	public PackingListCCUView() { }
 	
@@ -97,11 +102,18 @@ public final class PackingListCCUView extends PackingListView {
 			@Override
 			public void valueChange(ValueChangeEvent<String> event) {
 				String codiceDataMatrixInserito = textDatamatrix.getValue().trim();
-
+		        
 		    	textDatamatrix.setComponentError(null);
 				if (codiceDataMatrixInserito.isEmpty()) {
 					return;
 				}
+
+		        // Controlla se modalità scarto è attiva
+		        if (modalitaScarto) {
+		            mostraDialogConfermaScarto(codiceDataMatrixInserito);
+		        } else {
+		            checkAndSaveDatamatrix(codiceDataMatrixInserito);
+		        }
 				checkAndSaveDatamatrix(codiceDataMatrixInserito);
 						
 		    	textDatamatrix.setValue("");
@@ -111,11 +123,32 @@ public final class PackingListCCUView extends PackingListView {
     	textDatamatrix.setHeight("65px");
     	textDatamatrix.setWidth("700px");
 
+    	toggleButtonScarto = new Button("SCARTO");
+    	toggleButtonScarto.setHeight("65px");
+    	toggleButtonScarto.setWidth("120px");
+    	toggleButtonScarto.addStyleName(ValoTheme.BUTTON_SMALL);
+    	toggleButtonScarto.addClickListener(e -> {
+    	    modalitaScarto = !modalitaScarto;
+    	    if (modalitaScarto) {
+    	        toggleButtonScarto.addStyleName("v-button-pressed");
+    	        toggleButtonScarto.addStyleName(ValoTheme.BUTTON_DANGER);
+    	    } else {
+    	        toggleButtonScarto.removeStyleName("v-button-pressed");
+    	        toggleButtonScarto.removeStyleName(ValoTheme.BUTTON_DANGER);
+    	    }
+    	});
+
+    	// Layout orizzontale per textDatamatrix e bottone
+    	HorizontalLayout layoutInputDatamatrix = new HorizontalLayout();
+    	layoutInputDatamatrix.addComponents(textDatamatrix, toggleButtonScarto);
+    	layoutInputDatamatrix.setComponentAlignment(textDatamatrix, Alignment.MIDDLE_LEFT);
+    	layoutInputDatamatrix.setComponentAlignment(toggleButtonScarto, Alignment.MIDDLE_RIGHT);
+    	layoutInputDatamatrix.setSpacing(true);
     	
     	VerticalLayout layoutDatamatrix = new VerticalLayout();
     	layoutDatamatrix.setSizeFull();
-    	layoutDatamatrix.addComponents(textDatamatrix);
-    	layoutDatamatrix.setComponentAlignment(textDatamatrix, Alignment.MIDDLE_CENTER);
+    	layoutDatamatrix.addComponents(layoutInputDatamatrix);
+    	layoutDatamatrix.setComponentAlignment(layoutInputDatamatrix, Alignment.MIDDLE_CENTER);
 
     	VerticalLayout layoutPezziScatolaPan3 = new VerticalLayout();
 //    	layoutPezziScatolaPan3.setWidth("400px");
@@ -248,6 +281,45 @@ public final class PackingListCCUView extends PackingListView {
     	//setExpandRatio(fields, 8);
 	}
 
+	private void mostraDialogConfermaScarto(String codiceDataMatrix) {
+	    ScartoWindow scartoWindow = new ScartoWindow(codiceDataMatrix, 
+	        (codice, tipoProcesso, motivoScarto) -> {
+	            registraScarto(codice, tipoProcesso, motivoScarto);
+	        });
+	    
+	    getUI().addWindow(scartoWindow);
+	}
+	
+	private void registraScarto(String codiceDataMatrix, String tipoProcesso, String motivoScarto) {
+	    try {
+	        // Qui implementa la logica per registrare lo scarto nel database
+	        // Ad esempio, aggiorna lo stato del datamatrix, registra il motivo, ecc.
+	        
+	        // TODO: Implementare logica di salvataggio nel database
+	        // Esempio:
+	        // Datamatrix dmx = repositoryDatamatrix.getDatamatrixByCodice(codiceDataMatrix);
+	        // dmx.setStatoScarto(true);
+	        // dmx.setTipoProcessoScarto(tipoProcesso);
+	        // dmx.setMotivoScarto(motivoScarto);
+	        // dmx.setDataOraScarto(new Date());
+	        // dmx.setUtenteScarto(getCurrentUser());
+	        // repositoryDatamatrix.salva(dmx);
+	        
+	        ViewUtils.showSuccessfullNotification(
+	            "Scarto registrato: " + motivoScarto + " per codice " + codiceDataMatrix
+	        );
+	        
+	        // Reset modalità scarto
+	        modalitaScarto = false;
+	        toggleButtonScarto.addStyleName(ValoTheme.BUTTON_PRIMARY);
+	        toggleButtonScarto.removeStyleName(ValoTheme.BUTTON_DANGER);
+	        
+	    } catch (Exception e) {
+	        ViewUtils.showErrorNotification("Errore durante registrazione scarto: " + e.getMessage());
+	    }
+	}
+
+	
 	@Override
     void aggiornaDatiImballi() {
 
