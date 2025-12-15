@@ -14,6 +14,7 @@ import com.vaadin.demo.dashboard.component.utils.CommonUtils;
 import com.vaadin.demo.dashboard.component.utils.CustomPopupWindow;
 import com.vaadin.demo.dashboard.component.utils.ViewUtils;
 import com.vaadin.demo.dashboard.component.view.SegmentedProgressBar;
+import com.vaadin.demo.dashboard.data.model.Datamatrix;
 import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
 import com.vaadin.demo.dashboard.data.model.Prodotti;
 import com.vaadin.demo.dashboard.data.model.TipoImballi;
@@ -47,7 +48,6 @@ public final class PackingListCCUView extends PackingListView {
 	private Label lableBancalePan003, lableBancalePan004, lableBancalePan010;
 	
 	private Button toggleButtonScarto;
-	private boolean modalitaScarto = false;
 	
 	public PackingListCCUView() { }
 	
@@ -109,11 +109,6 @@ public final class PackingListCCUView extends PackingListView {
 				}
 
 		        // Controlla se modalità scarto è attiva
-		        if (modalitaScarto) {
-		            mostraDialogConfermaScarto(codiceDataMatrixInserito);
-		        } else {
-		            checkAndSaveDatamatrix(codiceDataMatrixInserito);
-		        }
 				checkAndSaveDatamatrix(codiceDataMatrixInserito);
 						
 		    	textDatamatrix.setValue("");
@@ -123,7 +118,7 @@ public final class PackingListCCUView extends PackingListView {
     	textDatamatrix.setHeight("65px");
     	textDatamatrix.setWidth("700px");
 
-    	toggleButtonScarto = new Button("SCARTO");
+    	toggleButtonScarto = new Button("Dichiara SCARTO");
     	toggleButtonScarto.setHeight("65px");
     	toggleButtonScarto.setWidth("120px");
     	toggleButtonScarto.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -137,6 +132,24 @@ public final class PackingListCCUView extends PackingListView {
     	        toggleButtonScarto.removeStyleName(ValoTheme.BUTTON_DANGER);
     	    }
     	});
+    	
+//    	// dopo:
+//    	toggleButtonScarto = new Button();
+//    	toggleButtonScarto.addStyleName("toggle-switch");
+//    	toggleButtonScarto.setCaption("");          // niente testo nel bottone
+//    	toggleButtonScarto.setWidth("60px");
+//    	toggleButtonScarto.setHeight("30px");
+//    	toggleButtonScarto.addClickListener(e -> {
+//		    modalitaScarto = !modalitaScarto;
+//		    if (modalitaScarto) {
+//		        toggleButtonScarto.addStyleName("v-button-pressed");
+//		        toggleButtonScarto.addStyleName(ValoTheme.BUTTON_DANGER);
+//		    } else {
+//		        toggleButtonScarto.removeStyleName("v-button-pressed");
+//		        toggleButtonScarto.removeStyleName(ValoTheme.BUTTON_DANGER);
+//		    }
+//		});
+
 
     	// Layout orizzontale per textDatamatrix e bottone
     	HorizontalLayout layoutInputDatamatrix = new HorizontalLayout();
@@ -281,44 +294,17 @@ public final class PackingListCCUView extends PackingListView {
     	//setExpandRatio(fields, 8);
 	}
 
-	private void mostraDialogConfermaScarto(String codiceDataMatrix) {
-	    ScartoWindow scartoWindow = new ScartoWindow(codiceDataMatrix, 
+	@Override
+	void mostraDialogConfermaScarto(Datamatrix dataMatrix) {
+	    ScartoWindow scartoWindow = new ScartoWindow(dataMatrix, getStringPermessoPackingList(), 
 	        (codice, tipoProcesso, motivoScarto) -> {
-	            registraScarto(codice, tipoProcesso, motivoScarto);
+		        // Reset modalità scarto
+		        modalitaScarto = false;
+		        toggleButtonScarto.removeStyleName("v-button-pressed");
+		        toggleButtonScarto.removeStyleName(ValoTheme.BUTTON_DANGER);
 	        });
-	    
 	    getUI().addWindow(scartoWindow);
 	}
-	
-	private void registraScarto(String codiceDataMatrix, String tipoProcesso, String motivoScarto) {
-	    try {
-	        // Qui implementa la logica per registrare lo scarto nel database
-	        // Ad esempio, aggiorna lo stato del datamatrix, registra il motivo, ecc.
-	        
-	        // TODO: Implementare logica di salvataggio nel database
-	        // Esempio:
-	        // Datamatrix dmx = repositoryDatamatrix.getDatamatrixByCodice(codiceDataMatrix);
-	        // dmx.setStatoScarto(true);
-	        // dmx.setTipoProcessoScarto(tipoProcesso);
-	        // dmx.setMotivoScarto(motivoScarto);
-	        // dmx.setDataOraScarto(new Date());
-	        // dmx.setUtenteScarto(getCurrentUser());
-	        // repositoryDatamatrix.salva(dmx);
-	        
-	        ViewUtils.showSuccessfullNotification(
-	            "Scarto registrato: " + motivoScarto + " per codice " + codiceDataMatrix
-	        );
-	        
-	        // Reset modalità scarto
-	        modalitaScarto = false;
-	        toggleButtonScarto.addStyleName(ValoTheme.BUTTON_PRIMARY);
-	        toggleButtonScarto.removeStyleName(ValoTheme.BUTTON_DANGER);
-	        
-	    } catch (Exception e) {
-	        ViewUtils.showErrorNotification("Errore durante registrazione scarto: " + e.getMessage());
-	    }
-	}
-
 	
 	@Override
     void aggiornaDatiImballi() {

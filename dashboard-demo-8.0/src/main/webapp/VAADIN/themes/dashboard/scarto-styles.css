@@ -10,3 +10,37 @@
     padding: 10px !important;
     margin-bottom: 10px !important;
 }
+
+/* contenitore switch */
+.v-button.toggle-switch {
+    background-color: #ddd;
+    border-radius: 15px;
+    border: none;
+    padding: 0;
+    position: relative;
+    box-shadow: inset 0 0 1px rgba(0,0,0,0.3);
+}
+
+/* cerchio interno */
+.v-button.toggle-switch:before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 26px;
+    height: 26px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    transition: left 0.2s ease;
+}
+
+/* stato ON */
+.v-button.toggle-switch.on {
+    background-color: #4caf50;
+}
+
+/* cerchio spostato a destra in ON */
+.v-button.toggle-switch.on:before {
+    left: 32px; /* 60px larghezza - 26px pallina - 2px margin */
+}

@@ -13,31 +13,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
-import com.vaadin.demo.dashboard.data.model.Accessi;
-import com.vaadin.demo.dashboard.data.model.AnimeImballi;
-import com.vaadin.demo.dashboard.data.model.Aziende;
-import com.vaadin.demo.dashboard.data.model.Config;
-import com.vaadin.demo.dashboard.data.model.CriteriBloccoDatamatrix;
-import com.vaadin.demo.dashboard.data.model.Datamatrix;
-import com.vaadin.demo.dashboard.data.model.FasiProcesso;
-import com.vaadin.demo.dashboard.data.model.FasiProcessoProdotto;
-import com.vaadin.demo.dashboard.data.model.LottiFusioneAssegnazioneStampi;
-import com.vaadin.demo.dashboard.data.model.VistaLottiFusioneAssegnazioneStampi;
-import com.vaadin.demo.dashboard.data.model.DatamatrixFasiProcesso;
-import com.vaadin.demo.dashboard.data.model.DatamatrixFasiProcessoTT;
-import com.vaadin.demo.dashboard.data.model.DatiProvaTenutaElio;
-import com.vaadin.demo.dashboard.data.model.EtichetteBancali;
-import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
-import com.vaadin.demo.dashboard.data.model.EtichettePezzi;
-import com.vaadin.demo.dashboard.data.model.Permessi;
-import com.vaadin.demo.dashboard.data.model.Prodotti;
-import com.vaadin.demo.dashboard.data.model.StampiProdotti;
-import com.vaadin.demo.dashboard.data.model.TipoImballi;
-import com.vaadin.demo.dashboard.data.model.Utenti;
-import com.vaadin.demo.dashboard.data.model.UtentiPermessi;
-import com.vaadin.demo.dashboard.data.model.VistaPackingList;
-import com.vaadin.demo.dashboard.data.model.VistaDatamatrixFasiProcesso;
-import com.vaadin.demo.dashboard.data.model.VistaDatamatrixFasiProcessoTT;
+import com.vaadin.demo.dashboard.data.model.*;
 
 public class DatabaseHibernateConnection {
 	static Session sessione = null;	
@@ -73,6 +49,7 @@ public class DatabaseHibernateConnection {
                 configuration.addAnnotatedClass(AnimeImballi.class);
                 configuration.addAnnotatedClass(StampiProdotti.class);
                 configuration.addAnnotatedClass(LottiFusioneAssegnazioneStampi.class);
+                configuration.addAnnotatedClass(TipiDifetto.class);
                 configuration.addAnnotatedClass(VistaPackingList.class);
                 configuration.addAnnotatedClass(VistaDatamatrixFasiProcesso.class);
                 configuration.addAnnotatedClass(VistaDatamatrixFasiProcessoTT.class);

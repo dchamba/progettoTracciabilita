@@ -44,6 +44,24 @@ public class RepositoryDatamatrixFasiProcesso {
         session.close();
         return dataMatrixFaseProcesso;
 	}
+	
+    public List<DatamatrixFasiProcesso> isDatamatrixScarto(Integer idDatamatrix) {
+        if (idDatamatrix == null) return null;
+
+        Session session = DatabaseHibernateConnection.getSessionFactory().openSession();
+        session.beginTransaction();
+        try {
+            Criteria criteria = session.createCriteria(DatamatrixFasiProcesso.class);
+            criteria.add(RepositoryUtils.getCriteraEliminato());
+    		criteria.add(Restrictions.eq(CampiDatamatrixFasiProcesso.dataMatrix_idDataMatrix, idDatamatrix));
+            criteria.add(Restrictions.eq("isScarto", true));
+
+            List<DatamatrixFasiProcesso> res = criteria.list();
+            return res;
+        } finally {
+            session.close();
+        }
+    }
 
 	public List<DatamatrixFasiProcesso> getListaDatamatrixFasiProcesso(Integer idDataMatrix) {
 		List<DatamatrixFasiProcesso> dataMatrixFaseProcesso = null;

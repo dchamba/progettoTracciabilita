@@ -19,12 +19,20 @@ public class RepositoryProvider {
 	private static RepositoryMarcatoriLaser repositoryMarcatoriLaser = null;
 	private static RepositoryStampiProdotti repositoryStampiProdotti = null;
 	private static RepositoryLottiFusioneAssegnazioneStampi repositoryLottiFusioneAssegnazioneStampi = null;
+	private static RepositoryTipiDifetto repositoryTipiDifetto = null;
 	
 	public static RepositoryDatamatrix getRepositoryDatamatrix() {
 		if (RepositoryProvider.repositoryDatamatrix == null) {
 			RepositoryProvider.repositoryDatamatrix = new RepositoryDatamatrix();
 		}
 		return RepositoryProvider.repositoryDatamatrix;
+	}
+	
+	public static RepositoryTipiDifetto repositoryTipiDifetto() {
+		if (RepositoryProvider.repositoryTipiDifetto == null) {
+			RepositoryProvider.repositoryTipiDifetto = new RepositoryTipiDifetto();
+		}
+		return RepositoryProvider.repositoryTipiDifetto;
 	}
 	
 	public static RepositoryAnimeImballi repositoryAnimeImballi() {

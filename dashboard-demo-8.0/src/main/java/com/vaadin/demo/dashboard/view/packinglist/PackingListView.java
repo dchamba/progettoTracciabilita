@@ -18,6 +18,7 @@ import com.vaadin.demo.dashboard.component.view.MyCustomView;
 import com.vaadin.demo.dashboard.component.view.SegmentedProgressBar;
 import com.vaadin.demo.dashboard.data.model.CriteriBloccoDatamatrix;
 import com.vaadin.demo.dashboard.data.model.Datamatrix;
+import com.vaadin.demo.dashboard.data.model.DatamatrixFasiProcesso;
 import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
 import com.vaadin.demo.dashboard.data.model.EtichettePezzi;
 import com.vaadin.demo.dashboard.data.model.FasiProcesso;
@@ -99,6 +100,8 @@ public class PackingListView extends MyCustomView {
 	
 	boolean verificaDoppioneDatamatrixPackingList = false;
 	boolean verificaFasiProcessoPrecedentiDatamatrix = false;
+
+	boolean modalitaScarto = false;
 	
 	public PackingListView() {
         setSizeFull();
@@ -189,7 +192,7 @@ public class PackingListView extends MyCustomView {
 		        } else {
 		            throw new Exception("Formato QrCode non riconosciuto");
 		        }
-	        } else {
+	        } else {	        	
 	        	//verifico e inserico prodotto in scatola
 		    	List<Datamatrix> listaDatamatrix = this.repositoryDatamatrix.getDataMatrix(new FilterDatamatrix(codiceDataMatrixInserito), null).getResult();
 		    	Datamatrix datamatrix = null;
@@ -213,6 +216,15 @@ public class PackingListView extends MyCustomView {
 		    	}
 	    		datamatrix = listaDatamatrix.get(0);
 	    		
+	    		//controllo scarto
+	    		List<DatamatrixFasiProcesso> fasiScarto = this.repositoryDatamatrixFasiProcesso.isDatamatrixScarto(datamatrix.getIdDataMatrix());
+	    		if(fasiScarto != null && fasiScarto.size() > 0) {
+	    			String messaggio = getMessaggioScarto(fasiScarto.get(0));
+    			    throw new Exception(messaggio);
+	    		} else if(modalitaScarto){
+	    			this.mostraDialogConfermaScarto(datamatrix);
+	    		}
+	    		
 	    		//Etichetta inserita per questo codice prodotto ??
 	    		EtichetteImballi etichettaImballo = this.getVariabileEtichettaImballo(datamatrix.getProddoto().getCodiceProdotto());
 	    		if(etichettaImballo == null) {
@@ -227,7 +239,7 @@ public class PackingListView extends MyCustomView {
 		    		}
 	    		}
 	    		
-	    		//controllo fasi precedenti eseguite correttamente
+	    		//controllo fasi precedenti eseguite correttamente 
 	    		controlloFasiEseguiteCorrettamente(prodottoCorrente, datamatrix);
 
 	    		//verifico che non ci siano criteri di blocco per questo datamtrix
@@ -261,7 +273,26 @@ public class PackingListView extends MyCustomView {
 		}
 	}
 
-    public String getNumeroDisegnoDaVericareInImballo(String codiceDataMatrixInserito) {
+    private String getMessaggioScarto(DatamatrixFasiProcesso faseScarto) {
+        String dataOra = (faseScarto.getDataOraEliminazione() != null)
+                ? CommonUtils.DATETIMEFORMAT.format(faseScarto.getDataOraEliminazione())
+                : "N/D";
+
+        String operatore = (faseScarto.getUtenteEliminazione() != null)
+                ? faseScarto.getUtenteEliminazione().getNomeCognome()
+                : "N/D";
+        
+        String tipoScarto = (faseScarto.getTipoDifetto() != null)
+                ? faseScarto.getTipoDifetto().getCodiceDifetto() + " - " + faseScarto.getTipoDifetto().getDescrizione()
+                : (faseScarto.getMotivoEliminazione() != null ? faseScarto.getMotivoEliminazione() : "N/D");
+
+        String messaggio = "Pz dichiarato SCARTO in data/ora: " + dataOra + " da utente: " + operatore +
+                			" in fase: " + faseScarto.getFaseProcesso().getDescrizione() + 
+                			" come tipo scarto: " + tipoScarto;
+		return messaggio;
+	}
+
+	public String getNumeroDisegnoDaVericareInImballo(String codiceDataMatrixInserito) {
 		return codiceDataMatrixInserito;
 	}
 
@@ -290,6 +321,8 @@ public class PackingListView extends MyCustomView {
     	FasiProcessoUtils.controlloFasiEseguiteCorrettamente(prodottoCorrente, datamatrix, getStringFaseProcesso());
     }
 
+	void mostraDialogConfermaScarto(Datamatrix datamatrix) { }
+	
 	void aggiornaVariabileEtichettaImballo(EtichetteImballi etichettaImballo) { }
 
 	EtichetteImballi getVariabileEtichettaImballo(String codiceProdotto) { return null; }
@@ -328,7 +361,7 @@ public class PackingListView extends MyCustomView {
         title.addStyleName(ValoTheme.LABEL_H2);
         title.addStyleName(ValoTheme.LABEL_NO_MARGIN);
 	}
-
+	
 	void setInfoScatolaStyle(Label title) {
         title.setSizeUndefined();
         title.addStyleName(ValoTheme.LABEL_H3);

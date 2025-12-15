@@ -42,7 +42,6 @@ public class DatamatrixFasiProcesso implements Serializable {
 	@ManyToOne
 	@JoinColumn(name ="idDataMatrix")
 	private Datamatrix dataMatrix;
-
 	
 	@ManyToOne
 	@JoinColumn(name ="idFaseProcesso")
@@ -56,6 +55,21 @@ public class DatamatrixFasiProcesso implements Serializable {
 	
 	private String posizione;
 
+	private Boolean isScarto;
+		
+	private String motivoEliminazione;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date dataOraEliminazione;
+	
+	@ManyToOne
+	@JoinColumn(name ="idUtenteEliminazione")
+	private Utenti utenteEliminazione;
+	
+	@ManyToOne
+	@JoinColumn(name ="idTipoDifetto")
+	private TipiDifetto tipoDifetto;
+	
 	public DatamatrixFasiProcesso() {
 	}
 
@@ -169,6 +183,46 @@ public class DatamatrixFasiProcesso implements Serializable {
 
 	public void setImpianto(String impianto) {
 		this.impianto = impianto;
+	}
+
+	public Date getDataOraEliminazione() {
+		return dataOraEliminazione;
+	}
+
+	public void setDataOraEliminazione(Date dataOraEliminazione) {
+		this.dataOraEliminazione = dataOraEliminazione;
+	}
+
+	public Utenti getUtenteEliminazione() {
+		return utenteEliminazione;
+	}
+
+	public void setUtenteEliminazione(Utenti utenteEliminazione) {
+		this.utenteEliminazione = utenteEliminazione;
+	}
+
+	public String getMotivoEliminazione() {
+		return motivoEliminazione;
+	}
+
+	public void setMotivoEliminazione(String motivoEliminazione) {
+		this.motivoEliminazione = motivoEliminazione;
+	}
+
+	public Boolean getIsScarto() {
+		return isScarto;
+	}
+
+	public void setIsScarto(Boolean isScarto) {
+		this.isScarto = isScarto;
+	}
+
+	public TipiDifetto getTipoDifetto() {
+		return tipoDifetto;
+	}
+
+	public void setTipoDifetto(TipiDifetto tipoDifetto) {
+		this.tipoDifetto = tipoDifetto;
 	}
 
 }
