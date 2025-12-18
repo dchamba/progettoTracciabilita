@@ -223,6 +223,7 @@ public class PackingListView extends MyCustomView {
     			    throw new Exception(messaggio);
 	    		} else if(modalitaScarto){
 	    			this.mostraDialogConfermaScarto(datamatrix);
+	    			return;
 	    		}
 	    		
 	    		//Etichetta inserita per questo codice prodotto ??
@@ -274,21 +275,21 @@ public class PackingListView extends MyCustomView {
 	}
 
     private String getMessaggioScarto(DatamatrixFasiProcesso faseScarto) {
-        String dataOra = (faseScarto.getDataOraEliminazione() != null)
-                ? CommonUtils.DATETIMEFORMAT.format(faseScarto.getDataOraEliminazione())
+        String dataOra = (faseScarto.getDataOra() != null)
+                ? CommonUtils.DATETIMEFORMAT.format(faseScarto.getDataOra())
                 : "N/D";
 
-        String operatore = (faseScarto.getUtenteEliminazione() != null)
-                ? faseScarto.getUtenteEliminazione().getNomeCognome()
+        String operatore = (faseScarto.getUtenteOperatore() != null)
+                ? faseScarto.getUtenteOperatore().getNomeCognome()
                 : "N/D";
         
         String tipoScarto = (faseScarto.getTipoDifetto() != null)
-                ? faseScarto.getTipoDifetto().getCodiceDifetto() + " - " + faseScarto.getTipoDifetto().getDescrizione()
+                ? faseScarto.getTipoDifetto().getDescrizione()
                 : (faseScarto.getMotivoEliminazione() != null ? faseScarto.getMotivoEliminazione() : "N/D");
 
         String messaggio = "Pz dichiarato SCARTO in data/ora: " + dataOra + " da utente: " + operatore +
                 			" in fase: " + faseScarto.getFaseProcesso().getDescrizione() + 
-                			" come tipo scarto: " + tipoScarto;
+                			" come tipo difetto: " + tipoScarto;
 		return messaggio;
 	}
 

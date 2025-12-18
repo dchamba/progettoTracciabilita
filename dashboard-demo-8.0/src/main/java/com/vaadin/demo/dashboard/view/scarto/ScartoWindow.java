@@ -23,7 +23,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.demo.dashboard.component.utils.ViewUtils;
 import com.vaadin.demo.dashboard.data.model.*;
 import com.vaadin.demo.dashboard.data.repository.RepositoryProvider;
-import com.vaadin.demo.dashboard.view.packinglist.*;
 
 @SuppressWarnings("serial")
 public class ScartoWindow extends Window {
@@ -55,7 +54,7 @@ public class ScartoWindow extends Window {
     private void initializeWindow() {
         setModal(true);
         setWidth("900px");
-        setHeight("650px");
+        setHeight("800px");
         setClosable(false);
         center();
     }
@@ -87,7 +86,8 @@ public class ScartoWindow extends Window {
         lblCodice.addStyleName(ValoTheme.LABEL_BOLD);
         lblCodice.addStyleName(ValoTheme.LABEL_FAILURE);
 
-        headerLayout.addComponents(lblTitolo, lblConferma, lblCodice);
+        //headerLayout.addComponents(lblTitolo, lblConferma, lblCodice);
+        headerLayout.addComponents(lblConferma, lblCodice);
         mainLayout.addComponent(headerLayout);
 
         // Titolo sezione
@@ -130,7 +130,7 @@ public class ScartoWindow extends Window {
                 Integer idFaseProcesso = entry.getKey();
                 List<TipiDifetto> difetti = entry.getValue();
 
-                String nomeFase = getNomeFaseProcesso(idFaseProcesso); // sostituibile con fetch DB
+                String nomeFase = getNomeFaseProcesso(idFaseProcesso);
                 VerticalLayout card = creaGruppoScartoDaDb(idFaseProcesso, nomeFase, difetti);
 
                 // distribuzione alternata sulle 2 colonne
@@ -182,16 +182,19 @@ public class ScartoWindow extends Window {
                 return new LinkedHashMap<>();
             }
 
-            // ordino prima per fase, poi per codice difetto
+            // ordino prima per fase, poi per descrizione (non più per codice)
             Collections.sort(listaTuttiTipiDifetti, new Comparator<TipiDifetto>() {
                 @Override
                 public int compare(TipiDifetto o1, TipiDifetto o2) {
-                    int c = o1.getFaseProcesso().getIdFaseProcesso().compareTo(o2.getFaseProcesso().getIdFaseProcesso());
+                    int c = o1.getFaseProcesso().getIdFaseProcesso()
+                              .compareTo(o2.getFaseProcesso().getIdFaseProcesso());
                     if (c != 0) return c;
-                    if (o1.getCodiceDifetto() == null && o2.getCodiceDifetto() == null) return 0;
-                    if (o1.getCodiceDifetto() == null) return 1;
-                    if (o2.getCodiceDifetto() == null) return -1;
-                    return o1.getCodiceDifetto().compareTo(o2.getCodiceDifetto());
+                    
+                    // ordino per descrizione
+                    if (o1.getDescrizione() == null && o2.getDescrizione() == null) return 0;
+                    if (o1.getDescrizione() == null) return 1;
+                    if (o2.getDescrizione() == null) return -1;
+                    return o1.getDescrizione().compareTo(o2.getDescrizione());
                 }
             });
 
@@ -206,15 +209,18 @@ public class ScartoWindow extends Window {
             return out;
 
         } catch (Exception e) {
-            Notification.show("Errore caricamento tipi difetto: " + e.getMessage(), Notification.Type.ERROR_MESSAGE);
+            Notification.show("Errore caricamento tipi difetto: " + e.getMessage(), 
+                            Notification.Type.ERROR_MESSAGE);
             return new LinkedHashMap<>();
         }
     }
 
     /**
      * Crea un gruppo (card) per una fase processo usando i TipiDifetto letti dal DB.
+     * Mostra SOLO la descrizione, ignora il codice difetto.
      */
-    private VerticalLayout creaGruppoScartoDaDb(Integer idFaseProcesso, String nomeProcesso, List<TipiDifetto> difetti) {
+    private VerticalLayout creaGruppoScartoDaDb(Integer idFaseProcesso, String nomeProcesso, 
+                                                 List<TipiDifetto> difetti) {
 
         VerticalLayout gruppoLayout = new VerticalLayout();
         gruppoLayout.setSpacing(true);
@@ -232,11 +238,8 @@ public class ScartoWindow extends Window {
 
         for (TipiDifetto td : difetti) {
 
-            // testo bottone: puoi scegliere se mostrare anche codice
+            // Mostra SOLO la descrizione (nessun codice)
             String caption = td.getDescrizione();
-            if (td.getCodiceDifetto() != null && !td.getCodiceDifetto().trim().isEmpty()) {
-                caption = td.getCodiceDifetto() + " - " + td.getDescrizione();
-            }
 
             CssLayout buttonWrapper = new CssLayout();
             buttonWrapper.setWidth("100%");
@@ -248,44 +251,47 @@ public class ScartoWindow extends Window {
             btnScarto.addStyleName("v-button-scarto-yellow");
 
             btnScarto.addClickListener(e -> {
-            	try {
-    		        // Carica fase processo corrente (dalla window o da contesto)
-    		        // Adatta questo in base a come identifichi la fase nella window
-    		        FasiProcesso faseCorrente = RepositoryProvider.repositoryFasiProcesso().getFaseProcessoPerCodice(this.codiceFaseProcesso);
-    		        if (faseCorrente == null) {
-    		            ViewUtils.showErrorNotification("Fase processo non identificata");
-    		            return;
-    		        }
+                try {
+                    // Carica fase processo corrente
+                    FasiProcesso faseCorrente = RepositoryProvider.repositoryFasiProcesso()
+                            .getFaseProcessoPerCodice("FIN");
+                    if (faseCorrente == null) {
+                        ViewUtils.showErrorNotification("Fase processo non identificata");
+                        return;
+                    }
 
-    		        // Carica tipo difetto dal motivoScarto (string che contiene codiceDifetto + descrizione)
-    		        // Se nella ScartoWindow usi idTipoDifetto, passa quello invece
-    		        // Per ora assumo che motivoScarto = descrizione TipiDifetto
-    		        
-    		        TipiDifetto difettoSelezionato = listaTuttiTipiDifetti.stream()
-    		                .filter(tdList -> tdList.getIdTipoDifetto().equals(td.getIdTipoDifetto()))
-    		                .findFirst()
-    		                .orElse(null);
+                    // Trova il difetto selezionato
+                    TipiDifetto difettoSelezionato = listaTuttiTipiDifetti.stream()
+                            .filter(tdList -> tdList.getIdTipoDifetto().equals(td.getIdTipoDifetto()))
+                            .findFirst()
+                            .orElse(null);
 
-    		        // Crea riga DatamatrixFasiProcesso di scarto
-    		        DatamatrixFasiProcesso scartoRecord = new DatamatrixFasiProcesso();
-    		        scartoRecord.setDataMatrix(this.dataMatrix);
-    		        scartoRecord.setFaseProcesso(faseCorrente);
-    		        scartoRecord.setDataOra(new Date());
-    		        scartoRecord.setAzienda(getCurrentUser().getAzienda());
-    		        scartoRecord.setUtenteOperatore(getCurrentUser());
-    		        scartoRecord.setIsScarto(true);
-//    		        scartoRecord.setMotivoEliminazione(motivoScarto);
-//    		        scartoRecord.setDataOraEliminazione(new Date());
-//    		        scartoRecord.setUtenteEliminazione(getCurrentUser());
-    		        scartoRecord.setTipoDifetto(difettoSelezionato);
-    		        scartoRecord.setEliminato(false);
+                    if (difettoSelezionato == null) {
+                        ViewUtils.showErrorNotification("Tipo difetto non trovato");
+                        return;
+                    }
 
-    		        RepositoryProvider.getRepositoryDatamatrixTrattamenti().salvaFaseProcesso(scartoRecord);
+                    // Crea riga DatamatrixFasiProcesso di scarto
+                    DatamatrixFasiProcesso scartoRecord = new DatamatrixFasiProcesso();
+                    scartoRecord.setDataMatrix(this.dataMatrix);
+                    scartoRecord.setFaseProcesso(faseCorrente);
+                    scartoRecord.setDataOra(new Date());
+                    scartoRecord.setAzienda(getCurrentUser().getAzienda());
+                    scartoRecord.setUtenteOperatore(getCurrentUser());
+                    scartoRecord.setIsScarto(true);
+                    scartoRecord.setTipoDifetto(difettoSelezionato);
+                    scartoRecord.setEliminato(false);
 
-    		        ViewUtils.showErrorNotification("Scarto registrato: " + faseCorrente.getDescrizione() + " per codice " + this.dataMatrix.getDataMatrix());
+                    RepositoryProvider.getRepositoryDatamatrixTrattamenti()
+                            .salvaFaseProcesso(scartoRecord);
+
+                    ViewUtils.showErrorNotification(
+                            "Scarto registrato: " + td.getDescrizione() + 
+                            " per codice " + this.dataMatrix.getDataMatrix()
+                    );
 
                     if (scartoListener != null) {
-                        // mantengo firma attuale: tipoProcesso = nome fase (normalizzato), motivoScarto = descrizione
+                        // callback con solo descrizione (nessun codice)
                         scartoListener.onScartoSelezionato(
                                 dataMatrix.getDataMatrix(),
                                 nomeProcesso.replace(" ", "_"),
@@ -293,9 +299,11 @@ public class ScartoWindow extends Window {
                         );
                     }
 
-    		    } catch (Exception ex) {
-    		        ViewUtils.showErrorNotification("Errore durante registrazione scarto: " + ex.getMessage());
-    		    }
+                } catch (Exception ex) {
+                    ViewUtils.showErrorNotification(
+                            "Errore durante registrazione scarto: " + ex.getMessage()
+                    );
+                }
                 close();
             });
 
@@ -308,7 +316,6 @@ public class ScartoWindow extends Window {
 
     /**
      * Mapping temporaneo idFaseProcesso -> Nome fase.
-     * Se hai una repo FasiProcesso, qui va sostituita con una query DB.
      */
     private String getNomeFaseProcesso(Integer idFaseProcesso) {
         if (idFaseProcesso == null) return "FASE";
@@ -350,32 +357,19 @@ public class ScartoWindow extends Window {
         if (nomeProcesso == null) return "•";
 
         switch (nomeProcesso) {
-            case "FUSIONE":
-                return "🔥";
-            case "SABBIATURA":
-                return "🧱";
-            case "SBAVATURA":
-                return "🔧";
-            case "LAVORAZIONE MECCANICA":
-                return "⚙️";
-            case "PROVA TENUTA":
-                return "💧";
-            case "LIQUIDI PENETRANTI":
-                return "🧪";
-            case "CONTROLLO RX":
-                return "📷";
-            case "ASSEMBLAGGIO":
-                return "🧩";
-            case "TRATTAMENTO TERMICO":
-                return "♨️";
-            case "TEST DUREZZA":
-                return "🔩";
-            case "LAVAGGIO / FINALE":
-                return "🧼";
-            case "STERRATURA":
-                return "🏜️";
-            default:
-                return "•";
+            case "FUSIONE": return "🔥";
+            case "SABBIATURA": return "🧱";
+            case "SBAVATURA": return "🔧";
+            case "LAVORAZIONE MECCANICA": return "⚙️";
+            case "PROVA TENUTA": return "💧";
+            case "LIQUIDI PENETRANTI": return "🧪";
+            case "CONTROLLO RX": return "📷";
+            case "ASSEMBLAGGIO": return "🧩";
+            case "TRATTAMENTO TERMICO": return "♨️";
+            case "TEST DUREZZA": return "🔩";
+            case "LAVAGGIO / FINALE": return "🧼";
+            case "STERRATURA": return "🏜️";
+            default: return "•";
         }
     }
 

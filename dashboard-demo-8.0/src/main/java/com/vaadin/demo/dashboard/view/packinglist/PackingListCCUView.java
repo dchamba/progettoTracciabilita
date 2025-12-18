@@ -120,7 +120,7 @@ public final class PackingListCCUView extends PackingListView {
 
     	toggleButtonScarto = new Button("Dichiara SCARTO");
     	toggleButtonScarto.setHeight("65px");
-    	toggleButtonScarto.setWidth("120px");
+    	toggleButtonScarto.setWidth("140px");
     	toggleButtonScarto.addStyleName(ValoTheme.BUTTON_SMALL);
     	toggleButtonScarto.addClickListener(e -> {
     	    modalitaScarto = !modalitaScarto;
