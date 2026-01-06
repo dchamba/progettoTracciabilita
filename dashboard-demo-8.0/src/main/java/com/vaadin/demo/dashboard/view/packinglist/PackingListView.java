@@ -14,6 +14,7 @@ import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils;
 import com.vaadin.demo.dashboard.component.utils.FasiProcessoUtils.FasiProcessoLista;
 import com.vaadin.demo.dashboard.component.utils.PermessiUtils;
 import com.vaadin.demo.dashboard.component.utils.ViewUtils;
+import com.vaadin.demo.dashboard.component.view.DatamatrixScartoComponentFactory;
 import com.vaadin.demo.dashboard.component.view.MyCustomView;
 import com.vaadin.demo.dashboard.component.view.SegmentedProgressBar;
 import com.vaadin.demo.dashboard.data.model.CriteriBloccoDatamatrix;
@@ -37,7 +38,9 @@ import com.vaadin.demo.dashboard.data.repository.RepositoryProvider;
 import com.vaadin.demo.dashboard.data.repository.RepositoryUtils;
 import com.vaadin.demo.dashboard.event.DashboardEventBus;
 import com.vaadin.demo.dashboard.view.DashboardMenu;
+import com.vaadin.demo.dashboard.view.scarto.ScartoWindow;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
@@ -97,11 +100,14 @@ public class PackingListView extends MyCustomView {
 	TipoImballi tipoImballoPan010 = null;
 	
 	TextField textDatamatrix;
+	CheckBox chkScarto;
+	
+	DatamatrixScartoComponentFactory.DatamatrixScartoComponents datamatrixScartoComponent;
 	
 	boolean verificaDoppioneDatamatrixPackingList = false;
 	boolean verificaFasiProcessoPrecedentiDatamatrix = false;
 
-	boolean modalitaScarto = false;
+	//boolean modalitaScarto = false;
 	
 	public PackingListView() {
         setSizeFull();
@@ -221,7 +227,7 @@ public class PackingListView extends MyCustomView {
 	    		if(fasiScarto != null && fasiScarto.size() > 0) {
 	    			String messaggio = getMessaggioScarto(fasiScarto.get(0));
     			    throw new Exception(messaggio);
-	    		} else if(modalitaScarto){
+	    		} else if(this.datamatrixScartoComponent.state.isAttiva()){
 	    			this.mostraDialogConfermaScarto(datamatrix);
 	    			return;
 	    		}
@@ -322,7 +328,11 @@ public class PackingListView extends MyCustomView {
     	FasiProcessoUtils.controlloFasiEseguiteCorrettamente(prodottoCorrente, datamatrix, getStringFaseProcesso());
     }
 
-	void mostraDialogConfermaScarto(Datamatrix datamatrix) { }
+	void mostraDialogConfermaScarto(Datamatrix dataMatrix) {
+		DatamatrixScartoComponentFactory.mostraDialogConfermaScarto(
+			    dataMatrix, this.datamatrixScartoComponent.chkScarto, this.datamatrixScartoComponent.state, 
+			    getStringPermessoPackingList(), this );
+	}
 	
 	void aggiornaVariabileEtichettaImballo(EtichetteImballi etichettaImballo) { }
 

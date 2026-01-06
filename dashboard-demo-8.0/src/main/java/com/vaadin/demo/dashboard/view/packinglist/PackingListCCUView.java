@@ -13,6 +13,7 @@ import com.vaadin.demo.dashboard.component.utils.ProdottiUtils.CodiciProdottiLis
 import com.vaadin.demo.dashboard.component.utils.CommonUtils;
 import com.vaadin.demo.dashboard.component.utils.CustomPopupWindow;
 import com.vaadin.demo.dashboard.component.utils.ViewUtils;
+import com.vaadin.demo.dashboard.component.view.DatamatrixScartoComponentFactory;
 import com.vaadin.demo.dashboard.component.view.SegmentedProgressBar;
 import com.vaadin.demo.dashboard.data.model.Datamatrix;
 import com.vaadin.demo.dashboard.data.model.EtichetteImballi;
@@ -37,6 +38,7 @@ import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.renderers.TextRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 
 @SuppressWarnings("serial")
 public final class PackingListCCUView extends PackingListView {
@@ -46,9 +48,7 @@ public final class PackingListCCUView extends PackingListView {
 	private Label lableQtaPzPan003, lableQtaPzPan004, lableQtaPzPan005, lableQtaPzPan010;
 	private Label lableEtichettaPan003, lableEtichettaPan004, lableEtichettaPan005, lableEtichettaPan010;
 	private Label lableBancalePan003, lableBancalePan004, lableBancalePan010;
-	
-	private Button toggleButtonScarto;
-	
+		
 	public PackingListCCUView() { }
 	
 	@Override
@@ -94,74 +94,24 @@ public final class PackingListCCUView extends PackingListView {
 //    	marginInfo.do(10, 10, 20, 10);
 //    	fields.setMargin(marginInfo);
 	    
-    	textDatamatrix = new TextField("QRCode");  
-    	textDatamatrix.setPlaceholder("QRCode");
-    	//textDatamatrix.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
-    	textDatamatrix.addValueChangeListener(new ValueChangeListener<String>() {
-			
-			@Override
-			public void valueChange(ValueChangeEvent<String> event) {
-				String codiceDataMatrixInserito = textDatamatrix.getValue().trim();
-		        
-		    	textDatamatrix.setComponentError(null);
-				if (codiceDataMatrixInserito.isEmpty()) {
-					return;
-				}
+        datamatrixScartoComponent = DatamatrixScartoComponentFactory.create("QRCode", new DatamatrixScartoComponentFactory.ModalitaScartoHandler() {
+                    @Override
+                    public void onChange(boolean attiva) {
+                    	//PackingListCCUView.super.modalitaScarto = attiva;
+                    }
 
-		        // Controlla se modalità scarto è attiva
-				checkAndSaveDatamatrix(codiceDataMatrixInserito);
-						
-		    	textDatamatrix.setValue("");
-		    	textDatamatrix.setComponentError(null);
-			}
-		});
-    	textDatamatrix.setHeight("65px");
-    	textDatamatrix.setWidth("700px");
+                    @Override
+                    public void onDatamatrixInserito(String codice) {
+                    	datamatrixScartoComponent.textDatamatrix.setComponentError(null);
+                        checkAndSaveDatamatrix(codice); // o il metodo equivalente della view
+                        datamatrixScartoComponent.textDatamatrix.setComponentError(null);
+                    }
+                });
 
-    	toggleButtonScarto = new Button("Dichiara SCARTO");
-    	toggleButtonScarto.setHeight("65px");
-    	toggleButtonScarto.setWidth("140px");
-    	toggleButtonScarto.addStyleName(ValoTheme.BUTTON_SMALL);
-    	toggleButtonScarto.addClickListener(e -> {
-    	    modalitaScarto = !modalitaScarto;
-    	    if (modalitaScarto) {
-    	        toggleButtonScarto.addStyleName("v-button-pressed");
-    	        toggleButtonScarto.addStyleName(ValoTheme.BUTTON_DANGER);
-    	    } else {
-    	        toggleButtonScarto.removeStyleName("v-button-pressed");
-    	        toggleButtonScarto.removeStyleName(ValoTheme.BUTTON_DANGER);
-    	    }
-    	});
-    	
-//    	// dopo:
-//    	toggleButtonScarto = new Button();
-//    	toggleButtonScarto.addStyleName("toggle-switch");
-//    	toggleButtonScarto.setCaption("");          // niente testo nel bottone
-//    	toggleButtonScarto.setWidth("60px");
-//    	toggleButtonScarto.setHeight("30px");
-//    	toggleButtonScarto.addClickListener(e -> {
-//		    modalitaScarto = !modalitaScarto;
-//		    if (modalitaScarto) {
-//		        toggleButtonScarto.addStyleName("v-button-pressed");
-//		        toggleButtonScarto.addStyleName(ValoTheme.BUTTON_DANGER);
-//		    } else {
-//		        toggleButtonScarto.removeStyleName("v-button-pressed");
-//		        toggleButtonScarto.removeStyleName(ValoTheme.BUTTON_DANGER);
-//		    }
-//		});
-
-
-    	// Layout orizzontale per textDatamatrix e bottone
-    	HorizontalLayout layoutInputDatamatrix = new HorizontalLayout();
-    	layoutInputDatamatrix.addComponents(textDatamatrix, toggleButtonScarto);
-    	layoutInputDatamatrix.setComponentAlignment(textDatamatrix, Alignment.MIDDLE_LEFT);
-    	layoutInputDatamatrix.setComponentAlignment(toggleButtonScarto, Alignment.MIDDLE_RIGHT);
-    	layoutInputDatamatrix.setSpacing(true);
-    	
-    	VerticalLayout layoutDatamatrix = new VerticalLayout();
-    	layoutDatamatrix.setSizeFull();
-    	layoutDatamatrix.addComponents(layoutInputDatamatrix);
-    	layoutDatamatrix.setComponentAlignment(layoutInputDatamatrix, Alignment.MIDDLE_CENTER);
+        VerticalLayout layoutDatamatrix = new VerticalLayout();
+        layoutDatamatrix.setSizeFull();
+        layoutDatamatrix.addComponent(datamatrixScartoComponent.layout);
+        layoutDatamatrix.setComponentAlignment(datamatrixScartoComponent.layout, Alignment.MIDDLE_CENTER);
 
     	VerticalLayout layoutPezziScatolaPan3 = new VerticalLayout();
 //    	layoutPezziScatolaPan3.setWidth("400px");
@@ -292,18 +242,6 @@ public final class PackingListCCUView extends PackingListView {
         
         addComponent(fields);
     	//setExpandRatio(fields, 8);
-	}
-
-	@Override
-	void mostraDialogConfermaScarto(Datamatrix dataMatrix) {
-	    ScartoWindow scartoWindow = new ScartoWindow(dataMatrix, getStringPermessoPackingList(), 
-	        (codice, tipoProcesso, motivoScarto) -> {
-		        // Reset modalità scarto
-		        modalitaScarto = false;
-		        toggleButtonScarto.removeStyleName("v-button-pressed");
-		        toggleButtonScarto.removeStyleName(ValoTheme.BUTTON_DANGER);
-	        });
-	    getUI().addWindow(scartoWindow);
 	}
 	
 	@Override
